@@ -798,6 +798,90 @@ window.connectMetaMask = connectMetaMask;
   input.addEventListener("keypress", e => {
     if (e.key === "Enter") sendBtn.click();
   });
+ 
+function botReply(userText) {
+    const text = userText.toLowerCase().trim();
+
+    // 1) Begrüßungen
+    if (/(hallo|hey|hi|servus|moin|guten tag|grüß)/.test(text)) {
+        return "Hallo! Wie kann ich dir helfen? 🙂";
+    }
+
+    // 2) Wie geht’s
+    if (/wie geht/.test(text)) {
+        return "Mir geht’s gut! Und dir?";
+    }
+
+    // 3) Bot-Infos
+    if (/(wer bist du|was bist du|dein name)/.test(text)) {
+        return "Ich bin ein lokaler JavaScript-Chatbot ohne Server oder API. 😊";
+    }
+
+    // 4) Uhrzeit
+    if (/(uhrzeit|wie spät)/.test(text)) {
+        const now = new Date();
+        return "Es ist gerade " + now.toLocaleTimeString("de-DE") + ".";
+    }
+
+    // 5) Datum
+    if (/(datum|welcher tag)/.test(text)) {
+        const today = new Date();
+        return "Heute ist " + today.toLocaleDateString("de-DE") + ".";
+    }
+
+    // 6) Wetter (keine API, aber plausible Antworten)
+    if (/wetter/.test(text)) {
+        return "Ich habe keine Online-Daten, aber draußen ist es bestimmt schöner als bei mir im Code 😄";
+    }
+
+    // 7) Witze
+    if (/witz|joke/.test(text)) {
+        const jokes = [
+            "Warum können Skelette so schlecht lügen? – Weil sie so leicht zu durchschauen sind!",
+            "Was macht ein Pirat am Computer? – Er drückt die Enter-Taste!",
+            "Warum steht ein Pilz immer im Mittelpunkt? – Weil er ein Champignon ist!"
+        ];
+        return jokes[Math.floor(Math.random() * jokes.length)];
+    }
+
+    // 8) Stimmung erkennen
+    if (/(traurig|schlecht|down)/.test(text)) {
+        return "Oh nein! 😟 Wenn du reden möchtest, ich bin da.";
+    }
+
+    if (/(cool|super|nice|gut)/.test(text)) {
+        return "Freut mich zu hören! 😄";
+    }
+
+    // 9) Rechnen (extrem einfach)
+    const mathMatch = text.match(/(-?\d+)\s*([\+\-\*\/])\s*(-?\d+)/);
+    if (mathMatch) {
+        const a = Number(mathMatch[1]);
+        const op = mathMatch[2];
+        const b = Number(mathMatch[3]);
+        let result = "";
+
+        switch (op) {
+            case "+": result = a + b; break;
+            case "-": result = a - b; break;
+            case "*": result = a * b; break;
+            case "/": result = b === 0 ? "nicht möglich (Division durch 0)" : a / b; break;
+        }
+        return `Ergebnis: ${result}`;
+    }
+
+    // 10) Hilfe
+    if (/hilfe|was kannst du/.test(text)) {
+        return "Ich kann auf einfache Fragen antworten: Begrüßung, Datum, Uhrzeit, Stimmung, Witze, kleine Rechnungen, und mehr.";
+    }
+
+    // 11) Fallback (intelligent)
+    if (text.endsWith("?")) {
+        return "Gute Frage! Dafür habe ich noch keine Regel, aber ich lerne gerne dazu 🙂";
+    }
+
+    return "Das habe ich leider nicht verstanden – probier es anders oder sag 'hilfe'.";
+} 
 </script>
 </body>
 </html>
