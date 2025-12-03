@@ -1,4 +1,4 @@
-have fun! secure and ready to play<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -31,6 +31,12 @@ have fun! secure and ready to play<!DOCTYPE html>
         user-select: none;
     }
 
+    h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 800;
+    }
+
     #content {
         max-width: 900px;
         margin: 30px auto;
@@ -49,11 +55,11 @@ have fun! secure and ready to play<!DOCTYPE html>
         border: 1px solid #1f242c;
         padding: 20px;
         border-radius: 10px;
-        height: 135px;
-        cursor: default;
+        height: 140px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        transition: 0.2s;
     }
 
     .game-title {
@@ -69,14 +75,15 @@ have fun! secure and ready to play<!DOCTYPE html>
 
     .play {
         font-size: 14px;
-        text-align: right;
-        color: #76c6ff;
+        align-self: flex-end;
         cursor: pointer;
+        color: #6ecfff;
         user-select: none;
+        text-decoration: underline;
     }
 
-    .play:active {
-        opacity: 0.6;
+    .play:hover {
+        opacity: 0.7;
     }
 </style>
 </head>
@@ -92,39 +99,89 @@ have fun! secure and ready to play<!DOCTYPE html>
 
     <div class="game-grid">
 
-        <!-- GAME 1 -->
         <div class="game-box" id="game1">
-            <div class="game-title">Game 1 – Garten</div>
-            <div class="game-sub">Baue Zitronen an und ernte sie.</div>
-            <div class="play" id="game1Play">Play</div>
+            <div class="game-title">Game 1</div>
+            <div class="game-sub">Garten Spiel – Pflanzen und Ernten</div>
+            <div class="play">Play</div>
         </div>
 
-        <!-- GAME 2 -->
         <div class="game-box" id="game2">
             <div class="game-title">Game 2</div>
-            <div class="game-sub">Beschreibung vom Spiel 2</div>
-            <div class="play" id="game2Play">Play</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
         </div>
 
-        <!-- Platzhalter für Games 3–12 -->
-        <div class="game-box"><div class="game-title">Game 3</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 5</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 6</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 7</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 8</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 9</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 10</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 11</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 12</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box" id="game3">
+            <div class="game-title">Game 3</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game4">
+            <div class="game-title">Game 4</div>
+            <div class="game-sub">Meteor Ausweich Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game5">
+            <div class="game-title">Game 5</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game6">
+            <div class="game-title">Game 6</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game7">
+            <div class="game-title">Game 7</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game8">
+            <div class="game-title">Game 8</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game9">
+            <div class="game-title">Game 9</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game10">
+            <div class="game-title">Game 10</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game11">
+            <div class="game-title">Game 11</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
+        <div class="game-box" id="game12">
+            <div class="game-title">Game 12</div>
+            <div class="game-sub">Noch kein Spiel</div>
+            <div class="play">Play</div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    
+
+/* ------------------------------------------------------------
+   BACK BUTTON
+------------------------------------------------------------ */
 function createBackButton() {
     const back = document.createElement("div");
-    back.textContent = "← Zurück zur Arcade";
+    back.textContent = "← Zurück";
     back.style.position = "fixed";
     back.style.top = "15px";
     back.style.left = "15px";
@@ -138,115 +195,197 @@ function createBackButton() {
     back.style.fontSize = "14px";
     back.style.zIndex = "9999";
     back.style.userSelect = "none";
-
     back.onclick = () => location.reload();
-
     document.body.appendChild(back);
 }
-/* -----------------------------------------------------
-   GAME 1 – GARDEN GAME (reines JavaScript)
------------------------------------------------------ */
 
-function startGardenGame() {
+
+/* ------------------------------------------------------------
+   GAME 1 — GARTEN SPIEL
+------------------------------------------------------------ */
+function startGame1() {
 
     document.body.innerHTML = "";
     createBackButton();
-    document.body.style.margin = "0";
-    document.body.style.background = "#0b0e11";
-    document.body.style.color = "white";
-    document.body.style.fontFamily = "Arial, sans-serif";
 
-    const game = document.createElement("div");
-    game.style.maxWidth = "600px";
-    game.style.margin = "40px auto";
-    game.style.textAlign = "center";
+    const score = document.createElement("div");
+    score.style.position = "fixed";
+    score.style.top = "20px";
+    score.style.right = "20px";
+    score.style.color = "white";
+    score.style.fontSize = "20px";
+    score.textContent = "Punkte: 0";
+    document.body.appendChild(score);
 
-    const title = document.createElement("h1");
-    title.textContent = "🍋 Garden Game";
-    title.style.marginBottom = "20px";
-    game.appendChild(title);
+    let punkte = 0;
 
-    const scoreBox = document.createElement("div");
-    scoreBox.style.fontSize = "22px";
-    scoreBox.style.marginBottom = "20px";
-    scoreBox.innerHTML = 'Punkte: <span id="scoreNum">0</span>';
-    game.appendChild(scoreBox);
+    const field = document.createElement("div");
+    field.style.width = "420px";
+    field.style.margin = "100px auto";
+    field.style.display = "grid";
+    field.style.gridTemplateColumns = "repeat(4, 1fr)";
+    field.style.gridGap = "10px";
+    document.body.appendChild(field);
 
-    const grid = document.createElement("div");
-    grid.style.display = "grid";
-    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
-    grid.style.gap = "12px";
-    game.appendChild(grid);
+    for (let i = 0; i < 16; i++) {
+        const tile = document.createElement("div");
+        tile.style.width = "100px";
+        tile.style.height = "100px";
+        tile.style.background = "#2b332f";
+        tile.style.border = "2px solid #44524a";
+        tile.style.borderRadius = "8px";
+        tile.style.display = "flex";
+        tile.style.alignItems = "center";
+        tile.style.justifyContent = "center";
+        tile.style.fontSize = "28px";
+        tile.style.color = "#b6ffb0";
+        tile.style.cursor = "pointer";
 
-    document.body.appendChild(game);
+        tile.state = 0;
 
-    for (let i = 0; i < 9; i++) {
-        let plot = document.createElement("div");
-        plot.classList.add("plot");
-        plot.setAttribute("data-state", "empty");
-
-        plot.style.height = "120px";
-        plot.style.background = "#1b232d";
-        plot.style.border = "1px solid #2a333f";
-        plot.style.borderRadius = "8px";
-        plot.style.cursor = "pointer";
-        plot.style.display = "flex";
-        plot.style.alignItems = "center";
-        plot.style.justifyContent = "center";
-        plot.style.fontSize = "30px";
-        plot.style.transition = "0.2s";
-        plot.style.userSelect = "none";
-
-        plot.onmouseenter = () => plot.style.background = "#263240";
-        plot.onmouseleave = () => plot.style.background = "#1b232d";
-
-        grid.appendChild(plot);
-    }
-
-    let score = 0;
-    document.querySelectorAll(".plot").forEach(plot => {
-
-        plot.addEventListener("click", () => {
-            let state = plot.getAttribute("data-state");
-
-            if (state === "empty") {
-                plot.textContent = "🌱";
-                plot.setAttribute("data-state", "growing");
+        tile.onclick = () => {
+            if (tile.state === 0) {
+                tile.state = 1;
+                tile.textContent = "∙";
+                tile.style.background = "#364038";
 
                 setTimeout(() => {
-                    plot.textContent = "🍋";
-                    plot.setAttribute("data-state", "ready");
-                }, 6000);
+                    if (tile.state === 1) {
+                        tile.state = 2;
+                        tile.textContent = "🌱";
+                    }
+                }, 1000);
 
-            } else if (state === "ready") {
-                score++;
-                document.getElementById("scoreNum").textContent = score;
+                setTimeout(() => {
+                    if (tile.state === 2) {
+                        tile.state = 3;
+                        tile.textContent = "🌿";
+                        tile.style.background = "#3d4c42";
+                    }
+                }, 2000);
 
-                plot.textContent = "";
-                plot.setAttribute("data-state", "empty");
+            } else if (tile.state === 3) {
+                punkte++;
+                score.textContent = "Punkte: " + punkte;
+                tile.state = 0;
+                tile.textContent = "";
+                tile.style.background = "#2b332f";
             }
-        });
+        };
+
+        field.appendChild(tile);
+    }
+}
+
+
+/* ------------------------------------------------------------
+   GAME 4 — METEOR AUSWEICHEN
+------------------------------------------------------------ */
+function startGame4() {
+
+    document.body.innerHTML = "";
+    createBackButton();
+
+    let scoreValue = 0;
+
+    const score = document.createElement("div");
+    score.style.position = "fixed";
+    score.style.top = "20px";
+    score.style.right = "20px";
+    score.style.color = "white";
+    score.style.fontSize = "20px";
+    score.textContent = "Score: 0";
+    document.body.appendChild(score);
+
+    const scoreInterval = setInterval(() => {
+        scoreValue++;
+        score.textContent = "Score: " + scoreValue;
+    }, 300);
+
+    const field = document.createElement("div");
+    field.style.position = "relative";
+    field.style.margin = "120px auto";
+    field.style.width = "400px";
+    field.style.height = "500px";
+    field.style.background = "#111";
+    field.style.borderRadius = "12px";
+    field.style.border = "2px solid #333";
+    field.style.overflow = "hidden";
+    document.body.appendChild(field);
+
+    const player = document.createElement("div");
+    player.style.position = "absolute";
+    player.style.bottom = "20px";
+    player.style.left = "180px";
+    player.style.width = "40px";
+    player.style.height = "40px";
+    player.style.background = "yellow";
+    player.style.borderRadius = "6px";
+    field.appendChild(player);
+
+    let playerX = 180;
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
+        if (e.key === "ArrowRight" && playerX < 360) playerX += 20;
+        player.style.left = playerX + "px";
     });
+
+    function spawnMeteor() {
+        const m = document.createElement("div");
+        m.style.position = "absolute";
+        m.style.top = "-30px";
+        m.style.left = Math.random() * 360 + "px";
+        m.style.width = "30px";
+        m.style.height = "30px";
+        m.style.background = "#8b5e3c";
+        m.style.borderRadius = "50%";
+        m.style.boxShadow = "0 0 8px #ffad5b";
+        field.appendChild(m);
+
+        let posY = -30;
+
+        const fall = setInterval(() => {
+            posY += 6;
+            m.style.top = posY + "px";
+
+            if (posY > 440 &&
+                parseInt(m.style.left) > playerX - 30 &&
+                parseInt(m.style.left) < playerX + 40) {
+
+                clearInterval(fall);
+                clearInterval(scoreInterval);
+                alert("GAME OVER! Score: " + scoreValue);
+                location.reload();
+            }
+
+            if (posY > 520) {
+                clearInterval(fall);
+                m.remove();
+            }
+        }, 30);
+    }
+
+    setInterval(() => spawnMeteor(), Math.random() * 400 + 500);
 }
 
 
-/* -----------------------------------------------------
-   GAME 2 – HIER KOMMT DEIN SPIEL HIN!
-   → DU FÜGST HIER DEIN GAME 2 CODE EIN
------------------------------------------------------ */
+/* ------------------------------------------------------------
+   CLICK EVENTS FÜR ALLE 12 PLAY BUTTONS
+------------------------------------------------------------ */
+document.querySelector("#game1 .play").onclick = startGame1;
+document.querySelector("#game2 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game3 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game4 .play").onclick = startGame4;
+document.querySelector("#game5 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game6 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game7 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game8 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game9 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game10 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game11 .play").onclick = () => alert("Noch kein Spiel");
+document.querySelector("#game12 .play").onclick = () => alert("Noch kein Spiel");
 
-function startGame2() {
-    alert("Game 2 kommt hier rein. Du kannst sofort eigenes JS einfügen!");
-}
-
-
-/* -----------------------------------------------------
-   PLAY BUTTONS
------------------------------------------------------ */
-
-document.getElementById("game1Play").onclick = () => startGardenGame();
-document.getElementById("game2Play").onclick = () => startGame2();
-        
 </script>
 
 </body>
