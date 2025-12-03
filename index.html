@@ -386,6 +386,157 @@ document.querySelector("#game10 .play").onclick = () => alert("Noch kein Spiel")
 document.querySelector("#game11 .play").onclick = () => alert("Noch kein Spiel");
 document.querySelector("#game12 .play").onclick = () => alert("Noch kein Spiel");
 
+    <!-- ░░░ GAME ENGINE + GAME 2 + PLATZHALTER 3–12 ░░░ -->
+<script>
+
+// Basis Game-Container erstellen
+function openGame(id) {
+    const wrapper = document.body;
+    wrapper.innerHTML = `
+        <div id="game-wrapper">${gameData[id].html}</div>
+    `;
+    setTimeout(() => {
+        eval(gameData[id].js);
+    }, 50);
+}
+
+// GAME-DATENBANK (12 Spiele)
+const gameData = {
+    1: { html: "<h2 style='color:white;text-align:center'>Game 1 kommt später</h2>", js: "" },
+
+    // ----------------------------------------------------
+    // ░░░ GAME 2 – AGENT LEMON ░░░
+    // ----------------------------------------------------
+    2: {
+        html: `
+            <style>
+                #agent-container {
+                    width: 100%;
+                    height: 100vh;
+                    background: linear-gradient(#0c0f15, #1a1f27);
+                    overflow: hidden;
+                    position: relative;
+                }
+                #agent {
+                    width: 50px;
+                    height: 50px;
+                    background: yellow;
+                    border-radius: 50%;
+                    position: absolute;
+                    bottom: 40px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    box-shadow: 0 0 20px rgba(255,255,0,0.6);
+                }
+                .laser {
+                    width: 120px;
+                    height: 8px;
+                    background: red;
+                    position: absolute;
+                    left: -150px;
+                    animation: fly 2.2s linear forwards;
+                    box-shadow: 0 0 10px red;
+                }
+                @keyframes fly {
+                    0% { left: -200px; }
+                    100% { left: 120%; }
+                }
+                #backbtn {
+                    position: absolute;
+                    top: 15px;
+                    left: 15px;
+                    padding: 8px 16px;
+                    background: rgba(0,0,0,0.5);
+                    border: 1px solid #fff3;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    color: white;
+                }
+            </style>
+
+            <div id="agent-container">
+                <div id="backbtn">← Back</div>
+                <div id="agent"></div>
+            </div>
+        `,
+
+        js: `
+            let agent = document.getElementById("agent");
+            let container = document.getElementById("agent-container");
+
+            let pos = window.innerWidth / 2;
+            let speed = 14;
+            let alive = true;
+
+            // Bewegung
+            document.addEventListener("keydown", (e) => {
+                if (!alive) return;
+                if (e.key === "ArrowLeft") pos -= speed;
+                if (e.key === "ArrowRight") pos += speed;
+                agent.style.left = pos + "px";
+            });
+
+            // Laser spawnen
+            function spawnLaser() {
+                if (!alive) return;
+                let laser = document.createElement("div");
+                laser.className = "laser";
+                laser.style.top = Math.random() * (window.innerHeight - 100) + "px";
+
+                container.appendChild(laser);
+
+                // Hitbox check
+                let check = setInterval(() => {
+                    let a = agent.getBoundingClientRect();
+                    let l = laser.getBoundingClientRect();
+
+                    if (a.left < l.right && a.right > l.left && a.top < l.bottom && a.bottom > l.top) {
+                        alive = false;
+                        agent.style.background = "gray";
+                        agent.style.boxShadow = "none";
+                        alert("Agent Lemon wurde erwischt!");
+                    }
+                }, 50);
+
+                // Entfernen
+                laser.addEventListener("animationend", () => {
+                    clearInterval(check);
+                    laser.remove();
+                    if (alive) spawnLaser();
+                });
+            }
+            spawnLaser();
+
+            // BACK
+            document.getElementById("backbtn").onclick = () => {
+                location.reload();
+            };
+        `
+    },
+
+    // ----------------------------------------------------
+    // ░░░ GAME 3–12 ░░░ (Platzhalter)
+    // ----------------------------------------------------
+    3: { html: "<h2 style='color:white;text-align:center'>Game 3 kommt später</h2>", js: "" },
+    4: { html: "<h2 style='color:white;text-align:center'>Game 4 kommt später</h2>", js: "" },
+    5: { html: "<h2 style='color:white;text-align:center'>Game 5 kommt später</h2>", js: "" },
+    6: { html: "<h2 style='color:white;text-align:center'>Game 6 kommt später</h2>", js: "" },
+    7: { html: "<h2 style='color:white;text-align:center'>Game 7 kommt später</h2>", js: "" },
+    8: { html: "<h2 style='color:white;text-align:center'>Game 8 kommt später</h2>", js: "" },
+    9: { html: "<h2 style='color:white;text-align:center'>Game 9 kommt später</h2>", js: "" },
+    10: { html: "<h2 style='color:white;text-align:center'>Game 10 kommt später</h2>", js: "" },
+    11: { html: "<h2 style='color:white;text-align:center'>Game 11 kommt später</h2>", js: "" },
+    12: { html: "<h2 style='color:white;text-align:center'>Game 12 kommt später</h2>", js: "" }
+};
+
+// Play-Buttons aktivieren
+document.querySelectorAll(".play").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const id = btn.parentElement.id.replace("game", "");
+        openGame(id);
+    });
+});
+
 </script>
 
 </body>
