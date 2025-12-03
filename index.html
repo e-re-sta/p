@@ -230,5 +230,66 @@ function paySOL() {
 }
 </script>
 
+   <style>
+    /* Gurken-Animation */
+    .cucumber {
+        position: fixed;
+        top: -80px;
+        width: 40px;
+        height: 40px;
+        background-image: url('https://i.imgur.com/N6dFJPZ.png'); /* Beispielgurke */
+        background-size: cover;
+        animation: fall linear forwards;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    @keyframes fall {
+        from { transform: translateY(0); }
+        to { transform: translateY(120vh); }
+    }
+</style>
+
+<script>
+/* ============================
+     G U R K E N R E G E N
+     20s Pause – 15s Dauer
+=============================== */
+
+let cucumberRainActive = false;
+
+function startCucumberRain() {
+    if (cucumberRainActive) return;
+    cucumberRainActive = true;
+
+    let interval = setInterval(() => {
+        spawnCucumber();
+    }, 200); // alle 0,2s eine Gurke
+
+    // 15 sekunden laufen lassen
+    setTimeout(() => {
+        clearInterval(interval);
+        cucumberRainActive = false;
+    }, 15000);
+}
+
+function spawnCucumber() {
+    const c = document.createElement("div");
+    c.classList.add("cucumber");
+
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+    document.body.appendChild(c);
+
+    // nach dem Fall entfernen
+    setTimeout(() => c.remove(), 7000);
+}
+
+/* alle 20 sekunden ein neuer Regen */
+setInterval(() => {
+    startCucumberRain();
+}, 20000);
+</script> 
 </body>
 </html>
