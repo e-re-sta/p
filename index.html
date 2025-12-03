@@ -221,7 +221,106 @@
 <div id="effects-container"></div>
 <div id="snow-ground"></div>
 
-<script>
+<style>
+/* Effekte Container */
+#effects-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+/* Gurke */
+.cucumber {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background-image: url('https://i.imgur.com/6H1SC1i.png'); /* Gurke */
+    background-size: contain;
+    animation: fall 3s linear forwards;
+}
+
+/* Schneeflocke */
+.snowflake {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.9;
+    animation: snowFall 4s linear forwards;
+}
+
+/* Schnee auf Boden */
+#snow-ground {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0px;
+    background: white;
+    transition: height 1s;
+    z-index: 9000;
+    pointer-events: none;
+}
+
+/* Auto */
+.car {
+    position: fixed;
+    bottom: 20px;
+    left: -300px;
+    width: 250px;
+    height: 90px;
+    background-image: url('https://i.imgur.com/Ew1N0iU.png'); /* Auto */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: carDrive 6s linear forwards;
+    z-index: 9500;
+}
+
+/* Schneeräumer */
+.snowplow {
+    position: fixed;
+    bottom: 20px;
+    left: -350px;
+    width: 320px;
+    height: 110px;
+    background-image: url('https://i.imgur.com/Msws5Et.png'); /* Schneeräumer */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: plowDrive 7s linear forwards;
+    z-index: 9600;
+}
+
+/* ANIMATIONEN */
+@keyframes fall {
+    from { transform: translateY(-50px); }
+    to   { transform: translateY(120vh); }
+}
+
+@keyframes snowFall {
+    from { transform: translateY(-30px); }
+    to   { transform: translateY(120vh); }
+}
+
+@keyframes carDrive {
+    from { left: -300px; }
+    to   { left: 120%; }
+}
+
+@keyframes plowDrive {
+    from { left: -350px; }
+    to   { left: 120%; }
+}
+<style/>
+
+<div id="effects-container"></div>
+<div id="snow-ground"></div>
+
 const effects = document.getElementById("effects-container");
 const snowGround = document.getElementById("snow-ground");
 
