@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CitrusArcade</title>
+
 <style>
     body {
         margin: 0;
         background: #0b0e11;
         color: white;
         font-family: Arial, sans-serif;
-        overflow-x: hidden;
     }
 
     header {
@@ -31,12 +31,6 @@
         user-select: none;
     }
 
-    h1 {
-        margin: 0;
-        font-size: 22px;
-        font-weight: 800;
-    }
-
     #content {
         max-width: 900px;
         margin: 30px auto;
@@ -55,20 +49,15 @@
         border: 1px solid #1f242c;
         padding: 20px;
         border-radius: 10px;
-        height: 140px;
+        height: 135px;
+        cursor: default;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
 
-    /* --- AUFLEUCHTEN & BEWEGEN DEAKTIVIERT --- */
-    .game-box:hover {
-        background: #12181f !important;
-        transform: none !important;
-    }
-
     .game-title {
-        font-size: 17px;
+        font-size: 16px;
         font-weight: bold;
         color: #ffd782;
     }
@@ -76,21 +65,18 @@
     .game-sub {
         font-size: 13px;
         color: #8e9aa8;
-        flex-grow: 1;
-        margin-top: 6px;
     }
 
-    .play-tag {
-        text-align: right;
+    .play {
         font-size: 14px;
-        color: #d2d2d2;
-        opacity: 0.8;
+        text-align: right;
+        color: #76c6ff;
         cursor: pointer;
+        user-select: none;
     }
 
-    .play-tag:hover {
-        color: #ffffff;
-        opacity: 1;
+    .play:active {
+        opacity: 0.6;
     }
 </style>
 </head>
@@ -106,135 +92,77 @@
 
     <div class="game-grid">
 
-        <div class="game-box">
-            <div class="game-title">Game 1</div>
-            <div class="game-sub">Ein kleines Garten-Abenteuer. Pflege Pflanzen, sammle Punkte.</div>
-            <div class="play-tag" onclick="startGame(1)">Play</div>
+        <!-- GAME 1 -->
+        <div class="game-box" id="game1">
+            <div class="game-title">Game 1 – Garten</div>
+            <div class="game-sub">Baue Zitronen an und ernte sie.</div>
+            <div class="play" id="game1Play">Play</div>
         </div>
 
-        <div class="game-box">
+        <!-- GAME 2 -->
+        <div class="game-box" id="game2">
             <div class="game-title">Game 2</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(2)">Play</div>
+            <div class="game-sub">Beschreibung vom Spiel 2</div>
+            <div class="play" id="game2Play">Play</div>
         </div>
 
-        <div class="game-box">
-            <div class="game-title">Game 3</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(3)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 4</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(4)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 5</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(5)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 6</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(6)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 7</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(7)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 8</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(8)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 9</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(9)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 10</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(10)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 11</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(11)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 12</div>
-            <div class="game-sub">Spielbeschreibung folgt.</div>
-            <div class="play-tag" onclick="startGame(12)">Play</div>
-        </div>
-
+        <!-- Platzhalter für Games 3–12 -->
+        <div class="game-box"><div class="game-title">Game 3</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 5</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 6</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 7</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 8</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 9</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 10</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 11</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 12</div><div class="game-sub">Platzhalter</div><div class="play">Play</div></div>
     </div>
 </div>
 
 <script>
-function startGame(id) {
-    // später wird hier das richtige Game geladen
-    alert("Starte Spiel " + id);
-}
-// -----------------------------
-// GARDEN GAME (ONLY JAVASCRIPT)
-// -----------------------------
+
+/* -----------------------------------------------------
+   GAME 1 – GARDEN GAME (reines JavaScript)
+----------------------------------------------------- */
 
 function startGardenGame() {
 
-    // Seite leeren
     document.body.innerHTML = "";
     document.body.style.margin = "0";
     document.body.style.background = "#0b0e11";
     document.body.style.color = "white";
     document.body.style.fontFamily = "Arial, sans-serif";
 
-    // Hauptcontainer
     const game = document.createElement("div");
     game.style.maxWidth = "600px";
     game.style.margin = "40px auto";
     game.style.textAlign = "center";
 
-    // Überschrift
     const title = document.createElement("h1");
     title.textContent = "🍋 Garden Game";
     title.style.marginBottom = "20px";
     game.appendChild(title);
 
-    // Punkteanzeige
     const scoreBox = document.createElement("div");
     scoreBox.style.fontSize = "22px";
     scoreBox.style.marginBottom = "20px";
     scoreBox.innerHTML = 'Punkte: <span id="scoreNum">0</span>';
     game.appendChild(scoreBox);
 
-    // Grid Container
     const grid = document.createElement("div");
     grid.style.display = "grid";
     grid.style.gridTemplateColumns = "repeat(3, 1fr)";
     grid.style.gap = "12px";
-
     game.appendChild(grid);
+
     document.body.appendChild(game);
 
-    // 9 Felder erzeugen
     for (let i = 0; i < 9; i++) {
         let plot = document.createElement("div");
-
         plot.classList.add("plot");
         plot.setAttribute("data-state", "empty");
 
-        // Style inline, da ohne CSS
         plot.style.height = "120px";
         plot.style.background = "#1b232d";
         plot.style.border = "1px solid #2a333f";
@@ -247,36 +175,31 @@ function startGardenGame() {
         plot.style.transition = "0.2s";
         plot.style.userSelect = "none";
 
-        // Hover-Effekt
         plot.onmouseenter = () => plot.style.background = "#263240";
         plot.onmouseleave = () => plot.style.background = "#1b232d";
 
         grid.appendChild(plot);
     }
 
-    // Spiellogik
     let score = 0;
-
     document.querySelectorAll(".plot").forEach(plot => {
 
         plot.addEventListener("click", () => {
             let state = plot.getAttribute("data-state");
 
             if (state === "empty") {
-                // Setzen
                 plot.textContent = "🌱";
                 plot.setAttribute("data-state", "growing");
 
                 setTimeout(() => {
                     plot.textContent = "🍋";
                     plot.setAttribute("data-state", "ready");
-                }, 6000); // Wachstum: 6 Sekunden
-            }
+                }, 6000);
 
-            else if (state === "ready") {
-                // Ernten
+            } else if (state === "ready") {
                 score++;
                 document.getElementById("scoreNum").textContent = score;
+
                 plot.textContent = "";
                 plot.setAttribute("data-state", "empty");
             }
@@ -284,10 +207,24 @@ function startGardenGame() {
     });
 }
 
-// -----------------------------------------
-// Auto-Start, wenn du es manuell auslöst:
-// Beispiel: startGardenGame()
-// -----------------------------------------
+
+/* -----------------------------------------------------
+   GAME 2 – HIER KOMMT DEIN SPIEL HIN!
+   → DU FÜGST HIER DEIN GAME 2 CODE EIN
+----------------------------------------------------- */
+
+function startGame2() {
+    alert("Game 2 kommt hier rein. Du kannst sofort eigenes JS einfügen!");
+}
+
+
+/* -----------------------------------------------------
+   PLAY BUTTONS
+----------------------------------------------------- */
+
+document.getElementById("game1Play").onclick = () => startGardenGame();
+document.getElementById("game2Play").onclick = () => startGame2();
+
 </script>
 
 </body>
