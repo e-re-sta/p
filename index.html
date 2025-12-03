@@ -1,190 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CitrusPortal</title>
+<title>OrangeWeb Portal</title>
 <style>
-  /* --- Reset & Darkmode --- */
-  * { margin:0; padding:0; box-sizing:border-box; font-family:sans-serif; }
-  body { background:#111; color:#eee; overflow:hidden; }
-  a { color:inherit; text-decoration:none; }
+body { margin:0; font-family:sans-serif; background:#111; color:#eee; transition:0.3s; overflow-x:hidden;}
+body.light { background:#fafafa; color:#111;}
+header { display:flex; justify-content:space-between; align-items:center; padding:20px; background:#111;}
+header.light { background:#eee;}
+.btn { background:#ff6600; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; color:#fff; margin:0 5px;}
+.btn:hover { background:#ffa040;}
+#games { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; padding:20px;}
+.game-btn { background:#222; padding:20px; text-align:center; border-radius:10px; cursor:pointer; border:2px solid #555;}
+.game-btn:hover { transform:scale(1.05); border-color:#ff6600;}
+#gameFrame { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000c; justify-content:center; align-items:center;}
+#gameBox { width:90%; height:90%; background:#000; border:3px solid #ff6600; border-radius:15px; position:relative; overflow:hidden;}
+#closeGame { position:absolute; top:15px; right:15px; background:#ff6600;}
+#effectsLayer { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;}
+.fx { position:absolute; width:100%; height:100%; top:0; left:0; pointer-events:none;}
+.fx.rain { background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.2) 0 2px, transparent 2px 4px); animation: fall 6s linear infinite;}
+.fx.fire { background: radial-gradient(circle, rgba(255,100,0,0.3) 0%, transparent 70%); animation: flicker 12s infinite;}
+.fx.snow { background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.3) 0 2px, transparent 2px 4px); animation: snow 12s linear infinite;}
+.fx.vines { background: url('vines.png') repeat; animation: grow 10s linear infinite;}
+.fx.ivy { background: url('ivy.png') repeat; animation: grow 16s linear infinite;}
+.fx.cucumber { background: url('cucumber.png') repeat; animation: fall 12s linear infinite;}
 
-  /* --- Container --- */
-  #overlay { position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; }
-  
-  header { width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-  #reloadBtn { background:#ff6600; border:none; padding:10px 15px; color:#fff; font-weight:bold; cursor:pointer; border-radius:5px; }
-  #connectWallet { background:#00ccff; border:none; padding:10px 15px; color:#000; font-weight:bold; cursor:pointer; border-radius:5px; }
-
-  h1 { font-size:2rem; margin-bottom:10px; text-align:center; }
-
-  /* --- Game Buttons --- */
-  #gameContainer { display:grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap:15px; width:100%; max-width:1000px; margin-bottom:20px; }
-  .gameBtn { background:#222; border:2px solid #555; border-radius:10px; padding:15px; cursor:pointer; text-align:center; transition:0.3s; font-weight:bold; color:#fff; }
-  .gameBtn:hover { border-color:#ff6600; transform:scale(1.05); }
-
-  /* --- Status Panel --- */
-  #walletStatus { margin-bottom:20px; }
-
-  /* --- Effects Canvas --- */
-  #effectsCanvas { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
-
-  /* --- Responsive --- */
-  @media(max-width:600px){ #gameContainer { grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); } }
+@keyframes fall { from {background-position:0 0;} to {background-position:0 100%;} }
+@keyframes flicker { 0%,100%{opacity:0.2;}50%{opacity:0.5;} }
+@keyframes snow { from {background-position:0 0;} to {background-position:0 100%;} }
+@keyframes grow { from {background-size:0 0;} to {background-size:100% 100%;} }
 </style>
 </head>
 <body>
 
-<div id="overlay">
-  <header>
-    <button id="reloadBtn">Reload</button>
-    <button id="connectWallet">Connect Wallet</button>
-  </header>
+<header>
+  <button class="btn" onclick="window.location.reload()">Reload</button>
+  <div>OrangeWeb Portal</div>
+  <button class="btn" onclick="toggleDark()">Dark / Light</button>
+  <button class="btn" onclick="connectWallet()">Connect Wallet</button>
+</header>
 
-  <h1>CitrusPortal</h1>
-  <div id="walletStatus">Wallet: <span id="walletAddr">Not Connected</span></div>
+<div id="games">
+  <div class="game-btn" data-game="1">Game 1</div>
+  <div class="game-btn" data-game="2">Game 2</div>
+  <div class="game-btn" data-game="3">Game 3</div>
+  <div class="game-btn" data-game="4">Game 4</div>
+  <div class="game-btn" data-game="5">Game 5</div>
+  <div class="game-btn" data-game="6">Game 6</div>
+  <div class="game-btn" data-game="7">Game 7</div>
+  <div class="game-btn" data-game="8">Game 8</div>
+  <div class="game-btn" data-game="9">Game 9</div>
+  <div class="game-btn" data-game="10">Game 10</div>
+  <div class="game-btn" data-game="11">Game 11</div>
+  <div class="game-btn" data-game="12">Game 12</div>
+</div>
 
-  <div id="gameContainer">
-    <!-- 12 Game Buttons -->
-    <div class="gameBtn" data-game="1">Game 1</div>
-    <div class="gameBtn" data-game="2">Game 2</div>
-    <div class="gameBtn" data-game="3">Game 3</div>
-    <div class="gameBtn" data-game="4">Game 4</div>
-    <div class="gameBtn" data-game="5">Game 5</div>
-    <div class="gameBtn" data-game="6">Game 6</div>
-    <div class="gameBtn" data-game="7">Game 7</div>
-    <div class="gameBtn" data-game="8">Game 8</div>
-    <div class="gameBtn" data-game="9">Game 9</div>
-    <div class="gameBtn" data-game="10">Game 10</div>
-    <div class="gameBtn" data-game="11">Game 11</div>
-    <div class="gameBtn" data-game="12">Game 12</div>
+<div id="gameFrame">
+  <div id="gameBox">
+    <button id="closeGame" class="btn" onclick="closeGame()">X</button>
+    <iframe id="gameIFrame" style="width:100%; height:100%; border:0;"></iframe>
   </div>
 </div>
 
-<canvas id="effectsCanvas"></canvas>
+<div id="effectsLayer"></div>
 
 <script>
-/* ======= GLOBAL CONFIG ======= */
-let walletAddress = ""; // <-- Hier einmal deine ETH/SOL Adresse eintragen
+// Darkmode
+function toggleDark() { document.body.classList.toggle("light"); }
+
+// Wallet/Payment Paywall Placeholder
 let walletConnected = false;
-
-/* ======= PHANTOM / METAMASK CONNECT ======= */
-const connectBtn = document.getElementById('connectWallet');
-const walletSpan = document.getElementById('walletAddr');
-
-connectBtn.addEventListener('click', async ()=>{
-  if(window.solana && window.solana.isPhantom){
-    try{
-      const resp = await window.solana.connect();
-      walletAddress = resp.publicKey.toString();
-      walletConnected = true;
-      walletSpan.textContent = walletAddress;
-      alert("Phantom connected!");
-    }catch(e){ console.error(e); alert("Connection failed"); }
-  } else if(window.ethereum){
-    try{
-      const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
-      walletAddress = accounts[0];
-      walletConnected = true;
-      walletSpan.textContent = walletAddress;
-      alert("MetaMask connected!");
-    }catch(e){ console.error(e); alert("Connection failed"); }
-  } else {
-    alert("No wallet detected!");
-  }
-});
-
-/* ======= RELOAD BUTTON ======= */
-document.getElementById('reloadBtn').addEventListener('click', ()=>{
-  location.reload();
-});
-
-/* ======= GAME BUTTONS PLACEHOLDER ======= */
-document.querySelectorAll('.gameBtn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    if(!walletConnected){ alert("Connect your wallet first!"); return; }
-    const gameId = btn.dataset.game;
-    alert("Game "+gameId+" clicked! Here you can load your game code.");
-    // Platzhalter: hier kannst du Game-Code einfügen oder ein iframe laden
-  });
-});
-
-/* ======= EFFECTS CANVAS ======= */
-const canvas = document.getElementById('effectsCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-window.addEventListener('resize', ()=>{
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
-
-const effects = ["ranken","schnee","feuer","gurken","efeu"];
-let effectIndex = 0;
-let effectTimer = 0;
-
-// --- Effekte Zyklus ---
-function drawEffects(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  effectTimer++;
-  if(effectTimer > 300){ // wechsel alle 5 Sekunden (60fps)
-    effectTimer=0;
-    effectIndex = (effectIndex+1) % effects.length;
-  }
-  const effect = effects[effectIndex];
-
-  switch(effect){
-    case "ranken":
-      for(let i=0;i<10;i++){
-        ctx.strokeStyle = "lime";
-        ctx.beginPath();
-        ctx.moveTo(Math.random()*canvas.width,canvas.height);
-        ctx.lineTo(Math.random()*canvas.width,canvas.height - 50 - Math.random()*100);
-        ctx.stroke();
-      }
-      break;
-    case "schnee":
-      for(let i=0;i<50;i++){
-        ctx.fillStyle = "white";
-        ctx.beginPath();
-        ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*3,0,Math.PI*2);
-        ctx.fill();
-      }
-      break;
-    case "feuer":
-      for(let i=0;i<30;i++){
-        const x = Math.random()*canvas.width;
-        const y = canvas.height - Math.random()*100;
-        ctx.fillStyle = "orange";
-        ctx.fillRect(x,y,4,20);
-      }
-      break;
-    case "gurken":
-      for(let i=0;i<15;i++){
-        const x = Math.random()*canvas.width;
-        const y = Math.random()*canvas.height;
-        ctx.fillStyle = "green";
-        ctx.fillRect(x,y,5,10);
-      }
-      break;
-    case "efeu":
-      for(let i=0;i<15;i++){
-        const x = Math.random()*canvas.width;
-        const y = canvas.height - Math.random()*150;
-        ctx.strokeStyle = "darkgreen";
-        ctx.beginPath();
-        ctx.moveTo(x,y);
-        ctx.lineTo(x+Math.random()*30,canvas.height);
-        ctx.stroke();
-      }
-      break;
-  }
-  requestAnimationFrame(drawEffects);
+let paywallActive = true;
+function connectWallet() {
+    walletConnected = true;
+    alert("Wallet verbunden (Paywall aktiv). Zahlungen müssen noch integriert werden.");
 }
 
-drawEffects();
+// Game öffnen
+document.querySelectorAll('.game-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if(!walletConnected && paywallActive){
+            alert("Bitte zuerst Wallet verbinden!");
+            return;
+        }
+        const gameId = btn.getAttribute('data-game');
+        document.getElementById('gameFrame').style.display = 'flex';
+        document.getElementById('gameIFrame').src = `games/game${gameId}.html`;
+    });
+});
+
+// Game schließen
+function closeGame() {
+    document.getElementById('gameFrame').style.display = 'none';
+    document.getElementById('gameIFrame').src = '';
+}
+
+// Special Effects Engine (doppelte Dauer)
+const layer = document.getElementById("effectsLayer");
+let effectCycle = [
+    {effect:"vines", duration:10000},
+    {effect:"fire", duration:14000},
+    {effect:"snow", duration:24000},
+    {effect:"cucumber", duration:12000},
+    {effect:"ivy", duration:16000},
+    {effect:"fire", duration:20000},
+    {effect:"rain", duration:12000}
+];
+let idx = 0;
+function nextEffect(){
+    layer.innerHTML = `<div class="fx ${effectCycle[idx].effect}"></div>`;
+    setTimeout(() => {
+        idx = (idx+1)%effectCycle.length;
+        nextEffect();
+    }, effectCycle[idx].duration);
+}
+nextEffect();
 </script>
+
 </body>
 </html>
