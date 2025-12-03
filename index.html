@@ -186,6 +186,46 @@ function startGame(id) {
     // später wird hier das richtige Game geladen
     alert("Starte Spiel " + id);
 }
+   // SIMPLE GARDEN GAME SCRIPT ONLY
+let score = 0;
+
+function initGardenGame() {
+    const plots = document.querySelectorAll(".plot");
+    const scoreNum = document.getElementById("scoreNum");
+
+    plots.forEach(plot => {
+        plot.addEventListener("click", () => {
+            let state = plot.getAttribute("data-state");
+
+            if (state === "empty") {
+                // Pflanze setzen
+                plot.textContent = "🌱";
+                plot.setAttribute("data-state", "growing");
+
+                setTimeout(() => {
+                    plot.textContent = "🍋";
+                    plot.setAttribute("data-state", "ready");
+                }, 6000); // Wachstum 6 Sekunden
+            }
+
+            else if (state === "ready") {
+                // Ernten
+                score++;
+                scoreNum.textContent = score;
+
+                plot.textContent = "";
+                plot.setAttribute("data-state", "empty");
+            }
+        });
+    });
+}
+
+// automatischer Start, sofern Game-Elemente existieren
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector(".plot")) {
+        initGardenGame();
+    }
+}); 
 </script>
 
 </body>
