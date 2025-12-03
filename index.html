@@ -246,7 +246,122 @@ function startGame2() {
 
 document.getElementById("game1Play").onclick = () => startGardenGame();
 document.getElementById("game2Play").onclick = () => startGame2();
+function startGame4() {
 
+    // ---------------------------
+    // Seite leeren + Back Button
+    // ---------------------------
+    document.body.innerHTML = "";
+    createBackButton();
+
+    // ---------------------------
+    // Score Anzeige
+    // ---------------------------
+    let scoreValue = 0;
+
+    const score = document.createElement("div");
+    score.style.position = "fixed";
+    score.style.top = "20px";
+    score.style.right = "20px";
+    score.style.color = "white";
+    score.style.fontFamily = "Arial";
+    score.style.fontSize = "20px";
+    score.textContent = "Score: 0";
+    document.body.appendChild(score);
+
+    // Score automatisch erhöhen
+    const scoreInterval = setInterval(() => {
+        scoreValue++;
+        score.textContent = "Score: " + scoreValue;
+    }, 300);
+
+    // ---------------------------
+    // Spielfeld
+    // ---------------------------
+    const field = document.createElement("div");
+    field.style.position = "relative";
+    field.style.margin = "120px auto";
+    field.style.width = "400px";
+    field.style.height = "500px";
+    field.style.border = "2px solid #333";
+    field.style.background = "#111";
+    field.style.overflow = "hidden";
+    field.style.borderRadius = "12px";
+    document.body.appendChild(field);
+
+    // ---------------------------
+    // Spieler
+    // ---------------------------
+    const player = document.createElement("div");
+    player.style.position = "absolute";
+    player.style.bottom = "20px";
+    player.style.left = "180px";
+    player.style.width = "40px";
+    player.style.height = "40px";
+    player.style.background = "yellow";
+    player.style.borderRadius = "6px";
+    field.appendChild(player);
+
+    let playerX = 180;
+
+    // Spieler bewegen
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" && playerX > 0) {
+            playerX -= 20;
+        }
+        if (e.key === "ArrowRight" && playerX < 360) {
+            playerX += 20;
+        }
+        player.style.left = playerX + "px";
+    });
+
+    // ---------------------------
+    // Meteore erzeugen
+    // ---------------------------
+    function spawnMeteor() {
+        const meteor = document.createElement("div");
+        meteor.style.position = "absolute";
+        meteor.style.top = "-30px";
+        meteor.style.left = Math.random() * 360 + "px";
+        meteor.style.width = "30px";
+        meteor.style.height = "30px";
+        meteor.style.background = "#8b5e3c";
+        meteor.style.borderRadius = "50%";
+        meteor.style.boxShadow = "0 0 8px #ffad5b";
+        field.appendChild(meteor);
+
+        let posY = -30;
+
+        const fall = setInterval(() => {
+            posY += 6;
+            meteor.style.top = posY + "px";
+
+            // Kollision prüfen
+            if (
+                posY > 440 &&
+                parseInt(meteor.style.left) > playerX - 30 &&
+                parseInt(meteor.style.left) < playerX + 40
+            ) {
+                // GAME OVER
+                clearInterval(fall);
+                clearInterval(scoreInterval);
+                alert("GAME OVER! Dein Score: " + scoreValue);
+                location.reload();
+            }
+
+            // Meteor aus dem Spiel entfernen
+            if (posY > 520) {
+                clearInterval(fall);
+                meteor.remove();
+            }
+        }, 30);
+    }
+
+    // alle 500–900 ms ein Meteor
+    setInterval(() => {
+        spawnMeteor();
+    }, Math.random() * 400 + 500);
+}
 </script>
 
 </body>
