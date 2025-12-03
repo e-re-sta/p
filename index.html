@@ -3,172 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CitrusArcade</title>
+<title>CitrusArcade Deluxe</title>
 
 <style>
     body {
         margin: 0;
-        background: #0b0e11;
+        background: #090c10;
         color: white;
-        font-family: Arial, sans-serif;
+        font-family: 'Segoe UI', sans-serif;
+        overflow-x: hidden;
     }
 
+    /* HEADER */
     header {
         display: flex;
         align-items: center;
-        padding: 12px 18px;
-        background: #11161c;
-        border-bottom: 1px solid #222;
+        padding: 14px 20px;
+        background: rgba(20, 25, 32, 0.9);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #1c212a;
         position: sticky;
         top: 0;
         z-index: 100;
     }
 
     #logo {
-        font-size: 28px;
+        font-size: 32px;
         cursor: pointer;
         margin-right: 12px;
         user-select: none;
+        filter: drop-shadow(0 0 6px #ffe88b);
     }
 
-    h1 {
+    header h1 {
+        font-size: 26px;
+        letter-spacing: 1px;
+        color: #ffdd7e;
         margin: 0;
-        font-size: 22px;
-        font-weight: 800;
+        text-shadow: 0 0 8px #ffbb33;
     }
 
+    /* CONTENT */
     #content {
-        max-width: 900px;
-        margin: 30px auto;
+        max-width: 1100px;
+        margin: 40px auto;
         padding: 0 20px;
     }
 
+    /* GRID */
     .game-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 25px;
         margin-top: 20px;
     }
 
+    /* GAME BOX */
     .game-box {
-        background: #12181f;
-        border: 1px solid #1f242c;
-        padding: 20px;
-        border-radius: 10px;
-        height: 140px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 22px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(8px);
+        height: 160px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: 0.2s;
+        box-shadow: 0 0 25px rgba(255,255,255,0.04);
+        cursor: default;
+        transition: transform 0.25s ease;
+    }
+
+    .game-box:active {
+        transform: scale(0.97);
     }
 
     .game-title {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bold;
-        color: #ffd782;
+        color: #ffe089;
+        text-shadow: 0 0 8px #ffb84c;
     }
 
     .game-sub {
-        font-size: 13px;
-        color: #8e9aa8;
+        font-size: 14px;
+        color: #b2c0d1;
     }
 
     .play {
-        font-size: 14px;
-        align-self: flex-end;
+        font-size: 15px;
+        text-align: right;
+        opacity: 0.9;
+        color: #ffffff;
         cursor: pointer;
-        color: #6ecfff;
-        user-select: none;
-        text-decoration: underline;
     }
 
-    .play:hover {
-        opacity: 0.7;
+    /* FRUIT FALL CSS */
+    .fruit {
+        position: fixed;
+        top: -50px;
+        font-size: 32px;
+        pointer-events: none;
+        user-select: none;
+        z-index: 0;
+        opacity: 0.92;
     }
+
 </style>
 </head>
 <body>
 
 <header>
     <div id="logo" onclick="location.reload()">🍋</div>
-    <h1>CitrusArcade</h1>
+    <h1>CitrusArcade Deluxe</h1>
 </header>
 
 <div id="content">
-    <h2>Spiele</h2>
+    <h2 style="color:#ffe089;text-shadow:0 0 8px #ffcc44;">Spiele</h2>
 
     <div class="game-grid">
 
         <div class="game-box" id="game1">
             <div class="game-title">Game 1</div>
-            <div class="game-sub">Garten Spiel – Pflanzen und Ernten</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game2">
             <div class="game-title">Game 2</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game3">
             <div class="game-title">Game 3</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game4">
             <div class="game-title">Game 4</div>
-            <div class="game-sub">Meteor Ausweich Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game5">
             <div class="game-title">Game 5</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game6">
             <div class="game-title">Game 6</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game7">
             <div class="game-title">Game 7</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game8">
             <div class="game-title">Game 8</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game9">
             <div class="game-title">Game 9</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game10">
             <div class="game-title">Game 10</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game11">
             <div class="game-title">Game 11</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
         <div class="game-box" id="game12">
             <div class="game-title">Game 12</div>
-            <div class="game-sub">Noch kein Spiel</div>
-            <div class="play">Play</div>
+            <div class="game-sub">Spielbeschreibung</div>
+            <div class="play">PLAY</div>
         </div>
 
     </div>
@@ -176,344 +200,63 @@
 
 <script>
 
-/* ------------------------------------------------------------
-   BACK BUTTON
------------------------------------------------------------- */
-function createBackButton() {
-    const back = document.createElement("div");
-    back.textContent = "← Zurück";
-    back.style.position = "fixed";
-    back.style.top = "15px";
-    back.style.left = "15px";
-    back.style.padding = "10px 16px";
-    back.style.background = "#11161c";
-    back.style.border = "1px solid #222";
-    back.style.borderRadius = "6px";
-    back.style.cursor = "pointer";
-    back.style.color = "white";
-    back.style.fontFamily = "Arial";
-    back.style.fontSize = "14px";
-    back.style.zIndex = "9999";
-    back.style.userSelect = "none";
-    back.onclick = () => location.reload();
-    document.body.appendChild(back);
-}
+/* ░░░ GAME ENGINE ░░░ */
 
-
-/* ------------------------------------------------------------
-   GAME 1 — GARTEN SPIEL
------------------------------------------------------------- */
-function startGame1() {
-
-    document.body.innerHTML = "";
-    createBackButton();
-
-    const score = document.createElement("div");
-    score.style.position = "fixed";
-    score.style.top = "20px";
-    score.style.right = "20px";
-    score.style.color = "white";
-    score.style.fontSize = "20px";
-    score.textContent = "Punkte: 0";
-    document.body.appendChild(score);
-
-    let punkte = 0;
-
-    const field = document.createElement("div");
-    field.style.width = "420px";
-    field.style.margin = "100px auto";
-    field.style.display = "grid";
-    field.style.gridTemplateColumns = "repeat(4, 1fr)";
-    field.style.gridGap = "10px";
-    document.body.appendChild(field);
-
-    for (let i = 0; i < 16; i++) {
-        const tile = document.createElement("div");
-        tile.style.width = "100px";
-        tile.style.height = "100px";
-        tile.style.background = "#2b332f";
-        tile.style.border = "2px solid #44524a";
-        tile.style.borderRadius = "8px";
-        tile.style.display = "flex";
-        tile.style.alignItems = "center";
-        tile.style.justifyContent = "center";
-        tile.style.fontSize = "28px";
-        tile.style.color = "#b6ffb0";
-        tile.style.cursor = "pointer";
-
-        tile.state = 0;
-
-        tile.onclick = () => {
-            if (tile.state === 0) {
-                tile.state = 1;
-                tile.textContent = "∙";
-                tile.style.background = "#364038";
-
-                setTimeout(() => {
-                    if (tile.state === 1) {
-                        tile.state = 2;
-                        tile.textContent = "🌱";
-                    }
-                }, 1000);
-
-                setTimeout(() => {
-                    if (tile.state === 2) {
-                        tile.state = 3;
-                        tile.textContent = "🌿";
-                        tile.style.background = "#3d4c42";
-                    }
-                }, 2000);
-
-            } else if (tile.state === 3) {
-                punkte++;
-                score.textContent = "Punkte: " + punkte;
-                tile.state = 0;
-                tile.textContent = "";
-                tile.style.background = "#2b332f";
-            }
-        };
-
-        field.appendChild(tile);
-    }
-}
-
-
-/* ------------------------------------------------------------
-   GAME 4 — METEOR AUSWEICHEN
------------------------------------------------------------- */
-function startGame4() {
-
-    document.body.innerHTML = "";
-    createBackButton();
-
-    let scoreValue = 0;
-
-    const score = document.createElement("div");
-    score.style.position = "fixed";
-    score.style.top = "20px";
-    score.style.right = "20px";
-    score.style.color = "white";
-    score.style.fontSize = "20px";
-    score.textContent = "Score: 0";
-    document.body.appendChild(score);
-
-    const scoreInterval = setInterval(() => {
-        scoreValue++;
-        score.textContent = "Score: " + scoreValue;
-    }, 300);
-
-    const field = document.createElement("div");
-    field.style.position = "relative";
-    field.style.margin = "120px auto";
-    field.style.width = "400px";
-    field.style.height = "500px";
-    field.style.background = "#111";
-    field.style.borderRadius = "12px";
-    field.style.border = "2px solid #333";
-    field.style.overflow = "hidden";
-    document.body.appendChild(field);
-
-    const player = document.createElement("div");
-    player.style.position = "absolute";
-    player.style.bottom = "20px";
-    player.style.left = "180px";
-    player.style.width = "40px";
-    player.style.height = "40px";
-    player.style.background = "yellow";
-    player.style.borderRadius = "6px";
-    field.appendChild(player);
-
-    let playerX = 180;
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
-        if (e.key === "ArrowRight" && playerX < 360) playerX += 20;
-        player.style.left = playerX + "px";
-    });
-
-    function spawnMeteor() {
-        const m = document.createElement("div");
-        m.style.position = "absolute";
-        m.style.top = "-30px";
-        m.style.left = Math.random() * 360 + "px";
-        m.style.width = "30px";
-        m.style.height = "30px";
-        m.style.background = "#8b5e3c";
-        m.style.borderRadius = "50%";
-        m.style.boxShadow = "0 0 8px #ffad5b";
-        field.appendChild(m);
-
-        let posY = -30;
-
-        const fall = setInterval(() => {
-            posY += 6;
-            m.style.top = posY + "px";
-
-            if (posY > 440 &&
-                parseInt(m.style.left) > playerX - 30 &&
-                parseInt(m.style.left) < playerX + 40) {
-
-                clearInterval(fall);
-                clearInterval(scoreInterval);
-                alert("GAME OVER! Score: " + scoreValue);
-                location.reload();
-            }
-
-            if (posY > 520) {
-                clearInterval(fall);
-                m.remove();
-            }
-        }, 30);
-    }
-
-    setInterval(() => spawnMeteor(), Math.random() * 400 + 500);
-}
-
-
-/* ------------------------------------------------------------
-   CLICK EVENTS FÜR ALLE 12 PLAY BUTTONS
------------------------------------------------------------- */
-document.querySelector("#game1 .play").onclick = startGame1;
-document.querySelector("#game2 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game3 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game4 .play").onclick = startGame4;
-document.querySelector("#game5 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game6 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game7 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game8 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game9 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game10 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game11 .play").onclick = () => alert("Noch kein Spiel");
-document.querySelector("#game12 .play").onclick = () => alert("Noch kein Spiel");
-
-    <!-- ░░░ GAME ENGINE + GAME 2 + PLATZHALTER 3–12 ░░░ -->
-<script>
-
-// Basis Game-Container erstellen
 function openGame(id) {
-    const wrapper = document.body;
-    wrapper.innerHTML = `
-        <div id="game-wrapper">${gameData[id].html}</div>
+    document.body.innerHTML = `
+        <div style='padding:40px;color:white;font-size:22px;'>
+            <div id='backbtn' style="
+                padding:8px 16px;
+                display:inline-block;
+                background:rgba(255,255,255,0.12);
+                border-radius:8px;
+                cursor:pointer;
+                margin-bottom:20px;
+            ">← Back</div>
+
+            <h1>Game ${id}</h1>
+            <p>Platzhalter-Spiel</p>
+        </div>
     `;
-    setTimeout(() => {
-        eval(gameData[id].js);
-    }, 50);
+
+    document.getElementById("backbtn").onclick = () => location.reload();
 }
 
-// GAME-DATENBANK (12 Spiele)
-const gameData = {
-    1: { html: "<h2 style='color:white;text-align:center'>Game 1 kommt später</h2>", js: "" },
+document.querySelectorAll(".play").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const id = btn.parentElement.id.replace("game", "");
+        openGame(id);
+    });
+});
 
-    // ----------------------------------------------------
-    // ░░░ GAME 2 – AGENT LEMON ░░░
-    // ----------------------------------------------------
-    2: {
-        html: `
-            <style>
-                #agent-container {
-                    width: 100%;
-                    height: 100vh;
-                    background: linear-gradient(#0c0f15, #1a1f27);
-                    overflow: hidden;
-                    position: relative;
-                }
-                #agent {
-                    width: 50px;
-                    height: 50px;
-                    background: yellow;
-                    border-radius: 50%;
-                    position: absolute;
-                    bottom: 40px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    box-shadow: 0 0 20px rgba(255,255,0,0.6);
-                }
-                .laser {
-                    width: 120px;
-                    height: 8px;
-                    background: red;
-                    position: absolute;
-                    left: -150px;
-                    animation: fly 2.2s linear forwards;
-                    box-shadow: 0 0 10px red;
-                }
-                @keyframes fly {
-                    0% { left: -200px; }
-                    100% { left: 120%; }
-                }
-                #backbtn {
-                    position: absolute;
-                    top: 15px;
-                    left: 15px;
-                    padding: 8px 16px;
-                    background: rgba(0,0,0,0.5);
-                    border: 1px solid #fff3;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    color: white;
-                }
-            </style>
 
-            <div id="agent-container">
-                <div id="backbtn">← Back</div>
-                <div id="agent"></div>
-            </div>
-        `,
 
-        js: `
-            let agent = document.getElementById("agent");
-            let container = document.getElementById("agent-container");
+/* ░░░ FRUIT RAIN ENGINE (Gurken, Zitronen, Ananas) ░░░ */
 
-            let pos = window.innerWidth / 2;
-            let speed = 14;
-            let alive = true;
+const fruits = ["🥒","🍋","🍍"];  
+const areaWidth = window.innerWidth;
 
-            // Bewegung
-            document.addEventListener("keydown", (e) => {
-                if (!alive) return;
-                if (e.key === "ArrowLeft") pos -= speed;
-                if (e.key === "ArrowRight") pos += speed;
-                agent.style.left = pos + "px";
-            });
+function spawnFruit() {
+    const f = document.createElement("div");
+    f.className = "fruit";
+    f.innerHTML = fruits[Math.floor(Math.random() * fruits.length)];
 
-            // Laser spawnen
-            function spawnLaser() {
-                if (!alive) return;
-                let laser = document.createElement("div");
-                laser.className = "laser";
-                laser.style.top = Math.random() * (window.innerHeight - 100) + "px";
+    f.style.left = Math.random() * areaWidth + "px";
+    f.style.fontSize = (28 + Math.random()*20) + "px";
+    f.style.transition = `transform ${3 + Math.random()*3}s linear, opacity 1s`;
 
-                container.appendChild(laser);
+    document.body.appendChild(f);
 
-                // Hitbox check
-                let check = setInterval(() => {
-                    let a = agent.getBoundingClientRect();
-                    let l = laser.getBoundingClientRect();
+    setTimeout(() => {
+        f.style.transform = `translateY(${window.innerHeight + 100}px)`;
+        f.style.opacity = 0;
+    }, 50);
 
-                    if (a.left < l.right && a.right > l.left && a.top < l.bottom && a.bottom > l.top) {
-                        alive = false;
-                        agent.style.background = "gray";
-                        agent.style.boxShadow = "none";
-                        alert("Agent Lemon wurde erwischt!");
-                    }
-                }, 50);
+    setTimeout(() => f.remove(), 7000);
+}
 
-                // Entfernen
-                laser.addEventListener("animationend", () => {
-                    clearInterval(check);
-                    laser.remove();
-                    if (alive) spawnLaser();
-                });
-            }
-            spawnLaser();
-
-            // BACK
-            document.getElementById("backbtn").onclick = () => {
-                location.reload();
-            };
-        `
-    },
-
+// Loop: alle 300–900ms ein Frucht-Fall
+setInterval(spawnFruit, 300 + Math.random()*600);
 
 </script>
 
