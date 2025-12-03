@@ -1,540 +1,128 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CitrusArcade — Game Portal (editable)</title>
-<!-- minimal reset + fonts -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CitrusArcade</title>
+
 <style>
-  :root{
-    --bg:#0b0c10; --panel:#0f1720; --accent:#ff7a00; --accent-2:#ffaa33; --muted:#9aa3b2;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
-    background:linear-gradient(180deg,#06060a 0%, #0b0c10 100%);
-    color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center;
-  }
+    body {
+        margin: 0;
+        background: #0b0e11;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
 
-  header{
-    width:100%; padding:16px 18px; display:flex; gap:12px; align-items:center;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));
-    box-shadow:0 6px 20px rgba(0,0,0,0.45);
-  }
-  .brand{display:flex; gap:12px; align-items:center}
-  .logo{width:44px;height:44px;border-radius:8px;display:grid;place-items:center;background:#071018}
-  .title {font-weight:700; color:#071018; font-size:18px}
-  .subtitle{font-size:12px;color:#071018;opacity:0.9;margin-top:2px}
+    /* Header */
+    header {
+        display: flex;
+        align-items: center;
+        padding: 12px 18px;
+        background: #11161c;
+        border-bottom: 1px solid #222;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
 
-  main{width:100%; max-width:1200px; padding:20px;}
+    /* Logo */
+    #logo {
+        font-size: 28px;
+        cursor: pointer;
+        margin-right: 12px;
+        user-select: none;
+    }
 
-/* grid of game cards */
-  .grid {
-    display:grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-    gap:14px;
-  }
-  .game-card{
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.03);
-    padding:16px; border-radius:12px; cursor:pointer;
-    transition:transform .18s ease, box-shadow .18s ease; min-height:120px;
-    display:flex; flex-direction:column; justify-content:space-between;
-  }
-  .game-card:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(0,0,0,0.45) }
-  .game-title{font-weight:700; color:var(--accent); font-size:16px}
-  .game-sub{font-size:13px; color:var(--muted); margin-top:8px}
-  .play-hint{font-size:12px;color:var(--muted); text-align:right}
+    /* Title */
+    h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 800;
+    }
 
-/* right-side rank panel (small) */
-  .rank-panel{position:fixed; right:18px; top:90px; background:rgba(255,255,255,0.03); padding:12px; border-radius:10px; min-width:140px; border:1px solid rgba(255,255,255,0.02)}
-  .rank-title{color:var(--accent); font-weight:700; margin-bottom:8px; font-size:13px}
-  .rank-item{font-size:13px; color:var(--muted); margin-top:6px}
+    /* Page content container */
+    #content {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
 
-/* top controls (wallet) */
-  .controls{margin-left:auto; display:flex; gap:10px; align-items:center}
-  .wallet-btn{background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px; cursor:pointer; color:#fff; font-weight:600}
-  .wallet-status{font-size:13px; color:var(--muted)}
+    /* Grid for 12 games */
+    .game-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
 
-/* modal editor for game code */
-  .modal {
-    position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:3000;
-    background:linear-gradient(180deg, rgba(3,3,3,0.6), rgba(3,3,3,0.85));
-  }
-  .modal-box{
-    width:92%; max-width:1100px; background:var(--panel); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.04);
-    display:flex; gap:12px; color:#fff;
-  }
-  .editor{
-    width:52%; display:flex; flex-direction:column;
-  }
-  textarea { width:100%; height:640px; background:#05060a; color:#e6eef8; border-radius:8px; border:1px solid rgba(255,255,255,0.04); padding:12px; font-family:monospace; resize:vertical; }
-  .iframe-wrap{ width:48%; display:flex; flex-direction:column; gap:8px; align-items:stretch; }
-  .iframe-preview{ flex:1; background:#000; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); }
-  .iframe-preview iframe{ width:100%; height:100%; border:0; display:block; background:#071018; }
+    .game-box {
+        background: #12181f;
+        border: 1px solid #1f242c;
+        padding: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-  .modal-controls{ display:flex; gap:8px; margin-top:8px; }
-  .btn { padding:10px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:700; }
-  .btn-primary{ background:linear-gradient(90deg,#ffd37a,#ff7a00); color:#000 }
-  .btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff }
+    .game-box:hover {
+        background: #1b232d;
+        transform: translateY(-3px);
+    }
 
-  /* small responsive */
-  @media (max-width:920px){
-    .modal-box{ flex-direction:column; }
-    .editor, .iframe-wrap{ width:100%; }
-    textarea{ height:360px; }
-  }
+    .game-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffd782;
+    }
 
-/* effect layers: fire border, fog, falling elements, lightning overlay, cars */
-  .fire-edge { pointer-events:none; position:fixed; inset:0; box-shadow:0 0 40px 18px rgba(255,80,0,0.8) inset; z-index:2200; animation:fireFlicker 1.2s infinite; }
-  @keyframes fireFlicker {
-    0%{ box-shadow:0 0 30px 12px rgba(255,80,0,0.6) inset; } 50%{ box-shadow:0 0 60px 28px rgba(255,0,0,0.9) inset;} 100%{ box-shadow:0 0 30px 12px rgba(255,80,0,0.6) inset;}
-  }
-  .fog { pointer-events:none; position:fixed; left:0; right:0; height:160px; top:12vh; z-index:2100; filter:blur(22px); opacity:0.45; background:linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); transform: translateX(-10%); animation:fogMove 14s linear infinite alternate; }
-  @keyframes fogMove { from{ transform:translateX(-10%) } to{ transform:translateX(10%) } }
+    .game-sub {
+        font-size: 13px;
+        color: #8e9aa8;
+    }
 
-  .falling { position:fixed; pointer-events:none; z-index:2100; font-size:28px; user-select:none; animation:fallDown linear; }
-  @keyframes fallDown { from{ transform:translateY(-60px); opacity:1 } to{ transform:translateY(120vh); opacity:0 } }
-
-  .lightning { position:fixed; inset:0; background:#fff; opacity:0; z-index:2300; pointer-events:none; }
-
-  .car { position:fixed; bottom:12px; z-index:2400; font-size:44px; pointer-events:none; white-space:nowrap; }
-
-/* chat button */
-  #chatbot-container { position:fixed; bottom:18px; right:18px; width:340px; height:460px; z-index:2600; font-family:Arial, sans-serif; }
-  .chatbox { width:100%; height:100%; background:#fff; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.4); display:flex; flex-direction:column; overflow:hidden; }
-  .chat-header { background:linear-gradient(90deg,#ffd37a,#ff7a00); padding:10px; font-weight:800; color:#000;}
-  .chat-messages{ flex:1; padding:10px; overflow:auto; background:#f8fafc; color:#000; }
-  .chat-input{ display:flex; border-top:1px solid #eee; }
-  .chat-input input{ flex:1; padding:10px; border:0; outline:none; }
-  .chat-input button{ padding:10px 12px; border:0; background:#0b6efd; color:#fff; cursor:pointer; }
-
-/* small util */
-.small-muted{ font-size:13px; color:var(--muted); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">
-    <div class="logo" aria-hidden="true">🍋</div>
-    <div>
-      <div class="title">CitrusArcade</div>
-      <div class="subtitle">Browser games • deploy-ready • edit & run</div>
-    </div>
-  </div>
-
-  <div class="controls" style="margin-left:auto;">
-    <button id="connectMeta" class="wallet-btn">Connect MetaMask</button>
-    <div id="metaAddr" class="wallet-status">Not connected</div>
-    <button id="connectPhantom" class="wallet-btn">Connect Phantom (Solana)</button>
-    <div id="phantomAddr" class="wallet-status">Not connected</div>
-  </div>
+    <div id="logo" onclick="location.reload()">🍋</div>
+    <h1>CitrusArcade</h1>
 </header>
 
-<main>
-  <section style="margin-top:18px; display:flex; gap:16px; align-items:flex-start;">
-    <div style="flex:1">
-      <div class="small-muted">Click a card to edit / paste full game HTML (save & run)</div>
-      <div class="grid" id="gameGrid" style="margin-top:12px;">
-        <!-- 12 game placeholders -->
-        <div class="game-card" id="game-1"><div><div class="game-title">Game 1</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-2"><div><div class="game-title">Game 2</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-3"><div><div class="game-title">Game 3</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-4"><div><div class="game-title">Game 4</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-5"><div><div class="game-title">Game 5</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-6"><div><div class="game-title">Game 6</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-7"><div><div class="game-title">Game 7</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-8"><div><div class="game-title">Game 8</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-9"><div><div class="game-title">Game 9</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-10"><div><div class="game-title">Game 10</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-11"><div><div class="game-title">Game 11</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-        <div class="game-card" id="game-12"><div><div class="game-title">Game 12</div><div class="game-sub">Click to edit & run</div></div><div class="play-hint">Edit</div></div>
-      </div>
+<div id="content">
+    <h2>Spiele</h2>
+
+    <div class="game-grid">
+        <div class="game-box" id="game1">
+            <div class="game-title">Game 1</div>
+            <div class="game-sub">Klicke um Code einzufügen</div>
+        </div>
+        <div class="game-box" id="game2"><div class="game-title">Game 2</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game3"><div class="game-title">Game 3</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game4"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game5"><div class="game-title">Game 5</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game6"><div class="game-title">Game 6</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game7"><div class="game-title">Game 7</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game8"><div class="game-title">Game 8</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game9"><div class="game-title">Game 9</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game10"><div class="game-title">Game 10</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game11"><div class="game-title">Game 11</div><div class="game-sub">Platzhalter</div></div>
+        <div class="game-box" id="game12"><div class="game-title">Game 12</div><div class="game-sub">Platzhalter</div></div>
     </div>
-    <aside style="width:240px;">
-      <div class="rank-panel">
-        <div class="rank-title">Local Scores</div>
-        <div id="rankList"><div class="rank-item">No scores yet</div></div>
-      </div>
-    </aside>
-  </section>
-</main>
-
-<!-- modal editor -->
-<div id="gameModal" class="modal" role="dialog" aria-hidden="true">
-  <div class="modal-box">
-    <div class="editor">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="font-weight:800">Game Editor</div>
-        <div class="small-muted" id="editorGameId">...</div>
-      </div>
-
-      <textarea id="gameCode" placeholder="Paste full HTML/CSS/JS of your game here (or just JS)"></textarea>
-
-      <div class="modal-controls">
-        <button id="saveCode" class="btn btn-primary">Save</button>
-        <button id="runCode" class="btn btn-primary">Run</button>
-        <button id="closeModal" class="btn btn-ghost">Close</button>
-        <button id="clearCode" class="btn btn-ghost">Delete</button>
-      </div>
-
-      <div style="margin-top:8px;" class="small-muted">Tip: You can paste a full HTML document (including &lt;style&gt; and &lt;script&gt;) — it will be rendered in the preview iframe.</div>
-    </div>
-
-    <div class="iframe-wrap">
-      <div style="display:flex; gap:8px; align-items:center;">
-        <div style="font-weight:700">Preview</div>
-        <div style="margin-left:auto" class="small-muted">Sandboxed iframe</div>
-      </div>
-      <div class="iframe-preview" id="iframePreview">
-        <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-      </div>
-      <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end;">
-        <button id="openInNew" class="btn btn-ghost">Open in new tab</button>
-      </div>
-    </div>
-  </div>
 </div>
-
-<!-- effect layers -->
-<div class="fire-edge" aria-hidden="true"></div>
-<div id="fog" class="fog" aria-hidden="true"></div>
-<!-- dynamic falling elements and cars are created by script -->
-
-<!-- chatbot -->
-<div id="chatbot-container" aria-hidden="false">
-  <div class="chatbox">
-    <div class="chat-header">CitrusBot</div>
-    <div id="chatMessages" class="chat-messages"></div>
-    <div class="chat-input">
-      <input id="chatInput" placeholder="Frag mich..." />
-      <button id="chatSend">Senden</button>
-    </div>
-  </div>
-</div>
-
-<!-- include web3 (for convenience) -->
-<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
-<script src="https://unpkg.com/@solana/web3.js@1.73.0/lib/index.iife.js"></script>
 
 <script>
-/* =============================
-   CONFIG / STORAGE KEYS
-   ============================= */
-const STORAGE_PREFIX = 'citrus_game_code_'; // + gameId (1..12)
-const SCORE_KEY = 'citrus_scores_v1';
-
-/* =============================
-   HELPERS
-   ============================= */
-function el(id){ return document.getElementById(id); }
-function log(...a){ console.log('[citrus]', ...a); }
-
-/* =============================
-   METAMASK (ETH) CONNECT
-   ============================= */
-const connectMeta = el('connectMeta');
-const metaAddr = el('metaAddr');
-let metaAccount = null;
-connectMeta.addEventListener('click', async () => {
-  if(!window.ethereum) return alert('MetaMask nicht gefunden');
-  try{
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    metaAccount = accounts[0];
-    metaAddr.textContent = metaAccount;
-    connectMeta.textContent = 'MetaMask connected';
-    connectMeta.disabled = true;
-  }catch(e){ console.error(e); alert('MetaMask connection cancelled'); }
-});
-
-/* =============================
-   PHANTOM (Solana) CONNECT
-   ============================= */
-const connectPhantom = el('connectPhantom');
-const phantomAddr = el('phantomAddr');
-let phantomAccount = null;
-connectPhantom.addEventListener('click', async () => {
-  if(!window.solana) return alert('Phantom not found');
-  try{
-    await window.solana.connect();
-    phantomAccount = window.solana.publicKey.toString();
-    phantomAddr.textContent = phantomAccount;
-    connectPhantom.textContent = 'Phantom connected';
-    connectPhantom.disabled = true;
-  }catch(e){ console.error(e); alert('Phantom connection cancelled'); }
-});
-
-/* =============================
-   GAME EDITOR / RUNNER
-   ============================= */
-const modal = el('gameModal');
-const gameCodeArea = el('gameCode');
-const gameFrame = el('gameFrame');
-const editorGameId = el('editorGameId');
-let currentEditing = null;
-
-// open editor for a game id
-function openEditor(gameId){
-  currentEditing = gameId;
-  editorGameId.textContent = 'Slot: ' + gameId;
-  // load stored code
-  const saved = localStorage.getItem(STORAGE_PREFIX + gameId) || getDefaultTemplate(gameId);
-  gameCodeArea.value = saved;
-  // preview
-  gameFrame.srcdoc = saved;
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
-}
-
-// default simple template (so user knows where to paste)
-function getDefaultTemplate(gameId){
-  return `<!doctype html>
-<html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Game ${gameId}</title>
-<style>body{margin:0;background:#071018;color:#fff;font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;}h1{color:#ffd37a}</style>
-</head>
-<body>
-  <h1>Game ${gameId} placeholder</h1>
-  <script>
-    // Paste your full game HTML/CSS/JS here.
-    // Example: simple alert to test
-    // alert('Game ${gameId} running!');
-  </script>
-</body>
-</html>`;
-}
-
-// bind run/save/close
-el('saveCode').addEventListener('click', () => {
-  if(!currentEditing) return;
-  localStorage.setItem(STORAGE_PREFIX + currentEditing, gameCodeArea.value);
-  alert('Saved to slot ' + currentEditing);
-});
-el('runCode').addEventListener('click', () => {
-  if(!currentEditing) return;
-  // run by setting srcdoc of iframe
-  gameFrame.srcdoc = gameCodeArea.value;
-});
-el('closeModal').addEventListener('click', () => {
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-  // stop any running code inside iframe by clearing srcdoc (optional)
-  // gameFrame.srcdoc = '';
-});
-el('clearCode').addEventListener('click', () => {
-  if(!currentEditing) return;
-  if(confirm('Delete saved code for slot ' + currentEditing + '?')){
-    localStorage.removeItem(STORAGE_PREFIX + currentEditing);
-    gameCodeArea.value = getDefaultTemplate(currentEditing);
-    gameFrame.srcdoc = gameCodeArea.value;
-  }
-});
-el('openInNew').addEventListener('click', () => {
-  // open current code in new tab via blob
-  const v = gameCodeArea.value || '';
-  const blob = new Blob([v], {type: 'text/html'});
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
-});
-
-// attach clicking on game cards
-for(let i=1;i<=12;i++){
-  const id = 'game-' + i;
-  const node = el(id);
-  if(!node) continue;
-  node.addEventListener('click', ()=> openEditor(i));
-  // display small saved status if exists
-  const saved = localStorage.getItem(STORAGE_PREFIX + i);
-  if(saved){
-    const sub = node.querySelector('.game-sub');
-    if(sub) sub.textContent = 'Saved';
-  }
-}
-
-/* =============================
-   CHATBOT (local)
-   ============================= */
-const chatMessages = el('chatMessages');
-const chatInput = el('chatInput');
-const chatSend = el('chatSend');
-
-function addChatMessage(text, who='bot'){
-  const d = document.createElement('div');
-  d.style.margin = '6px 0';
-  d.textContent = (who==='user' ? 'You: ' : 'Bot: ') + text;
-  chatMessages.appendChild(d);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-chatSend.addEventListener('click', ()=> {
-  const v = chatInput.value.trim();
-  if(!v) return;
-  addChatMessage(v, 'user');
-  chatInput.value = '';
-  setTimeout(()=> addChatMessage(simpleBotReply(v), 'bot'), 400);
-});
-chatInput.addEventListener('keypress', (e)=> { if(e.key==='Enter') chatSend.click(); });
-
-function simpleBotReply(t){
-  t = t.toLowerCase();
-  if(t.includes('hallo')||t.includes('hi')) return 'Hallo! Was möchtest du spielen?';
-  if(t.includes('wallet')) return 'MetaMask & Phantom Connect Buttons oben rechts.';
-  if(t.includes('help')||t.includes('hilfe')) return 'Klicke ein Spiel, füge Code ein, Save & Run.';
-  if(t.includes('zeit')||t.includes('uhr')) return 'Es ist ' + new Date().toLocaleTimeString();
-  return "Sorry, das weiß ich noch nicht – probier 'hilfe'.";
-}
-
-/* =============================
-   SCORE PANEL (local)
-   ============================= */
-function updateRankPanel(){
-  const obj = JSON.parse(localStorage.getItem(SCORE_KEY) || '{}');
-  const list = Object.keys(obj).sort((a,b)=> obj[b]-obj[a]).slice(0,6);
-  const rankList = el('rankList');
-  rankList.innerHTML = '';
-  if(list.length===0) rankList.innerHTML = '<div class="rank-item">No scores yet</div>';
-  list.forEach(k=>{
-    const d = document.createElement('div'); d.className='rank-item'; d.textContent = `${k}: ${obj[k]}`; rankList.appendChild(d);
-  });
-}
-updateRankPanel();
-
-/* =============================
-   SPECIAL EFFECTS ENGINE
-   - falling items (gurken, snow, ivy)
-   - sparks, fog, lightning
-   - cars driving, crashes
-   - runs in random cycles
-   ============================= */
-
-// helper
-function createFallingElement(char, size, duration){
-  const el = document.createElement('div');
-  el.className = 'falling';
-  el.innerHTML = char;
-  el.style.left = Math.random() * window.innerWidth + 'px';
-  el.style.fontSize = size + 'px';
-  el.style.animationDuration = (duration||rnd(3,6)) + 's';
-  el.style.zIndex = 2100 + Math.floor(Math.random()*100);
-  document.body.appendChild(el);
-  setTimeout(()=> el.remove(), (duration||5)*1000 + 500);
-}
-
-// start/stop patterns return interval id or element handle
-function startGurken(){ return setInterval(()=> createFallingElement('🥒', 36, rnd(3,5)), 220); }
-function startSnow(){ return setInterval(()=> createFallingElement('❄️', 26, rnd(4,7)), 160); }
-function startIvy(){ return setInterval(()=> createFallingElement('🍃', 30, rnd(4,6)), 240); }
-function startSparks(){
-  return setInterval(()=> {
-    const s = document.createElement('div');
-    s.innerHTML = '✨';
-    s.style.position='fixed';
-    s.style.left = Math.random()*window.innerWidth + 'px';
-    s.style.top  = (window.innerHeight*0.7 + Math.random()*120) + 'px';
-    s.style.fontSize = (10 + Math.random()*16)+'px';
-    s.style.zIndex = 2150;
-    s.style.animation = 'sparkRise 1.2s ease-out';
-    document.body.appendChild(s);
-    setTimeout(()=> s.remove(), 1600);
-  }, 90);
-}
-function startFogElement(){ const fog = el('fog'); fog.style.display='block'; return fog; }
-function stopFogElement(fog){ if(fog) fog.style.display='none'; }
-
-// lightning
-function flashLightningOnce(){
-  const l = document.createElement('div'); l.className='lightning';
-  l.style.animationDuration = (0.4 + Math.random()*0.6) + 's';
-  document.body.appendChild(l);
-  setTimeout(()=> l.remove(), 800);
-}
-
-// cars & crashes
-function spawnCarOnce(){
-  const c = document.createElement('div');
-  c.className='car';
-  c.innerHTML = ['🚗','🚙','🚕','🏎️'][Math.floor(Math.random()*4)];
-  c.style.left = '-120px';
-  c.style.bottom = (10 + Math.random()*120) + 'px';
-  c.style.fontSize = (32 + Math.random()*36) + 'px';
-  c.style.animationDuration = (3 + Math.random()*5) + 's';
-  document.body.appendChild(c);
-  setTimeout(()=> c.remove(), 11000);
-}
-// scheduled random cars every 20-40s
-setInterval(()=> {
-  spawnCarOnce();
-}, 20000 + Math.random()*20000);
-
-// crashes: every ~2min spawn two cars from opposite sides and show crash
-setInterval(()=> {
-  const a = document.createElement('div');
-  const b = document.createElement('div');
-  a.className = b.className = 'car';
-  a.innerHTML='🚗'; b.innerHTML='🚙';
-  a.style.left='-160px'; a.style.bottom='40px'; a.style.fontSize='48px'; a.style.animationDuration='3s';
-  b.style.right='-160px'; b.style.bottom='40px'; b.style.fontSize='48px'; b.style.animationDuration='3s';
-  b.style.position='fixed'; b.style.zIndex = 2401;
-  document.body.appendChild(a); document.body.appendChild(b);
-  // after 1.6s show crash
-  setTimeout(()=> {
-    a.innerHTML='💥'; b.remove();
-  }, 1600);
-  setTimeout(()=> a.remove(), 4000);
-}, 120000);
-
-// effect cycle (random durations and picks)
-let runningIntervals = []; // store intervals to clear
-function clearRunning(){
-  runningIntervals.forEach(x=>{
-    if(typeof x === 'number') clearInterval(x);
-    else if(x && x.remove) try{ x.remove(); }catch(e){}
-  });
-  runningIntervals = [];
-}
-function startRandomCycle(){
-  clearRunning();
-  const effects = [
-    {fn:startGurken, min:8000, max:15000},
-    {fn:startSnow, min:8000, max:15000},
-    {fn:startIvy, min:8000, max:15000},
-    {fn:startSparks, min:6000, max:12000},
-    {fn: ()=> { startFogElement(); return el('fog'); }, min:7000, max:16000}
-  ];
-  // pick 1-3 random effects to run concurrently
-  const pickCount = 1 + Math.floor(Math.random()*3);
-  const pick = [];
-  while(pick.length < pickCount){
-    const p = effects[Math.floor(Math.random()*effects.length)];
-    if(!pick.includes(p)) pick.push(p);
-  }
-  // start each with random duration
-  pick.forEach(e=>{
-    const handle = e.fn();
-    runningIntervals.push(handle);
-  });
-  // lightning chance
-  if(Math.random() < 0.45){
-    setTimeout(()=> flashLightningOnce(), 800 + Math.random()*2000);
-  }
-  // schedule next cycle after random 12-18s
-  setTimeout(()=> {
-    // clear (if intervals)
-    runningIntervals.forEach(h=>{ if(typeof h==='number') clearInterval(h); else if(h && h.id===undefined) { /*ignore*/ } });
-    runningIntervals = [];
-    startRandomCycle();
-  }, 12000 + Math.random()*6000);
-}
-// start cycles
-startRandomCycle();
-
-/* =============================
-   UTIL: simple random helper
-=============================*/
-function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    // Click handler für alle 12 Plätze
+    for (let i = 1; i <= 12; i++) {
+        document.getElementById("game" + i).addEventListener("click", () => {
+            alert("Hier kannst du später deinen Game-Code für Slot " + i + " einfügen.");
+        });
+    }
 </script>
+
 </body>
 </html>
