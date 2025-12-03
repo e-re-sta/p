@@ -1,268 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>OrangeWeb – 12 Games</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CitrusPortal</title>
 <style>
-    *{
-        margin:0; padding:0; box-sizing:border-box;
-        font-family:Arial, sans-serif;
-    }
+  /* --- Reset & Darkmode --- */
+  * { margin:0; padding:0; box-sizing:border-box; font-family:sans-serif; }
+  body { background:#111; color:#eee; overflow:hidden; }
+  a { color:inherit; text-decoration:none; }
 
-    body{
-        background:#0d0d0f;
-        color:white;
-        overflow:hidden;
-        transition:background 0.5s;
-    }
+  /* --- Container --- */
+  #overlay { position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; }
+  
+  header { width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+  #reloadBtn { background:#ff6600; border:none; padding:10px 15px; color:#fff; font-weight:bold; cursor:pointer; border-radius:5px; }
+  #connectWallet { background:#00ccff; border:none; padding:10px 15px; color:#000; font-weight:bold; cursor:pointer; border-radius:5px; }
 
-    /* Reload Button */
-    #reloadBtn{
-        position:fixed;
-        top:20px; left:20px;
-        background:#ff8800;
-        padding:10px 20px;
-        border-radius:8px;
-        cursor:pointer;
-        font-weight:bold;
-        box-shadow:0 0 10px #ff8800aa;
-        z-index:99999;
-    }
+  h1 { font-size:2rem; margin-bottom:10px; text-align:center; }
 
-    /* Dark Mode Toggle */
-    #darkToggle{
-        position:fixed;
-        top:20px; right:20px;
-        background:#444;
-        padding:10px 20px;
-        border-radius:8px;
-        cursor:pointer;
-        font-weight:bold;
-        box-shadow:0 0 10px #ffffff33;
-        z-index:99999;
-    }
+  /* --- Game Buttons --- */
+  #gameContainer { display:grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap:15px; width:100%; max-width:1000px; margin-bottom:20px; }
+  .gameBtn { background:#222; border:2px solid #555; border-radius:10px; padding:15px; cursor:pointer; text-align:center; transition:0.3s; font-weight:bold; color:#fff; }
+  .gameBtn:hover { border-color:#ff6600; transform:scale(1.05); }
 
-    /* Container */
-    .main-wrapper{
-        width:100vw;
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        overflow:hidden;
-        position:relative;
-    }
+  /* --- Status Panel --- */
+  #walletStatus { margin-bottom:20px; }
 
-    .games-grid{
-        display:grid;
-        grid-template-columns:repeat(3, 1fr);
-        gap:20px;
-        width:80%;
-        max-width:900px;
-        z-index:10;
-    }
+  /* --- Effects Canvas --- */
+  #effectsCanvas { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
 
-    .game-btn{
-        padding:30px;
-        border-radius:15px;
-        text-align:center;
-        background:#1a1a1d;
-        border:2px solid #ff8800;
-        color:white;
-        cursor:pointer;
-        transition:0.3s;
-        font-size:20px;
-        box-shadow:0 0 15px #ff880055;
-    }
-
-    .game-btn:hover{
-        background:#ff8800;
-        color:black;
-        transform:scale(1.05);
-    }
-
-    /* SPECIAL EFFECT CANVAS */
-    #fxCanvas{
-        position:fixed;
-        width:100%;
-        height:100%;
-        top:0; left:0;
-        pointer-events:none;
-        z-index:1;
-    }
-
+  /* --- Responsive --- */
+  @media(max-width:600px){ #gameContainer { grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); } }
 </style>
 </head>
 <body>
 
-<div id="reloadBtn">⟳ Reload</div>
-<div id="darkToggle">🌙 Dark</div>
+<div id="overlay">
+  <header>
+    <button id="reloadBtn">Reload</button>
+    <button id="connectWallet">Connect Wallet</button>
+  </header>
 
-<canvas id="fxCanvas"></canvas>
+  <h1>CitrusPortal</h1>
+  <div id="walletStatus">Wallet: <span id="walletAddr">Not Connected</span></div>
 
-<div class="main-wrapper">
-    <div class="games-grid">
-        <div class="game-btn">Game 1</div>
-        <div class="game-btn">Game 2</div>
-        <div class="game-btn">Game 3</div>
-        <div class="game-btn">Game 4</div>
-        <div class="game-btn">Game 5</div>
-        <div class="game-btn">Game 6</div>
-        <div class="game-btn">Game 7</div>
-        <div class="game-btn">Game 8</div>
-        <div class="game-btn">Game 9</div>
-        <div class="game-btn">Game 10</div>
-        <div class="game-btn">Game 11</div>
-        <div class="game-btn">Game 12</div>
-    </div>
+  <div id="gameContainer">
+    <!-- 12 Game Buttons -->
+    <div class="gameBtn" data-game="1">Game 1</div>
+    <div class="gameBtn" data-game="2">Game 2</div>
+    <div class="gameBtn" data-game="3">Game 3</div>
+    <div class="gameBtn" data-game="4">Game 4</div>
+    <div class="gameBtn" data-game="5">Game 5</div>
+    <div class="gameBtn" data-game="6">Game 6</div>
+    <div class="gameBtn" data-game="7">Game 7</div>
+    <div class="gameBtn" data-game="8">Game 8</div>
+    <div class="gameBtn" data-game="9">Game 9</div>
+    <div class="gameBtn" data-game="10">Game 10</div>
+    <div class="gameBtn" data-game="11">Game 11</div>
+    <div class="gameBtn" data-game="12">Game 12</div>
+  </div>
 </div>
 
+<canvas id="effectsCanvas"></canvas>
+
 <script>
-/* ----------------------------- RELOAD BUTTON ----------------------------- */
-document.getElementById("reloadBtn").addEventListener("click", () => {
-    location.reload();
+/* ======= GLOBAL CONFIG ======= */
+let walletAddress = ""; // <-- Hier einmal deine ETH/SOL Adresse eintragen
+let walletConnected = false;
+
+/* ======= PHANTOM / METAMASK CONNECT ======= */
+const connectBtn = document.getElementById('connectWallet');
+const walletSpan = document.getElementById('walletAddr');
+
+connectBtn.addEventListener('click', async ()=>{
+  if(window.solana && window.solana.isPhantom){
+    try{
+      const resp = await window.solana.connect();
+      walletAddress = resp.publicKey.toString();
+      walletConnected = true;
+      walletSpan.textContent = walletAddress;
+      alert("Phantom connected!");
+    }catch(e){ console.error(e); alert("Connection failed"); }
+  } else if(window.ethereum){
+    try{
+      const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
+      walletAddress = accounts[0];
+      walletConnected = true;
+      walletSpan.textContent = walletAddress;
+      alert("MetaMask connected!");
+    }catch(e){ console.error(e); alert("Connection failed"); }
+  } else {
+    alert("No wallet detected!");
+  }
 });
 
-/* ----------------------------- DARK MODE ----------------------------- */
-let dark = true;
-document.getElementById("darkToggle").addEventListener("click", () => {
-    dark = !dark;
-    if(dark){
-        document.body.style.background = "#0d0d0f";
-        document.getElementById("darkToggle").innerText = "🌙 Dark";
-    } else {
-        document.body.style.background = "#dcdcdc";
-        document.getElementById("darkToggle").innerText = "☀️ Light";
-    }
+/* ======= RELOAD BUTTON ======= */
+document.getElementById('reloadBtn').addEventListener('click', ()=>{
+  location.reload();
 });
 
-/* ---------------------------------------------------------------------------
-   SPECIAL EFFECTS ENGINE
-   THE EFFECTS RUN RANDOMLY IN SEQUENCES AND LOOP FOREVER
---------------------------------------------------------------------------- */
-const canvas = document.getElementById("fxCanvas");
-const ctx = canvas.getContext("2d");
+/* ======= GAME BUTTONS PLACEHOLDER ======= */
+document.querySelectorAll('.gameBtn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if(!walletConnected){ alert("Connect your wallet first!"); return; }
+    const gameId = btn.dataset.game;
+    alert("Game "+gameId+" clicked! Here you can load your game code.");
+    // Platzhalter: hier kannst du Game-Code einfügen oder ein iframe laden
+  });
+});
+
+/* ======= EFFECTS CANVAS ======= */
+const canvas = document.getElementById('effectsCanvas');
+const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let effects = [];
+window.addEventListener('resize', ()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+const effects = ["ranken","schnee","feuer","gurken","efeu"];
+let effectIndex = 0;
 let effectTimer = 0;
 
-/* --- PARTICLE CLASS --- */
-class Particle{
-    constructor(x,y,speedX,speedY,size,color){
-        this.x=x; this.y=y;
-        this.speedX=speedX; this.speedY=speedY;
-        this.size=size; this.color=color;
-    }
-    update(){
-        this.x+=this.speedX;
-        this.y+=this.speedY;
-        if(this.size>0.2) this.size-=0.02;
-    }
-    draw(){
-        ctx.fillStyle=this.color;
+// --- Effekte Zyklus ---
+function drawEffects(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  effectTimer++;
+  if(effectTimer > 300){ // wechsel alle 5 Sekunden (60fps)
+    effectTimer=0;
+    effectIndex = (effectIndex+1) % effects.length;
+  }
+  const effect = effects[effectIndex];
+
+  switch(effect){
+    case "ranken":
+      for(let i=0;i<10;i++){
+        ctx.strokeStyle = "lime";
         ctx.beginPath();
-        ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.moveTo(Math.random()*canvas.width,canvas.height);
+        ctx.lineTo(Math.random()*canvas.width,canvas.height - 50 - Math.random()*100);
+        ctx.stroke();
+      }
+      break;
+    case "schnee":
+      for(let i=0;i<50;i++){
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*3,0,Math.PI*2);
         ctx.fill();
-    }
+      }
+      break;
+    case "feuer":
+      for(let i=0;i<30;i++){
+        const x = Math.random()*canvas.width;
+        const y = canvas.height - Math.random()*100;
+        ctx.fillStyle = "orange";
+        ctx.fillRect(x,y,4,20);
+      }
+      break;
+    case "gurken":
+      for(let i=0;i<15;i++){
+        const x = Math.random()*canvas.width;
+        const y = Math.random()*canvas.height;
+        ctx.fillStyle = "green";
+        ctx.fillRect(x,y,5,10);
+      }
+      break;
+    case "efeu":
+      for(let i=0;i<15;i++){
+        const x = Math.random()*canvas.width;
+        const y = canvas.height - Math.random()*150;
+        ctx.strokeStyle = "darkgreen";
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.lineTo(x+Math.random()*30,canvas.height);
+        ctx.stroke();
+      }
+      break;
+  }
+  requestAnimationFrame(drawEffects);
 }
 
-/* --- EFFECT FUNCTIONS --- */
-function effectSnow(){
-    for(let i=0;i<10;i++){
-        effects.push(new Particle(
-            Math.random()*canvas.width,
-            -10,
-            Math.random()*0.5-0.25,
-            Math.random()*2+0.5,
-            Math.random()*3+2,
-            "white"
-        ));
-    }
-}
-
-function effectFire(){
-    for(let i=0;i<3;i++){
-        effects.push(new Particle(
-            canvas.width*Math.random(),
-            canvas.height-10,
-            Math.random()*2-1,
-            -Math.random()*4-2,
-            Math.random()*6+4,
-            "orange"
-        ));
-    }
-}
-
-function effectRain(){
-    for(let i=0;i<15;i++){
-        effects.push(new Particle(
-            Math.random()*canvas.width,
-            -10,
-            0,
-            Math.random()*6+4,
-            Math.random()*3+2,
-            "#66aaff"
-        ));
-    }
-}
-
-function effectCucumbers(){
-    for(let i=0;i<3;i++){
-        effects.push(new Particle(
-            Math.random()*canvas.width,
-            -10,
-            0,
-            Math.random()*3+2,
-            8,
-            "green"
-        ));
-    }
-}
-
-function effectVines(){
-    for(let i=0;i<2;i++){
-        effects.push(new Particle(
-            Math.random()*canvas.width,
-            Math.random()*canvas.height,
-            Math.random()*0.2-0.1,
-            Math.random()*0.2-0.1,
-            Math.random()*5+3,
-            "#1b8f3a"
-        ));
-    }
-}
-
-const effectList = [
-    effectSnow, effectFire, effectRain,
-    effectCucumbers, effectVines
-];
-
-/* --- LOOP --- */
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    /* RANDOM EFFECT EVERY 400ms */
-    effectTimer++;
-    if(effectTimer > 25){
-        effectTimer = 0;
-        let pick = effectList[Math.floor(Math.random()*effectList.length)];
-        pick();
-    }
-
-    effects.forEach((p, index)=>{
-        p.update();
-        p.draw();
-        if(p.size <= 0.2) effects.splice(index,1);
-    });
-
-    requestAnimationFrame(animate);
-}
-animate();
-
+drawEffects();
 </script>
 </body>
 </html>
