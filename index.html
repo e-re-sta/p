@@ -122,7 +122,187 @@
             alert("Hier kannst du später deinen Game-Code für Slot " + i + " einfügen.");
         });
     }
-</script>
+<style>
+/* Effekte Container */
+#effects-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
 
+/* Gurke */
+.cucumber {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background-image: url('https://i.imgur.com/6H1SC1i.png'); /* Gurke */
+    background-size: contain;
+    animation: fall 3s linear forwards;
+}
+
+/* Schneeflocke */
+.snowflake {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.9;
+    animation: snowFall 4s linear forwards;
+}
+
+/* Schnee auf Boden */
+#snow-ground {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0px;
+    background: white;
+    transition: height 1s;
+    z-index: 9000;
+    pointer-events: none;
+}
+
+/* Auto */
+.car {
+    position: fixed;
+    bottom: 20px;
+    left: -300px;
+    width: 250px;
+    height: 90px;
+    background-image: url('https://i.imgur.com/Ew1N0iU.png'); /* Auto */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: carDrive 6s linear forwards;
+    z-index: 9500;
+}
+
+/* Schneeräumer */
+.snowplow {
+    position: fixed;
+    bottom: 20px;
+    left: -350px;
+    width: 320px;
+    height: 110px;
+    background-image: url('https://i.imgur.com/Msws5Et.png'); /* Schneeräumer */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: plowDrive 7s linear forwards;
+    z-index: 9600;
+}
+
+/* ANIMATIONEN */
+@keyframes fall {
+    from { transform: translateY(-50px); }
+    to   { transform: translateY(120vh); }
+}
+
+@keyframes snowFall {
+    from { transform: translateY(-30px); }
+    to   { transform: translateY(120vh); }
+}
+
+@keyframes carDrive {
+    from { left: -300px; }
+    to   { left: 120%; }
+}
+
+@keyframes plowDrive {
+    from { left: -350px; }
+    to   { left: 120%; }
+}
+
+<div id="effects-container"></div>
+<div id="snow-ground"></div>
+
+<script>
+const effects = document.getElementById("effects-container");
+const snowGround = document.getElementById("snow-ground");
+
+function spawnCucumber() {
+    const c = document.createElement("div");
+    c.className = "cucumber";
+    c.style.left = Math.random() * 100 + "vw";
+    effects.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+}
+
+function spawnSnow() {
+    const s = document.createElement("div");
+    s.className = "snowflake";
+    s.style.left = Math.random() * 100 + "vw";
+    effects.appendChild(s);
+    setTimeout(() => s.remove(), 4000);
+}
+
+function spawnCar() {
+    const car = document.createElement("div");
+    car.className = "car";
+    effects.appendChild(car);
+    setTimeout(() => car.remove(), 6000);
+}
+
+function spawnSnowplow() {
+    const plow = document.createElement("div");
+    plow.className = "snowplow";
+    effects.appendChild(plow);
+
+    // Wenn Schneeräumer kommt → Boden Schnee wegschieben
+    setTimeout(() => {
+        snowGround.style.height = "0px";
+    }, 2000);
+
+    setTimeout(() => plow.remove(), 7000);
+}
+
+/* --------------------
+   EFFEKT SEQUENZ
+-------------------- */
+async function playSequence() {
+
+    // 1️⃣ 15s Gurken + Auto
+    for (let t = 0; t < 15 * 3; t++) setTimeout(spawnCucumber, t * 300);
+    spawnCar();
+    await new Promise(r => setTimeout(r, 15000));
+
+    // 2️⃣ 22s Schnee
+    snowGround.style.height = "80px";
+    for (let t = 0; t < 22 * 3; t++) setTimeout(spawnSnow, t * 300);
+    // 5 Sekunden vor Ende: Schneeräumer
+    setTimeout(spawnSnowplow, (22 - 5) * 1000);
+    await new Promise(r => setTimeout(r, 22000));
+
+    // 3️⃣ 35s Gurken
+    for (let t = 0; t < 35 * 3; t++) setTimeout(spawnCucumber, t * 300);
+    await new Promise(r => setTimeout(r, 35000));
+
+    // 4️⃣ 15s Schnee
+    snowGround.style.height = "80px";
+    for (let t = 0; t < 15 * 3; t++) setTimeout(spawnSnow, t * 300);
+    setTimeout(spawnSnowplow, (15 - 5) * 1000);
+    await new Promise(r => setTimeout(r, 15000));
+
+    // 5️⃣ 22s Gurken
+    for (let t = 0; t < 22 * 3; t++) setTimeout(spawnCucumber, t * 300);
+    await new Promise(r => setTimeout(r, 22000));
+
+    // 6️⃣ 35s Schnee
+    snowGround.style.height = "80px";
+    for (let t = 0; t < 35 * 3; t++) setTimeout(spawnSnow, t * 300);
+    setTimeout(spawnSnowplow, (35 - 5) * 1000);
+    await new Promise(r => setTimeout(r, 35000));
+
+    // Wiederholen
+    playSequence();
+}
+
+playSequence();
+</script>
 </body>
 </html>
