@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+o.<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -121,7 +121,28 @@
 </div>
 
 <script>
+    
+function createBackButton() {
+    const back = document.createElement("div");
+    back.textContent = "← Zurück zur Arcade";
+    back.style.position = "fixed";
+    back.style.top = "15px";
+    back.style.left = "15px";
+    back.style.padding = "10px 16px";
+    back.style.background = "#11161c";
+    back.style.border = "1px solid #222";
+    back.style.borderRadius = "6px";
+    back.style.cursor = "pointer";
+    back.style.color = "white";
+    back.style.fontFamily = "Arial";
+    back.style.fontSize = "14px";
+    back.style.zIndex = "9999";
+    back.style.userSelect = "none";
 
+    back.onclick = () => location.reload();
+
+    document.body.appendChild(back);
+}
 /* -----------------------------------------------------
    GAME 1 – GARDEN GAME (reines JavaScript)
 ----------------------------------------------------- */
@@ -129,6 +150,7 @@
 function startGardenGame() {
 
     document.body.innerHTML = "";
+    createBackButton();
     document.body.style.margin = "0";
     document.body.style.background = "#0b0e11";
     document.body.style.color = "white";
