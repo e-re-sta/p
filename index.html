@@ -243,6 +243,158 @@
 
     setTimeout(() => botReply("Interessant 👀"), 500);
   };
+<style>
+/* 🔥 Feuer am Rand */
+.fire-edge {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    animation: fireGlow 0.2s infinite;
+    box-shadow: 0 0 50px 20px rgba(255,100,0,0.8) inset;
+    z-index: 9999;
+}
+
+@keyframes fireGlow {
+    0%   { box-shadow: 0 0 40px 15px rgba(255,120,0,0.7) inset; }
+    50%  { box-shadow: 0 0 60px 25px rgba(255,30,0,0.9) inset; }
+    100% { box-shadow: 0 0 40px 15px rgba(255,120,0,0.7) inset; }
+}
+
+/* Animation für fallende Elemente (Gurken & Schnee) */
+@keyframes fallDown {
+    from { transform: translateY(-50px); opacity: 1; }
+    to   { transform: translateY(110vh); opacity: 0; }
+}
+
+/* Autos */
+.car {
+    position: fixed;
+    bottom: 20px;
+    font-size: 40px;
+    z-index: 9999;
+    white-space: nowrap;
+    animation: drive linear;
+}
+
+@keyframes drive {
+    from { transform: translateX(-200px); }
+    to   { transform: translateX(120vw); }
+}
+</style>
+
+<div class="fire-edge"></div>
+
+/* ============================
+   🥒 GURKEN-REGEN
+============================ */
+function startCucumberRain() {
+    const interval = setInterval(() => {
+        let c = document.createElement("div");
+        c.innerHTML = "🥒";
+        c.style.position = "fixed";
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.top = "-50px";
+        c.style.fontSize = "28px";
+        c.style.animation = "fallDown 4s linear";
+        c.style.zIndex = 5000;
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+    }, 250);
+
+    return interval;
+}
+
+/* ============================
+   ❄️ SCHNEEFLOCKEN
+============================ */
+function startSnow() {
+    const interval = setInterval(() => {
+        let s = document.createElement("div");
+        s.innerHTML = "❄️";
+        s.style.position = "fixed";
+        s.style.left = Math.random() * window.innerWidth + "px";
+        s.style.top = "-50px";
+        s.style.fontSize = (Math.random()*15+15) + "px";
+        s.style.opacity = Math.random()+0.3;
+        s.style.animation = "fallDown " + (Math.random()*4+3) + "s linear";
+        s.style.zIndex = 4000;
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 5000);
+    }, 150);
+
+    return interval;
+}
+
+/* ============================
+   🚗 AUTOS
+============================ */
+const carIcons = ["🚗", "🚙", "🚕", "🏎️", "🚓"];
+
+function spawnCar() {
+    let car = document.createElement("div");
+    car.classList.add("car");
+    car.innerHTML = carIcons[Math.floor(Math.random()*carIcons.length)];
+
+    car.style.bottom = (Math.random()*40 + 10) + "px";         // Höhe
+    car.style.fontSize = (Math.random()*20+35) + "px";         // Größe
+    car.style.animationDuration = (Math.random()*3+3) + "s";   // Geschwindigkeit
+
+    document.body.appendChild(car);
+    setTimeout(() => car.remove(), 6000);
+}
+
+/* Autos fahren zufällig alle paar Sekunden */
+setInterval(spawnCar, 3000 + Math.random()*3000);
+
+/* ============================
+   🔄 ABWECHSELNDE LOGIK
+============================ */
+function cycleEffects() {
+    let cucumber = null;
+    let snow = null;
+
+    function startCukes() {
+        cucumber = startCucumberRain();
+    }
+    function stopCukes() {
+        clearInterval(cucumber);
+    }
+
+    function startSnowing() {
+        snow = startSnow();
+    }
+    function stopSnowing() {
+        clearInterval(snow);
+    }
+
+    // Ablauf:
+    // 1.  Gurken (5s)
+    // 2.  Pause (1s)
+    // 3.  Schnee (6s)
+    // 4.  Pause (1s)
+    // 5.  Wiederholen
+
+    function loop() {
+        startCukes();
+        setTimeout(() => {
+            stopCukes();
+        }, 5000);
+
+        setTimeout(() => {
+            startSnowing();
+        }, 6000);
+
+        setTimeout(() => {
+            stopSnowing();
+        }, 12000);
+
+        setTimeout(loop, 13000);
+    }
+
+    loop();
+}
+
+cycleEffects();
 </script>
 
 </body>
