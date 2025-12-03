@@ -514,28 +514,6 @@ const gameData = {
         `
     },
 
-    // ----------------------------------------------------
-    // ░░░ GAME 3–12 ░░░ (Platzhalter)
-    // ----------------------------------------------------
-    3: { html: "<h2 style='color:white;text-align:center'>Game 3 kommt später</h2>", js: "" },
-    4: { html: "<h2 style='color:white;text-align:center'>Game 4 kommt später</h2>", js: "" },
-    5: { html: "<h2 style='color:white;text-align:center'>Game 5 kommt später</h2>", js: "" },
-    6: { html: "<h2 style='color:white;text-align:center'>Game 6 kommt später</h2>", js: "" },
-    7: { html: "<h2 style='color:white;text-align:center'>Game 7 kommt später</h2>", js: "" },
-    8: { html: "<h2 style='color:white;text-align:center'>Game 8 kommt später</h2>", js: "" },
-    9: { html: "<h2 style='color:white;text-align:center'>Game 9 kommt später</h2>", js: "" },
-    10: { html: "<h2 style='color:white;text-align:center'>Game 10 kommt später</h2>", js: "" },
-    11: { html: "<h2 style='color:white;text-align:center'>Game 11 kommt später</h2>", js: "" },
-    12: { html: "<h2 style='color:white;text-align:center'>Game 12 kommt später</h2>", js: "" }
-};
-
-// Play-Buttons aktivieren
-document.querySelectorAll(".play").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const id = btn.parentElement.id.replace("game", "");
-        openGame(id);
-    });
-});
 
 </script>
 
