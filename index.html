@@ -1,463 +1,268 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CitrusArcade — Pay Portal</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrangeWeb – 12 Games</title>
+
 <style>
-:root{
-  --bg:#07080b; --panel:#0f1519; --accent:#ff7a00; --accent-2:#ffaa33; --muted:#98a4b3;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#050607 0,#071017 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
-header{width:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:18px 16px;display:flex;align-items:center;gap:14px}
-.logo{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.06);display:grid;place-items:center}
-.brand-title{font-weight:800;color:#06121a}
-.header-right{margin-left:auto;display:flex;gap:10px;align-items:center}
-.container{width:100%;max-width:1200px;padding:20px}
-.top-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
-.title-block{max-width:66%}
-.h1{font-size:20px;font-weight:800;margin:0}
-.desc{color:var(--muted);margin-top:6px;font-size:14px}
-.wallet-panel{display:flex;gap:10px;align-items:center}
-.btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.04);padding:10px 12px;border-radius:10px;color:#fff;cursor:pointer}
-.btn.primary{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#000;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:14px;border-radius:12px;cursor:pointer;min-height:110px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .18s,box-shadow .18s}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(0,0,0,0.5)}
-.card .title{color:var(--accent);font-weight:800}
-.card .sub{color:var(--muted);font-size:13px;margin-top:6px}
+    *{
+        margin:0; padding:0; box-sizing:border-box;
+        font-family:Arial, sans-serif;
+    }
 
-/* modal */
-.modal{display:none;position:fixed;inset:0;background:linear-gradient(180deg,rgba(2,2,2,0.6),rgba(2,2,2,0.85));z-index:2000;align-items:center;justify-content:center}
-.modal .box{width:90%;max-width:720px;background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-.modal .row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px}
+    body{
+        background:#0d0d0f;
+        color:white;
+        overflow:hidden;
+        transition:background 0.5s;
+    }
 
-/* special effects layers */
-.layer-gurken, .layer-efeu, .layer-fire, .layer-snow { pointer-events:none; position:fixed; inset:0; z-index:1200; overflow:hidden; }
-.gurke{position:absolute; transform:rotate(-10deg); animation:fall linear; font-size:26px}
-@keyframes fall{ from{ transform:translateY(-10vh) rotate(-10deg) } to{ transform:translateY(120vh) rotate(20deg) } }
+    /* Reload Button */
+    #reloadBtn{
+        position:fixed;
+        top:20px; left:20px;
+        background:#ff8800;
+        padding:10px 20px;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:bold;
+        box-shadow:0 0 10px #ff8800aa;
+        z-index:99999;
+    }
 
-.efeu{position:absolute; left:0; top:0; width:60px; bottom:0; background:linear-gradient(180deg, rgba(0,120,50,0.04), rgba(0,80,40,0.02)); transform-origin:left top; border-radius:0 8px 8px 0; opacity:0.95}
-.fire-edge{position:absolute; top:0; bottom:0; width:60px; background:linear-gradient(180deg, rgba(255,90,0,0.09), rgba(255,20,0,0.03)); pointer-events:none}
-.fire-left{left:0}
-.fire-right{right:0; transform:scaleX(-1);}
+    /* Dark Mode Toggle */
+    #darkToggle{
+        position:fixed;
+        top:20px; right:20px;
+        background:#444;
+        padding:10px 20px;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:bold;
+        box-shadow:0 0 10px #ffffff33;
+        z-index:99999;
+    }
 
-.snowflake{position:absolute;color:#eaf4ff; font-size:16px; opacity:0.9; animation:snowFall linear}
-@keyframes snowFall{ from{ transform:translateY(-8vh) } to{ transform:translateY(120vh) } }
+    /* Container */
+    .main-wrapper{
+        width:100vw;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        overflow:hidden;
+        position:relative;
+    }
 
-.rank-panel{position:fixed;right:18px;top:92px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);width:160px;z-index:1300}
-.rank-panel h4{margin:0;color:var(--accent);font-size:13px}
-.rank-item{font-size:13px;color:var(--muted);margin-top:8px}
+    .games-grid{
+        display:grid;
+        grid-template-columns:repeat(3, 1fr);
+        gap:20px;
+        width:80%;
+        max-width:900px;
+        z-index:10;
+    }
 
-/* small footer */
-.footer{width:100%;max-width:1200px;padding:18px;color:var(--muted);font-size:13px;text-align:center;margin-top:16px}
+    .game-btn{
+        padding:30px;
+        border-radius:15px;
+        text-align:center;
+        background:#1a1a1d;
+        border:2px solid #ff8800;
+        color:white;
+        cursor:pointer;
+        transition:0.3s;
+        font-size:20px;
+        box-shadow:0 0 15px #ff880055;
+    }
 
-/* responsive */
-@media (max-width:700px){
-  .top-row{flex-direction:column;align-items:flex-start}
-  .title-block{max-width:100%}
-}
+    .game-btn:hover{
+        background:#ff8800;
+        color:black;
+        transform:scale(1.05);
+    }
+
+    /* SPECIAL EFFECT CANVAS */
+    #fxCanvas{
+        position:fixed;
+        width:100%;
+        height:100%;
+        top:0; left:0;
+        pointer-events:none;
+        z-index:1;
+    }
+
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo" aria-hidden="true">
-    <!-- simple svg icon -->
-    <svg viewBox="0 0 64 64" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="60" height="60" rx="12" fill="#071018"/>
-      <circle cx="22" cy="26" r="10" fill="#ff7a00"/>
-      <path d="M36 18h18v14c0 6-5 10-11 10H36V18z" fill="#ffd37a" opacity="0.95"/>
-    </svg>
-  </div>
-  <div style="margin-left:10px">
-    <div class="brand-title">CitrusArcade</div>
-    <div style="font-size:12px;color:#071018">Pay portal — ETH & Solflare</div>
-  </div>
+<div id="reloadBtn">⟳ Reload</div>
+<div id="darkToggle">🌙 Dark</div>
 
-  <div class="header-right">
-    <div id="addrDisplay" style="color:#071018;background:rgba(255,255,255,0.12);padding:8px 10px;border-radius:8px;font-weight:700">Not connected</div>
-    <button id="connectMeta" class="btn">Connect MetaMask</button>
-  </div>
-</header>
+<canvas id="fxCanvas"></canvas>
 
-<div class="container">
-  <div class="top-row">
-    <div class="title-block">
-      <div class="h1">12 Games — pay to unlock</div>
-      <div class="desc">MetaMask connection is required to interact. Sol payments use Solflare. Configure addresses in the CONFIG at the bottom.</div>
+<div class="main-wrapper">
+    <div class="games-grid">
+        <div class="game-btn">Game 1</div>
+        <div class="game-btn">Game 2</div>
+        <div class="game-btn">Game 3</div>
+        <div class="game-btn">Game 4</div>
+        <div class="game-btn">Game 5</div>
+        <div class="game-btn">Game 6</div>
+        <div class="game-btn">Game 7</div>
+        <div class="game-btn">Game 8</div>
+        <div class="game-btn">Game 9</div>
+        <div class="game-btn">Game 10</div>
+        <div class="game-btn">Game 11</div>
+        <div class="game-btn">Game 12</div>
     </div>
-    <div>
-      <div class="wallet-panel">
-        <button id="testPay" class="btn primary">Test Pay Flow</button>
-      </div>
-    </div>
-  </div>
-
-  <section class="grid" id="grid"></section>
 </div>
 
-<div class="rank-panel" id="rankPanel">
-  <h4>Top Scores</h4>
-  <div id="rankList"><div class="rank-item">No scores yet</div></div>
-</div>
-
-<!-- special effects layers -->
-<div class="layer-gurken" id="layerGurken"></div>
-<div class="layer-efeu" id="layerEfeu"></div>
-<div class="layer-fire" id="layerFire"></div>
-<div class="layer-snow" id="layerSnow"></div>
-
-<!-- modal for payment/details -->
-<div class="modal" id="modal">
-  <div class="box">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div id="modalTitle" style="font-weight:800"></div>
-      <div class="small-muted" id="modalSub"></div>
-    </div>
-
-    <div style="margin-top:12px;color:var(--muted)">You must be connected with MetaMask to proceed. Choose payment method: ETH (MetaMask) or SOL (Solflare).</div>
-
-    <div class="row" style="margin-top:14px">
-      <div style="display:flex;gap:10px;align-items:center">
-        <button id="payEthBtn" class="btn primary">Pay with ETH</button>
-        <button id="paySolBtn" class="btn">Pay with SOL (Solflare)</button>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button id="closeModal" class="btn">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="footer">Frontend-only. Insert ETH/SOL wallet once in CONFIG. MetaMask required to operate.</div>
-
-<!-- scripts for web3 + solflare support (if available) -->
-<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
-<!-- Solflare web extension exposes window.solflare in many installs; we will detect it -->
 <script>
-/* ============================
-   CONFIG — edit only here
-   ============================ */
-const CONFIG = {
-  ETH_ADDRESS: "YOUR_ETH_ADDRESS_HERE",
-  SOL_ADDRESS: "YOUR_SOL_ADDRESS_HERE",
-  ETH_AMOUNT: 0.00012,
-  SOL_AMOUNT: 0.0006
-};
-
-/* ============================
-   Simple UI + Payment + Effects
-   ============================ */
-const grid = document.getElementById('grid');
-for(let i=1;i<=12;i++){
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `<div><div class="title">Game ${i}</div><div class="sub">${i===1?'Demo available':'Pay to unlock'}</div></div>
-                    <div style="display:flex;justify-content:flex-end"><small class="small-muted">OPEN</small></div>`;
-  card.addEventListener('click', ()=> onCardClick(i));
-  grid.appendChild(card);
-}
-
-/* wallet state */
-let metaConnected = false;
-let metaAccount = null;
-
-/* UI elements */
-const connectMetaBtn = document.getElementById('connectMeta');
-const addrDisplay = document.getElementById('addrDisplay');
-const modal = document.getElementById('modal');
-const modalTitle = document.getElementById('modalTitle');
-const closeModal = document.getElementById('closeModal');
-const payEthBtn = document.getElementById('payEthBtn');
-const paySolBtn = document.getElementById('paySolBtn');
-const testPay = document.getElementById('testPay');
-
-/* connect meta */
-connectMetaBtn.addEventListener('click', connectMetaMask);
-async function connectMetaMask(){
-  if(typeof window.ethereum === 'undefined'){ alert('MetaMask not found — install MetaMask.'); return; }
-  try{
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    metaAccount = accounts[0];
-    metaConnected = true;
-    addrDisplay.textContent = shorten(metaAccount);
-    connectMetaBtn.textContent = 'MetaMask connected';
-    connectMetaBtn.disabled = true;
-  }catch(e){
-    console.error(e); alert('MetaMask connection canceled.');
-  }
-}
-function shorten(a){ return a ? (a.slice(0,6)+'...'+a.slice(-4)) : 'Not connected'; }
-
-/* card click behavior: require MetaMask connection */
-function onCardClick(i){
-  if(!metaConnected){
-    if(confirm('MetaMask must be connected to proceed. Connect now?')){
-      connectMetaMask();
-    }
-    return;
-  }
-  openModalForGame(i);
-}
-
-/* modal open */
-function openModalForGame(i){
-  modalTitle.textContent = `Game ${i} — Payment`;
-  modal.style.display = 'flex';
-  payEthBtn.disabled = false;
-  paySolBtn.disabled = false;
-  // bind handlers
-  payEthBtn.onclick = async ()=> {
-    payEthBtn.disabled = true;
-    const ok = await payWithETH(CONFIG.ETH_AMOUNT);
-    if(ok){ alert('Payment successful — unlock logic goes here'); modal.style.display='none' }
-    payEthBtn.disabled = false;
-  };
-  paySolBtn.onclick = async ()=> {
-    paySolBtn.disabled = true;
-    const ok = await payWithSolflare(CONFIG.SOL_AMOUNT);
-    if(ok){ alert('Sol payment successful — unlock logic goes here'); modal.style.display='none' }
-    paySolBtn.disabled = false;
-  };
-}
-closeModal.addEventListener('click', ()=> modal.style.display='none');
-
-/* test pay */
-testPay.addEventListener('click', ()=>{
-  if(!metaConnected){ alert('Connect MetaMask first'); return; }
-  alert('Test pay flow — opens modal for game 2'); openModalForGame(2);
+/* ----------------------------- RELOAD BUTTON ----------------------------- */
+document.getElementById("reloadBtn").addEventListener("click", () => {
+    location.reload();
 });
 
-/* ===== Payment functions ===== */
-async function payWithETH(amount){
-  if(!metaConnected){ alert('MetaMask not connected'); return false; }
-  try{
-    const web3 = new Web3(window.ethereum);
-    const from = metaAccount;
-    const value = web3.utils.toWei(amount.toString(),'ether');
-    await web3.eth.sendTransaction({ from, to: CONFIG.ETH_ADDRESS, value });
-    return true;
-  }catch(e){ console.error('ETH pay err', e); alert('ETH pay failed'); return false; }
-}
-
-async function payWithSolflare(amount){
-  // Solflare extension usually injects window.solflare (or window.solana for Phantom)
-  const solObj = window.solflare || window.solana;
-  if(!solObj){ alert('No Solana wallet (Solflare/Phantom) found in this browser.'); return false; }
-  try{
-    // ensure connected
-    await solObj.connect();
-    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
-    const fromPub = solObj.publicKey;
-    const toPub = new solanaWeb3.PublicKey(CONFIG.SOL_ADDRESS);
-    const tx = new solanaWeb3.Transaction().add(
-      solanaWeb3.SystemProgram.transfer({ fromPubkey: fromPub, toPubkey: toPub, lamports: Math.round(amount * solanaWeb3.LAMPORTS_PER_SOL) })
-    );
-    const signed = await solObj.signAndSendTransaction(tx);
-    await connection.confirmTransaction(signed.signature);
-    return true;
-  }catch(e){ console.error('SOL pay err', e); alert('SOL pay failed'); return false; }
-}
-
-/* =========================
-   Special Effects Engine
-   - pattern sequence 5-7-12-6-8-10-6 (seconds)
-   - repeat 20 times, mix randomly
-   - effects: ranken (ivy), gurken (cucumber) rain, fire edges, snow, snow+stick (liegendbleiben)
-   - efeu grows over 20s: speed ramp
-   ========================= */
-const patternSeq = [5,7,12,6,8,10,6]; // seconds
-const effectTypes = ['ranken','gurken','fire','snow','snow_sticky','efeu'];
-const layerGurken = document.getElementById('layerGurken');
-const layerEfeu = document.getElementById('layerEfeu');
-const layerFire = document.getElementById('layerFire');
-const layerSnow = document.getElementById('layerSnow');
-
-let effectTimeline = []; // array of {type,duration}
-function buildTimeline(){
-  effectTimeline = [];
-  for(let round=0; round<20; round++){
-    // shuffle pattern order a bit
-    let seq = patternSeq.slice();
-    // random shuffle
-    for(let i=seq.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      [seq[i],seq[j]]=[seq[j],seq[i]];
+/* ----------------------------- DARK MODE ----------------------------- */
+let dark = true;
+document.getElementById("darkToggle").addEventListener("click", () => {
+    dark = !dark;
+    if(dark){
+        document.body.style.background = "#0d0d0f";
+        document.getElementById("darkToggle").innerText = "🌙 Dark";
+    } else {
+        document.body.style.background = "#dcdcdc";
+        document.getElementById("darkToggle").innerText = "☀️ Light";
     }
-    // pair with random effect types
-    seq.forEach(dur=>{
-      const t = effectTypes[Math.floor(Math.random()*effectTypes.length)];
-      effectTimeline.push({type:t,duration:dur});
+});
+
+/* ---------------------------------------------------------------------------
+   SPECIAL EFFECTS ENGINE
+   THE EFFECTS RUN RANDOMLY IN SEQUENCES AND LOOP FOREVER
+--------------------------------------------------------------------------- */
+const canvas = document.getElementById("fxCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let effects = [];
+let effectTimer = 0;
+
+/* --- PARTICLE CLASS --- */
+class Particle{
+    constructor(x,y,speedX,speedY,size,color){
+        this.x=x; this.y=y;
+        this.speedX=speedX; this.speedY=speedY;
+        this.size=size; this.color=color;
+    }
+    update(){
+        this.x+=this.speedX;
+        this.y+=this.speedY;
+        if(this.size>0.2) this.size-=0.02;
+    }
+    draw(){
+        ctx.fillStyle=this.color;
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.fill();
+    }
+}
+
+/* --- EFFECT FUNCTIONS --- */
+function effectSnow(){
+    for(let i=0;i<10;i++){
+        effects.push(new Particle(
+            Math.random()*canvas.width,
+            -10,
+            Math.random()*0.5-0.25,
+            Math.random()*2+0.5,
+            Math.random()*3+2,
+            "white"
+        ));
+    }
+}
+
+function effectFire(){
+    for(let i=0;i<3;i++){
+        effects.push(new Particle(
+            canvas.width*Math.random(),
+            canvas.height-10,
+            Math.random()*2-1,
+            -Math.random()*4-2,
+            Math.random()*6+4,
+            "orange"
+        ));
+    }
+}
+
+function effectRain(){
+    for(let i=0;i<15;i++){
+        effects.push(new Particle(
+            Math.random()*canvas.width,
+            -10,
+            0,
+            Math.random()*6+4,
+            Math.random()*3+2,
+            "#66aaff"
+        ));
+    }
+}
+
+function effectCucumbers(){
+    for(let i=0;i<3;i++){
+        effects.push(new Particle(
+            Math.random()*canvas.width,
+            -10,
+            0,
+            Math.random()*3+2,
+            8,
+            "green"
+        ));
+    }
+}
+
+function effectVines(){
+    for(let i=0;i<2;i++){
+        effects.push(new Particle(
+            Math.random()*canvas.width,
+            Math.random()*canvas.height,
+            Math.random()*0.2-0.1,
+            Math.random()*0.2-0.1,
+            Math.random()*5+3,
+            "#1b8f3a"
+        ));
+    }
+}
+
+const effectList = [
+    effectSnow, effectFire, effectRain,
+    effectCucumbers, effectVines
+];
+
+/* --- LOOP --- */
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    /* RANDOM EFFECT EVERY 400ms */
+    effectTimer++;
+    if(effectTimer > 25){
+        effectTimer = 0;
+        let pick = effectList[Math.floor(Math.random()*effectList.length)];
+        pick();
+    }
+
+    effects.forEach((p, index)=>{
+        p.update();
+        p.draw();
+        if(p.size <= 0.2) effects.splice(index,1);
     });
-  }
-  // now we want roughly 220 words of mixing? interpret as 220 effect entries limit => trim or expand
-  if(effectTimeline.length > 220) effectTimeline = effectTimeline.slice(0,220);
-}
-buildTimeline();
 
-let timelineIndex = 0;
-let effectTimer = null;
+    requestAnimationFrame(animate);
+}
+animate();
 
-function startEffects(){
-  timelineIndex = 0;
-  runNextEffect();
-}
-function runNextEffect(){
-  if(timelineIndex >= effectTimeline.length){ timelineIndex=0; buildTimeline(); } // loop
-  const item = effectTimeline[timelineIndex++];
-  activateEffect(item.type, item.duration);
-  // schedule next after item.duration seconds
-  effectTimer = setTimeout(runNextEffect, item.duration * 1000);
-}
-
-/* activate */
-function activateEffect(type, duration){
-  // clear all layers first
-  clearAllEffects();
-  if(type === 'ranken'){
-    startRanken(duration);
-  }else if(type === 'gurken'){
-    startGurken(duration);
-  }else if(type === 'fire'){
-    startFire(duration);
-  }else if(type === 'snow'){
-    startSnow(duration,false);
-  }else if(type === 'snow_sticky'){
-    startSnow(duration,true); // sticky = lying on ground effect
-  }else if(type === 'efeu'){
-    startEfeu(duration);
-  }
-}
-
-/* clear */
-function clearAllEffects(){
-  layerGurken.innerHTML=''; layerEfeu.innerHTML=''; layerFire.innerHTML=''; layerSnow.innerHTML='';
-}
-
-/* -- Ranken (ivy) growth at sides for duration (visual) -- */
-function startRanken(duration){
-  // create left and right ivy strips that animate small movement
-  const left = document.createElement('div'); left.className='efeu'; left.style.left='0'; left.style.opacity='0.95';
-  const right = document.createElement('div'); right.className='efeu'; right.style.right='0';
-  layerEfeu.appendChild(left); layerEfeu.appendChild(right);
-
-  // animate subtle sway using CSS transform via JS
-  let t0 = performance.now();
-  function sway(now){
-    const elapsed = (now - t0)/1000;
-    const speed = 0.6 + Math.min(3, elapsed/ (duration) * 2);
-    left.style.transform = `translateY(${Math.sin(elapsed*speed)*6}px)`;
-    right.style.transform = `translateY(${Math.cos(elapsed*speed)*6}px)`;
-    if(elapsed < duration) requestAnimationFrame(sway); else { left.remove(); right.remove(); }
-  }
-  requestAnimationFrame(sway);
-}
-
-/* -- Gurkenregen (cucumber rain) -- */
-function startGurken(duration){
-  const spawnInterval = 250; // ms
-  let spawnCount = Math.ceil(duration * 1000 / spawnInterval);
-  let cnt=0;
-  const iv = setInterval(()=>{
-    cnt++; spawnSingleGurke();
-    if(cnt>=spawnCount){ clearInterval(iv); }
-  }, spawnInterval);
-}
-function spawnSingleGurke(){
-  const g = document.createElement('div'); g.className='gurke';
-  g.style.left = Math.random()*100 + 'vw';
-  g.style.fontSize = (18 + Math.random()*28) + 'px';
-  g.style.animationDuration = (4 + Math.random()*6) + 's';
-  g.textContent = '🥒';
-  layerGurken.appendChild(g);
-  setTimeout(()=> g.remove(), 12000);
-}
-
-/* -- Fire edges -- */
-function startFire(duration){
-  // left and right flames
-  const left = document.createElement('div'); left.className='fire-left fire-edge';
-  const right = document.createElement('div'); right.className='fire-right fire-edge';
-  layerFire.appendChild(left); layerFire.appendChild(right);
-  setTimeout(()=>{ left.remove(); right.remove(); }, duration*1000);
-}
-
-/* -- Snow (and sticky snow lying on ground) -- */
-function startSnow(duration, sticky){
-  const spawnInterval = 180;
-  let ivCount=0;
-  const iv = setInterval(()=>{
-    spawnSnowflake(sticky);
-    ivCount++;
-    if(ivCount*spawnInterval > duration*1000){ clearInterval(iv); if(sticky) makeSnowPatch(); }
-  }, spawnInterval);
-}
-function spawnSnowflake(sticky){
-  const s = document.createElement('div'); s.className='snowflake';
-  s.style.left = Math.random()*100 + 'vw';
-  s.style.fontSize = (10 + Math.random()*20) + 'px';
-  s.style.animationDuration = (4 + Math.random()*6) + 's';
-  s.textContent = '❄️';
-  layerSnow.appendChild(s);
-  setTimeout(()=> s.remove(), 12000);
-}
-function makeSnowPatch(){
-  const p = document.createElement('div');
-  p.style.position='absolute'; p.style.left='0'; p.style.right='0'; p.style.bottom='0'; p.style.height='40px';
-  p.style.background='linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06))';
-  layerSnow.appendChild(p);
-  setTimeout(()=> p.remove(), 8000);
-}
-
-/* -- Efeu growth: 20s with acceleration until sec 15 then medium speed then stop -- */
-function startEfeu(duration){
-  // create a left ivy element and grow height over 20s
-  const ivy = document.createElement('div'); ivy.className='efeu'; ivy.style.left='0'; ivy.style.width='60px';
-  layerEfeu.appendChild(ivy);
-  const total = Math.max(5, duration); // ensure positive
-  const growSeconds = 20; // specified growth period
-  let start = performance.now();
-  function grow(now){
-    const elapsed = (now - start)/1000;
-    // speed profile: accelerate until 15s, then medium, then slow
-    let progress;
-    if(elapsed < 15) progress = Math.pow(elapsed/15, 0.9); // accelerate
-    else if(elapsed < 20) progress = 1 - Math.pow((20-elapsed)/5, 1.1);
-    else progress = 1;
-    ivy.style.height = (progress * 100) + '%';
-    // increase opacity/sway with progress
-    ivy.style.opacity = 0.4 + progress*0.6;
-    if(elapsed < growSeconds) requestAnimationFrame(grow); else { /* end */ }
-  }
-  requestAnimationFrame(grow);
-  // remove after duration seconds
-  setTimeout(()=> ivy.remove(), duration*1000);
-}
-
-/* =========================
-   kick off effects
-   ========================= */
-startEffects();
-
-/* expose simple API-binding placeholder */
-async function callBackendAPI(endpoint, payload){
-  console.log('API call placeholder:', endpoint, payload);
-  // ready to replace with fetch(...) when backend exists
-  return {ok:true};
-}
-
-/* auto-detect wallet already connected */
-(async ()=>{
-  if(window.ethereum && window.ethereum.selectedAddress){
-    metaAccount = window.ethereum.selectedAddress;
-    metaConnected = true;
-    addrDisplay.textContent = shorten(metaAccount);
-    connectMetaBtn.textContent = 'MetaMask connected';
-    connectMetaBtn.disabled = true;
-  }
-})();
 </script>
 </body>
 </html>
