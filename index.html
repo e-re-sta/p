@@ -11,6 +11,7 @@
         background: #0b0e11;
         color: white;
         font-family: Arial, sans-serif;
+        overflow-x: hidden;
     }
 
     /* Header */
@@ -22,10 +23,9 @@
         border-bottom: 1px solid #222;
         position: sticky;
         top: 0;
-        z-index: 100;
+        z-index: 10;
     }
 
-    /* Logo */
     #logo {
         font-size: 28px;
         cursor: pointer;
@@ -33,21 +33,20 @@
         user-select: none;
     }
 
-    /* Title */
     h1 {
         margin: 0;
         font-size: 22px;
         font-weight: 800;
     }
 
-    /* Page content container */
     #content {
         max-width: 900px;
         margin: 30px auto;
         padding: 0 20px;
+        z-index: 5;
+        position: relative;
     }
 
-    /* Grid for 12 games */
     .game-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -84,6 +83,57 @@
         color: #8e9aa8;
     }
 
+    /* --- EFFEKTE SYSTEM --- */
+
+    #effects {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 9999;
+        font-size: 30px;
+    }
+
+    .effect {
+        position: absolute;
+        animation: fall 3s linear forwards;
+    }
+
+    .snowflake {
+        animation-duration: 4s;
+    }
+
+    .car, .plow {
+        position: fixed;
+        bottom: 25px;
+        left: -300px;
+        font-size: 60px;
+        animation: drive 6s linear forwards;
+        z-index: 9500;
+    }
+
+    #snow-floor {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0px;
+        background: white;
+        transition: height 1s;
+        z-index: 9000;
+        pointer-events: none;
+    }
+
+    @keyframes fall {
+        from { transform: translateY(-40px); opacity: 1; }
+        to   { transform: translateY(110vh); opacity: 0.4; }
+    }
+
+    @keyframes drive {
+        from { left: -300px; }
+        to   { left: 110%; }
+    }
+
 </style>
 </head>
 <body>
@@ -97,10 +147,7 @@
     <h2>Spiele</h2>
 
     <div class="game-grid">
-        <div class="game-box" id="game1">
-            <div class="game-title">Game 1</div>
-            <div class="game-sub">Klicke um Code einzufügen</div>
-        </div>
+        <div class="game-box" id="game1"><div class="game-title">Game 1</div><div class="game-sub">Klicke um Code einzufügen</div></div>
         <div class="game-box" id="game2"><div class="game-title">Game 2</div><div class="game-sub">Platzhalter</div></div>
         <div class="game-box" id="game3"><div class="game-title">Game 3</div><div class="game-sub">Platzhalter</div></div>
         <div class="game-box" id="game4"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div></div>
@@ -115,293 +162,100 @@
     </div>
 </div>
 
+<!-- Effekte -->
+<div id="effects"></div>
+<div id="snow-floor"></div>
+
 <script>
-    // Click handler für alle 12 Plätze
-    for (let i = 1; i <= 12; i++) {
-        document.getElementById("game" + i).addEventListener("click", () => {
-            alert("Hier kannst du später deinen Game-Code für Slot " + i + " einfügen.");
-        });
-    }
-<style>
-/* Effekte Container */
-#effects-container {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 9999;
+/* ---- GAME BUTTONS ---- */
+for (let i = 1; i <= 12; i++) {
+    document.getElementById("game" + i).addEventListener("click", () => {
+        alert("Hier kannst du später deinen Game-Code für Slot " + i + " einfügen.");
+    });
 }
 
-/* Gurke */
-.cucumber {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background-image: url('https://i.imgur.com/6H1SC1i.png'); /* Gurke */
-    background-size: contain;
-    animation: fall 3s linear forwards;
-}
+/* ---- EFFEKTSYSTEM ---- */
+const effects = document.getElementById("effects");
+const floor = document.getElementById("snow-floor");
 
-/* Schneeflocke */
-.snowflake {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: white;
-    opacity: 0.9;
-    animation: snowFall 4s linear forwards;
-}
-
-/* Schnee auf Boden */
-#snow-ground {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0px;
-    background: white;
-    transition: height 1s;
-    z-index: 9000;
-    pointer-events: none;
-}
-
-/* Auto */
-.car {
-    position: fixed;
-    bottom: 20px;
-    left: -300px;
-    width: 250px;
-    height: 90px;
-    background-image: url('https://i.imgur.com/Ew1N0iU.png'); /* Auto */
-    background-size: contain;
-    background-repeat: no-repeat;
-    animation: carDrive 6s linear forwards;
-    z-index: 9500;
-}
-
-/* Schneeräumer */
-.snowplow {
-    position: fixed;
-    bottom: 20px;
-    left: -350px;
-    width: 320px;
-    height: 110px;
-    background-image: url('https://i.imgur.com/Msws5Et.png'); /* Schneeräumer */
-    background-size: contain;
-    background-repeat: no-repeat;
-    animation: plowDrive 7s linear forwards;
-    z-index: 9600;
-}
-
-/* ANIMATIONEN */
-@keyframes fall {
-    from { transform: translateY(-50px); }
-    to   { transform: translateY(120vh); }
-}
-
-@keyframes snowFall {
-    from { transform: translateY(-30px); }
-    to   { transform: translateY(120vh); }
-}
-
-@keyframes carDrive {
-    from { left: -300px; }
-    to   { left: 120%; }
-}
-
-@keyframes plowDrive {
-    from { left: -350px; }
-    to   { left: 120%; }
-}
-
-<div id="effects-container"></div>
-<div id="snow-ground"></div>
-
-<style>
-/* Effekte Container */
-#effects-container {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 9999;
-}
-
-/* Gurke */
-.cucumber {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background-image: url('https://i.imgur.com/6H1SC1i.png'); /* Gurke */
-    background-size: contain;
-    animation: fall 3s linear forwards;
-}
-
-/* Schneeflocke */
-.snowflake {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: white;
-    opacity: 0.9;
-    animation: snowFall 4s linear forwards;
-}
-
-/* Schnee auf Boden */
-#snow-ground {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0px;
-    background: white;
-    transition: height 1s;
-    z-index: 9000;
-    pointer-events: none;
-}
-
-/* Auto */
-.car {
-    position: fixed;
-    bottom: 20px;
-    left: -300px;
-    width: 250px;
-    height: 90px;
-    background-image: url('https://i.imgur.com/Ew1N0iU.png'); /* Auto */
-    background-size: contain;
-    background-repeat: no-repeat;
-    animation: carDrive 6s linear forwards;
-    z-index: 9500;
-}
-
-/* Schneeräumer */
-.snowplow {
-    position: fixed;
-    bottom: 20px;
-    left: -350px;
-    width: 320px;
-    height: 110px;
-    background-image: url('https://i.imgur.com/Msws5Et.png'); /* Schneeräumer */
-    background-size: contain;
-    background-repeat: no-repeat;
-    animation: plowDrive 7s linear forwards;
-    z-index: 9600;
-}
-
-/* ANIMATIONEN */
-@keyframes fall {
-    from { transform: translateY(-50px); }
-    to   { transform: translateY(120vh); }
-}
-
-@keyframes snowFall {
-    from { transform: translateY(-30px); }
-    to   { transform: translateY(120vh); }
-}
-
-@keyframes carDrive {
-    from { left: -300px; }
-    to   { left: 120%; }
-}
-
-@keyframes plowDrive {
-    from { left: -350px; }
-    to   { left: 120%; }
-}
-<style/>
-
-<div id="effects-container"></div>
-<div id="snow-ground"></div>
-
-const effects = document.getElementById("effects-container");
-const snowGround = document.getElementById("snow-ground");
-
-function spawnCucumber() {
-    const c = document.createElement("div");
-    c.className = "cucumber";
-    c.style.left = Math.random() * 100 + "vw";
-    effects.appendChild(c);
-    setTimeout(() => c.remove(), 3000);
+function spawnCuke() {
+    const el = document.createElement("div");
+    el.className = "effect";
+    el.textContent = "🥒";
+    el.style.left = Math.random()*100 + "vw";
+    effects.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
 }
 
 function spawnSnow() {
-    const s = document.createElement("div");
-    s.className = "snowflake";
-    s.style.left = Math.random() * 100 + "vw";
-    effects.appendChild(s);
-    setTimeout(() => s.remove(), 4000);
+    const el = document.createElement("div");
+    el.className = "effect snowflake";
+    el.textContent = "❄️";
+    el.style.left = Math.random()*100 + "vw";
+    effects.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
 }
 
 function spawnCar() {
-    const car = document.createElement("div");
-    car.className = "car";
-    effects.appendChild(car);
-    setTimeout(() => car.remove(), 6000);
+    const el = document.createElement("div");
+    el.className = "car";
+    el.textContent = "🚗";
+    effects.appendChild(el);
+    setTimeout(() => el.remove(), 6000);
 }
 
-function spawnSnowplow() {
-    const plow = document.createElement("div");
-    plow.className = "snowplow";
-    effects.appendChild(plow);
+function spawnPlow() {
+    const el = document.createElement("div");
+    el.className = "plow";
+    el.textContent = "🛻";
+    effects.appendChild(el);
 
-    // Wenn Schneeräumer kommt → Boden Schnee wegschieben
     setTimeout(() => {
-        snowGround.style.height = "0px";
-    }, 2000);
+        floor.style.height = "0px"; // Schnee wegschieben
+    }, 2500);
 
-    setTimeout(() => plow.remove(), 7000);
+    setTimeout(() => el.remove(), 6000);
 }
 
-/* --------------------
-   EFFEKT SEQUENZ
--------------------- */
-async function playSequence() {
+/* ---- TIMING SEQUENZ ---- */
+async function sequence() {
 
-    // 1️⃣ 15s Gurken + Auto
-    for (let t = 0; t < 15 * 3; t++) setTimeout(spawnCucumber, t * 300);
+    // 1 → 15s Gurken + Auto
+    for (let i = 0; i < 15 * 3; i++) setTimeout(spawnCuke, i * 300);
     spawnCar();
     await new Promise(r => setTimeout(r, 15000));
 
-    // 2️⃣ 22s Schnee
-    snowGround.style.height = "80px";
-    for (let t = 0; t < 22 * 3; t++) setTimeout(spawnSnow, t * 300);
-    // 5 Sekunden vor Ende: Schneeräumer
-    setTimeout(spawnSnowplow, (22 - 5) * 1000);
+    // 2 → 22s Schnee
+    floor.style.height = "70px";
+    for (let i = 0; i < 22 * 3; i++) setTimeout(spawnSnow, i * 300);
+    setTimeout(spawnPlow, (22 - 5) * 1000);
     await new Promise(r => setTimeout(r, 22000));
 
-    // 3️⃣ 35s Gurken
-    for (let t = 0; t < 35 * 3; t++) setTimeout(spawnCucumber, t * 300);
+    // 3 → 35s Gurken
+    for (let i = 0; i < 35 * 3; i++) setTimeout(spawnCuke, i * 300);
     await new Promise(r => setTimeout(r, 35000));
 
-    // 4️⃣ 15s Schnee
-    snowGround.style.height = "80px";
-    for (let t = 0; t < 15 * 3; t++) setTimeout(spawnSnow, t * 300);
-    setTimeout(spawnSnowplow, (15 - 5) * 1000);
+    // 4 → 15s Schnee
+    floor.style.height = "70px";
+    for (let i = 0; i < 15 * 3; i++) setTimeout(spawnSnow, i * 300);
+    setTimeout(spawnPlow, (15 - 5) * 1000);
     await new Promise(r => setTimeout(r, 15000));
 
-    // 5️⃣ 22s Gurken
-    for (let t = 0; t < 22 * 3; t++) setTimeout(spawnCucumber, t * 300);
+    // 5 → 22s Gurken
+    for (let i = 0; i < 22 * 3; i++) setTimeout(spawnCuke, i * 300);
     await new Promise(r => setTimeout(r, 22000));
 
-    // 6️⃣ 35s Schnee
-    snowGround.style.height = "80px";
-    for (let t = 0; t < 35 * 3; t++) setTimeout(spawnSnow, t * 300);
-    setTimeout(spawnSnowplow, (35 - 5) * 1000);
+    // 6 → 35s Schnee
+    floor.style.height = "70px";
+    for (let i = 0; i < 35 * 3; i++) setTimeout(spawnSnow, i * 300);
+    setTimeout(spawnPlow, (35 - 5) * 1000);
     await new Promise(r => setTimeout(r, 35000));
 
-    // Wiederholen
-    playSequence();
+    sequence(); // Loop
 }
 
-playSequence();
+sequence();
 </script>
+
 </body>
 </html>
