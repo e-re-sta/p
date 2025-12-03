@@ -3,222 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CitrusArcade</title>
+<title>CitrusArcade – Clean Version</title>
 
 <style>
-/* GLOBAL */
-body {
+  body {
     margin: 0;
-    background: linear-gradient(180deg, #ffe88a, #ffc43a);
-    overflow-x: hidden;
+    padding: 0;
+    background: #0d0d0d;
+    color: white;
     font-family: Arial, sans-serif;
-}
+    overflow-x: hidden;
+  }
 
-/* HEADER */
-.logo {
-    text-align: center;
-    padding: 20px;
-    font-size: 48px;
-    text-shadow: 0 0 20px white;
-    animation: glow 3s infinite alternate;
-}
-@keyframes glow {
-    from { text-shadow: 0 0 10px #fff; }
-    to { text-shadow: 0 0 40px yellow; }
-}
+  /* HEADER */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: #111;
+    border-bottom: 2px solid #f5c400;
+  }
 
-/* TITLE */
-.title {
-    text-align: center;
-    font-size: 34px;
-    padding-top: 10px;
-    text-shadow: 0 0 15px white;
-}
+  header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #f5c400;
+    letter-spacing: 1px;
+  }
 
-/* GAME GRID */
-.game-grid {
-    display: grid;
-    padding: 20px;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-/* GAME CARDS */
-.game-card {
-    padding: 40px;
-    background: white;
-    border-radius: 20px;
-    text-align: center;
-    font-size: 24px;
+  .wallet-btn {
+    background: #f5c400;
+    color: #000;
+    padding: 10px 18px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
-    position: relative;
-    overflow: hidden;
-    border: 4px solid transparent;
-}
-.game-card:hover {
+    font-weight: bold;
+    border: none;
+    transition: 0.2s;
+  }
+
+  .wallet-btn:hover {
     transform: scale(1.05);
-    border-color: orange;
-    box-shadow: 0 0 20px gold;
-}
+  }
 
-/* FIRE BORDER */
-.fire-border {
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    box-shadow: 0 0 40px 15px orange inset;
-    animation: fireFlicker 0.15s infinite;
-}
-@keyframes fireFlicker {
-    0% { box-shadow: 0 0 40px 15px orange inset; }
-    50% { box-shadow: 0 0 60px 25px red inset; }
-    100% { box-shadow: 0 0 40px 15px orange inset; }
-}
+  /* GAME GRID */
+  .games-section {
+    padding: 40px 20px;
+    text-align: center;
+  }
 
-/* IVY FRAME */
-.ivy-frame {
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    background-image: url("https://i.imgur.com/7bL3E1y.png");
-    background-size: cover;
-    opacity: 0.4;
-    animation: ivyMove 10s infinite alternate;
-}
-@keyframes ivyMove {
-    from { filter: brightness(0.7); }
-    to { filter: brightness(1.1); }
-}
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+  }
 
-/* SNOW */
-#snow {
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    background-image: url("https://i.imgur.com/M6r9m5U.png");
-    background-size: 200px;
-    animation: snowFall linear infinite 20s;
-}
-@keyframes snowFall {
-    from { background-position: 0 -200px; }
-    to   { background-position: 0 100%; }
-}
+  .game-card {
+    background: #151515;
+    border: 2px solid #333;
+    padding: 20px;
+    border-radius: 14px;
+    transition: 0.2s;
+    cursor: pointer;
+  }
 
-/* BUBBLES */
-#bubbles {
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    background-image: url("https://i.imgur.com/C91tQ7T.png");
-    background-size: 150px;
-    opacity: 0.25;
-    animation: bubblesRise 12s infinite linear;
-}
-@keyframes bubblesRise {
-    from { background-position-y: 100%; }
-    to { background-position-y: -200px; }
-}
+  .game-card:hover {
+    border-color: #f5c400;
+    transform: scale(1.05);
+  }
 
-/* STARS */
-#glow-stars {
-    pointer-events: none;
+  .game-card h3 {
+    margin: 10px 0 0 0;
+    color: #f5c400;
+  }
+
+  .game-card p {
+    opacity: 0.7;
+    font-size: 14px;
+  }
+
+  /* CHATBOT BUTTON */
+  #chatbot-btn {
     position: fixed;
-    inset: 0;
-    background-image: url("https://i.imgur.com/qy6UYhI.png");
-    opacity: 0.3;
-    animation: starTwinkle 3s infinite alternate;
-}
-@keyframes starTwinkle {
-    from { opacity: 0.2; }
-    to { opacity: 0.5; }
-}
+    bottom: 25px;
+    right: 25px;
+    background: #f5c400;
+    color: #000;
+    padding: 15px 18px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 15px #f5c400aa;
+    transition: 0.2s;
+    z-index: 999;
+  }
+
+  #chatbot-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px #f5c400;
+  }
+
+  /* CHATBOT POPUP */
+  #chatbot-window {
+    position: fixed;
+    bottom: 90px;
+    right: 25px;
+    width: 300px;
+    height: 380px;
+    background: #111;
+    border: 2px solid #f5c400;
+    border-radius: 14px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 999;
+  }
+
+  #chatbot-header {
+    padding: 12px;
+    background: #f5c400;
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  #chatbot-messages {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  #chatbot-input {
+    display: flex;
+    border-top: 2px solid #f5c400;
+  }
+
+  #chatbot-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    background: #222;
+    color: #fff;
+  }
+
+  #chatbot-input button {
+    background: #f5c400;
+    color: #000;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
 </style>
-</head>
 
+</head>
 <body>
 
-<!-- BACKGROUND EFFECT LAYERS -->
-<div id="snow"></div>
-<div id="bubbles"></div>
-<div id="glow-stars"></div>
-<div class="fire-border"></div>
-<div class="ivy-frame"></div>
-
 <header>
-    <h1 class="logo">🍋 CitrusArcade</h1>
+  <h1>CitrusArcade</h1>
+  <button class="wallet-btn">Wallet verbinden</button>
 </header>
 
-<main>
-    <h2 class="title">Choose your Game</h2>
+<section class="games-section">
+  <h2>Games</h2>
 
-    <div class="game-grid">
-        <div class="game-card" id="game1">Game 1</div>
-        <div class="game-card" id="game2">Game 2</div>
-        <div class="game-card" id="game3">Game 3</div>
-        <div class="game-card" id="game4">Game 4</div>
-        <div class="game-card" id="game5">Game 5</div>
-        <div class="game-card" id="game6">Game 6</div>
-        <div class="game-card" id="game7">Game 7</div>
-        <div class="game-card" id="game8">Game 8</div>
-        <div class="game-card" id="game9">Game 9</div>
-        <div class="game-card" id="game10">Game 10</div>
-        <div class="game-card" id="game11">Game 11</div>
-        <div class="game-card" id="game12">Game 12</div>
+  <div class="games-grid">
+    <div class="game-card">
+      <h3>Flappy Lemon</h3>
+      <p>Kommendes Spiel</p>
     </div>
-</main>
+
+    <div class="game-card">
+      <h3>Lemon Clicker</h3>
+      <p>Bald verfügbar</p>
+    </div>
+
+    <div class="game-card">
+      <h3>Citrus Runner</h3>
+      <p>In Planung</p>
+    </div>
+  </div>
+</section>
+
+<!-- CHATBOT BUTTON -->
+<button id="chatbot-btn">💬</button>
+
+<!-- CHATBOT WINDOW -->
+<div id="chatbot-window">
+  <div id="chatbot-header">CitrusBot</div>
+  <div id="chatbot-messages"></div>
+
+  <div id="chatbot-input">
+    <input type="text" id="chatbot-text" placeholder="Schreib etwas...">
+    <button id="chatbot-send">OK</button>
+  </div>
+</div>
 
 <script>
-/* ---------------------------
-   🥒 GURKEN-REGEN
------------------------------ */
-function startCucumberRain() {
-    setInterval(() => {
-        let cuke = document.createElement("div");
-        cuke.innerHTML = "🥒";
-        cuke.style.position = "fixed";
-        cuke.style.left = Math.random() * window.innerWidth + "px";
-        cuke.style.top = "-50px";
-        cuke.style.fontSize = "30px";
-        cuke.style.animation = "fall 4s linear";
-        document.body.appendChild(cuke);
-        setTimeout(() => cuke.remove(), 4000);
-    }, 300);
-}
+  // CHATBOT ÖFFNEN/SCHLIESSEN
+  const chatBtn = document.getElementById("chatbot-btn");
+  const chatWindow = document.getElementById("chatbot-window");
 
-const style = document.createElement("style");
-style.innerHTML = `
-@keyframes fall {
-    from { transform: translateY(-50px); opacity:1; }
-    to { transform: translateY(120vh); opacity:0; }
-}`;
-document.head.appendChild(style);
+  chatBtn.addEventListener("click", () => {
+    chatWindow.style.display =
+      chatWindow.style.display === "flex" ? "none" : "flex";
+  });
 
-startCucumberRain();
+  // EINFACHER DUMMY-CHATBOT
+  const msgBox = document.getElementById("chatbot-messages");
+  const input = document.getElementById("chatbot-text");
+  const sendBtn = document.getElementById("chatbot-send");
 
-/* ---------------------------
-   🎮 GAME LOADER
-   Hier fügst du später deinen
-   ganzen Game-Code ein!
-   (z.B. Flappy Lemon)
------------------------------ */
+  function botReply(msg) {
+    const div = document.createElement("div");
+    div.style.margin = "5px 0";
+    div.style.color = "#f5c400";
+    div.textContent = "🟡 CitrusBot: " + msg;
+    msgBox.appendChild(div);
 
-function loadGame(gameId) {
-    alert("Game " + gameId + " geladen! (Hier kommt später dein Spielcode hin.)");
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
 
-    // HIER kommt später dein kompletter Spielcode rein
-    // -------------------------------------------------
-    // Example:
-    // startFlappyLemon();
-    // -------------------------------------------------
-}
+  sendBtn.onclick = () => {
+    const user = input.value.trim();
+    if (!user) return;
 
-/* Klick-Events für alle 12 Spiele */
-for (let i = 1; i <= 12; i++) {
-    document.getElementById("game" + i).addEventListener("click", () => {
-        loadGame(i);
-    });
-}
+    const div = document.createElement("div");
+    div.style.margin = "5px 0";
+    div.textContent = "🧑: " + user;
+    msgBox.appendChild(div);
+
+    input.value = "";
+
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    setTimeout(() => botReply("Interessant 👀"), 500);
+  };
 </script>
 
 </body>
