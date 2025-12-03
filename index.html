@@ -3,110 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CitrusArcade Deluxe</title>
+<title>CitrusArcade</title>
 
 <style>
     body {
         margin: 0;
-        background: #090c10;
-        color: white;
-        font-family: 'Segoe UI', sans-serif;
-        overflow-x: hidden;
+        background: #0b0e11;
+        color: #fff;
+        font-family: Arial, sans-serif;
     }
 
-    /* HEADER */
     header {
         display: flex;
         align-items: center;
-        padding: 14px 20px;
-        background: rgba(20, 25, 32, 0.9);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid #1c212a;
+        padding: 12px 18px;
+        background: #11161c;
+        border-bottom: 1px solid #222;
         position: sticky;
         top: 0;
         z-index: 100;
     }
 
     #logo {
-        font-size: 32px;
+        font-size: 30px;
         cursor: pointer;
         margin-right: 12px;
         user-select: none;
-        filter: drop-shadow(0 0 6px #ffe88b);
+        transition: 0.2s;
     }
 
-    header h1 {
-        font-size: 26px;
-        letter-spacing: 1px;
-        color: #ffdd7e;
+    h1 {
         margin: 0;
-        text-shadow: 0 0 8px #ffbb33;
+        font-size: 22px;
+        font-weight: 800;
     }
 
-    /* CONTENT */
     #content {
-        max-width: 1100px;
-        margin: 40px auto;
+        max-width: 1000px;
+        margin: 30px auto;
         padding: 0 20px;
     }
 
-    /* GRID */
     .game-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
         margin-top: 20px;
     }
 
-    /* GAME BOX */
     .game-box {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 22px;
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.08);
-        backdrop-filter: blur(8px);
-        height: 160px;
+        background: #12181f;
+        border: 1px solid #1f242c;
+        padding: 20px;
+        border-radius: 10px;
+        cursor: default;
+        height: 140px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        box-shadow: 0 0 25px rgba(255,255,255,0.04);
-        cursor: default;
-        transition: transform 0.25s ease;
-    }
-
-    .game-box:active {
-        transform: scale(0.97);
+        user-select: none;
     }
 
     .game-title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
-        color: #ffe089;
-        text-shadow: 0 0 8px #ffb84c;
+        color: #ffd782;
     }
 
-    .game-sub {
+    .game-desc {
+        font-size: 13px;
+        color: #8e9aa8;
+    }
+
+    .play-btn {
+        color: #5bc0ff;
         font-size: 14px;
-        color: #b2c0d1;
+        text-align: right;
+        cursor: pointer;
+        user-select: none;
     }
 
-    .play {
-        font-size: 15px;
-        text-align: right;
-        opacity: 0.9;
-        color: #ffffff;
+    /* Game Screen */
+    #gameView {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #0b0e11;
+        display: none;
+        flex-direction: column;
+        padding: 20px;
+        z-index: 999;
+    }
+
+    #backBtn {
+        color: #5bc0ff;
+        font-size: 16px;
+        margin-bottom: 20px;
         cursor: pointer;
     }
 
-    /* FRUIT FALL CSS */
-    .fruit {
-        position: fixed;
-        top: -50px;
-        font-size: 32px;
-        pointer-events: none;
-        user-select: none;
-        z-index: 0;
-        opacity: 0.92;
+    /* Payment Box */
+    .payment-box {
+        margin-top: 40px;
+        padding: 18px;
+        background: #12181f;
+        border: 1px solid #1f242c;
+        border-radius: 10px;
+    }
+
+    .payment-title {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .pay-btn {
+        padding: 8px 14px;
+        margin-right: 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background: #ffd782;
+        color: #000;
+        font-weight: bold;
     }
 
 </style>
@@ -115,149 +134,100 @@
 
 <header>
     <div id="logo" onclick="location.reload()">🍋</div>
-    <h1>CitrusArcade Deluxe</h1>
+    <h1>CitrusArcade</h1>
 </header>
 
 <div id="content">
-    <h2 style="color:#ffe089;text-shadow:0 0 8px #ffcc44;">Spiele</h2>
+    <h2>Spiele</h2>
 
     <div class="game-grid">
 
-        <div class="game-box" id="game1">
-            <div class="game-title">Game 1</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
+        <!-- 12 Game Slots -->
+        <script>
+            const games = [
+                "Agent Lemon I",
+                "Agent Lemon II",
+                "Agent Lemon III",
+                "Mystery Garden",
+                "Lemon Clicker",
+                "Cucumber Runner",
+                "Pineapple Storm",
+                "Snowfall Arena",
+                "Arcade Invaders",
+                "Fruit Escape",
+                "Lemon Tower",
+                "Super Citrus World"
+            ];
+        </script>
 
-        <div class="game-box" id="game2">
-            <div class="game-title">Game 2</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
+        <script>
+        document.write(
+            Array.from({length:12}, (_,i)=>`
+                <div class="game-box">
+                    <div class="game-title">${games[i]}</div>
+                    <div class="game-desc">Beschreibung folgt…</div>
+                    <div class="play-btn" onclick="openGame(${i+1})">Play</div>
+                </div>
+            `).join('')
+        );
+        </script>
 
-        <div class="game-box" id="game3">
-            <div class="game-title">Game 3</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
+    </div>
 
-        <div class="game-box" id="game4">
-            <div class="game-title">Game 4</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
+    <!-- Payment Placeholder Area -->
+    <div class="payment-box">
+        <div class="payment-title">Spezialeffekte kaufen</div>
+        <button class="pay-btn" onclick="payETH()">Mit ETH bezahlen</button>
+        <button class="pay-btn" onclick="paySOL()">Mit SOL bezahlen</button>
+    </div>
 
-        <div class="game-box" id="game5">
-            <div class="game-title">Game 5</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
+</div>
 
-        <div class="game-box" id="game6">
-            <div class="game-title">Game 6</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
 
-        <div class="game-box" id="game7">
-            <div class="game-title">Game 7</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
-
-        <div class="game-box" id="game8">
-            <div class="game-title">Game 8</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
-
-        <div class="game-box" id="game9">
-            <div class="game-title">Game 9</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
-
-        <div class="game-box" id="game10">
-            <div class="game-title">Game 10</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
-
-        <div class="game-box" id="game11">
-            <div class="game-title">Game 11</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
-
-        <div class="game-box" id="game12">
-            <div class="game-title">Game 12</div>
-            <div class="game-sub">Spielbeschreibung</div>
-            <div class="play">PLAY</div>
-        </div>
-
+<!-- GAME VIEW -->
+<div id="gameView">
+    <div id="backBtn" onclick="closeGame()">← Zurück</div>
+    <div id="gameContainer" style="color:white; font-size:20px;">
+        Lade Spiel…
     </div>
 </div>
 
-<script>
 
-/* ░░░ GAME ENGINE ░░░ */
+
+<script>
+/* -----------------------------------------
+   WALLET ADRESSEN – HIER EINMAL EINTRAGEN
+------------------------------------------ */
+const ETH_WALLET = "0xDEINE_ETH_ADRESSE";
+const SOL_WALLET = "DEINE_SOL_ADRESSE";
+
+/* -----------------------------------------
+   GAME OPEN / CLOSE
+------------------------------------------ */
 
 function openGame(id) {
-    document.body.innerHTML = `
-        <div style='padding:40px;color:white;font-size:22px;'>
-            <div id='backbtn' style="
-                padding:8px 16px;
-                display:inline-block;
-                background:rgba(255,255,255,0.12);
-                border-radius:8px;
-                cursor:pointer;
-                margin-bottom:20px;
-            ">← Back</div>
+    document.getElementById("content").style.display = "none";
+    document.getElementById("gameView").style.display = "flex";
 
-            <h1>Game ${id}</h1>
-            <p>Platzhalter-Spiel</p>
-        </div>
-    `;
-
-    document.getElementById("backbtn").onclick = () => location.reload();
+    document.getElementById("gameContainer").innerHTML =
+        "Game " + id + " wird hier geladen…";
 }
 
-document.querySelectorAll(".play").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const id = btn.parentElement.id.replace("game", "");
-        openGame(id);
-    });
-});
-
-
-
-/* ░░░ FRUIT RAIN ENGINE (Gurken, Zitronen, Ananas) ░░░ */
-
-const fruits = ["🥒","🍋","🍍"];  
-const areaWidth = window.innerWidth;
-
-function spawnFruit() {
-    const f = document.createElement("div");
-    f.className = "fruit";
-    f.innerHTML = fruits[Math.floor(Math.random() * fruits.length)];
-
-    f.style.left = Math.random() * areaWidth + "px";
-    f.style.fontSize = (28 + Math.random()*20) + "px";
-    f.style.transition = `transform ${3 + Math.random()*3}s linear, opacity 1s`;
-
-    document.body.appendChild(f);
-
-    setTimeout(() => {
-        f.style.transform = `translateY(${window.innerHeight + 100}px)`;
-        f.style.opacity = 0;
-    }, 50);
-
-    setTimeout(() => f.remove(), 7000);
+function closeGame() {
+    document.getElementById("gameView").style.display = "none";
+    document.getElementById("content").style.display = "block";
 }
 
-// Loop: alle 300–900ms ein Frucht-Fall
-setInterval(spawnFruit, 300 + Math.random()*600);
+/* -----------------------------------------
+   PAYMENT PLATZHALTER
+------------------------------------------ */
+function payETH() {
+    alert("ETH Zahlung starten an:\n" + ETH_WALLET);
+}
 
+function paySOL() {
+    alert("SOL Zahlung starten an:\n" + SOL_WALLET);
+}
 </script>
 
 </body>
