@@ -1,128 +1,337 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CitrusArcade</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CitrusArcade — Safe Editor (no canvas / no audio / no fullscreen)</title>
 
 <style>
-    body {
-        margin: 0;
-        background: #0b0e11;
-        color: white;
-        font-family: Arial, sans-serif;
-    }
+  :root{
+    --bg:#081017; --panel:#0f1720; --accent:#ff7a00; --muted:#9aa3b2;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,#06060a 0%, #0b0c10 100%);
+    color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  }
 
-    /* Header */
-    header {
-        display: flex;
-        align-items: center;
-        padding: 12px 18px;
-        background: #11161c;
-        border-bottom: 1px solid #222;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
+  header{
+    width:100%; padding:14px 18px; display:flex; gap:12px; align-items:center;
+    background:linear-gradient(90deg,var(--accent),#ffb85a);
+    box-shadow:0 6px 20px rgba(0,0,0,0.35);
+  }
+  .logo{cursor:pointer; width:44px;height:44px;border-radius:8px;display:grid;place-items:center;background:#071018;font-size:22px}
+  .title {font-weight:800; color:#071018; font-size:18px}
+  .subtitle{font-size:12px;color:#071018;opacity:0.9;margin-top:2px}
+  main{width:100%; max-width:1200px; padding:20px;}
 
-    /* Logo */
-    #logo {
-        font-size: 28px;
-        cursor: pointer;
-        margin-right: 12px;
-        user-select: none;
-    }
+  .grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:14px;
+  }
+  .game-card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    padding:14px; border-radius:12px; cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease; min-height:100px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .game-card:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(0,0,0,0.35) }
+  .game-title{font-weight:700; color:var(--accent); font-size:16px}
+  .game-sub{font-size:13px; color:var(--muted); margin-top:8px}
+  .play-hint{font-size:12px;color:var(--muted); text-align:right}
 
-    /* Title */
-    h1 {
-        margin: 0;
-        font-size: 22px;
-        font-weight: 800;
-    }
+  /* modal editor */
+  .modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:3000; background:linear-gradient(180deg, rgba(3,3,3,0.6), rgba(3,3,3,0.85)); }
+  .modal-box{ width:92%; max-width:1100px; background:var(--panel); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.04); display:flex; gap:12px; color:#fff; }
+  .editor{ width:52%; display:flex; flex-direction:column }
+  textarea{ width:100%; height:620px; background:#05060a; color:#e6eef8; border-radius:8px; border:1px solid rgba(255,255,255,0.04); padding:12px; font-family:monospace; resize:vertical }
+  .iframe-wrap{ width:48%; display:flex; flex-direction:column; gap:8px }
+  .iframe-preview{ flex:1; background:#000; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.03) }
+  .iframe-preview iframe{ width:100%; height:100%; border:0; display:block; background:#071018; }
 
-    /* Page content container */
-    #content {
-        max-width: 900px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
+  .controls { display:flex; gap:8px; margin-top:8px; }
+  .btn { padding:10px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:700; }
+  .btn-primary{ background:linear-gradient(90deg,#ffd37a,#ff7a00); color:#000 }
+  .btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff }
 
-    /* Grid for 12 games */
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin-top: 20px;
-    }
+  /* small chat */
+  #chat { position:fixed; right:14px; bottom:14px; width:320px; max-width:88vw; z-index:2000; font-family:Arial,sans-serif; }
+  .chatbox { background:#fff; color:#000; border-radius:10px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.4) }
+  .chat-header { background:linear-gradient(90deg,#ffd37a,#ff7a00); padding:10px; font-weight:800; color:#000 }
+  .chat-messages { padding:8px; height:160px; overflow:auto; background:#f8fafc }
+  .chat-input { display:flex; border-top:1px solid #eee }
+  .chat-input input{ flex:1; padding:10px; border:0; outline:none }
+  .chat-input button{ padding:10px 12px; border:0; background:#0b6efd; color:#fff; cursor:pointer }
 
-    .game-box {
-        background: #12181f;
-        border: 1px solid #1f242c;
-        padding: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-        height: 120px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .game-box:hover {
-        background: #1b232d;
-        transform: translateY(-3px);
-    }
-
-    .game-title {
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffd782;
-    }
-
-    .game-sub {
-        font-size: 13px;
-        color: #8e9aa8;
-    }
-
+  footer{ margin-top:24px; padding:12px; color:var(--muted); font-size:13px; width:100%; text-align:center }
 </style>
 </head>
 <body>
 
 <header>
-    <div id="logo" onclick="location.reload()">🍋</div>
-    <h1>CitrusArcade</h1>
+  <div class="logo" id="logo" title="Reload page (logo)">🍋</div>
+  <div>
+    <div class="title">CitrusArcade</div>
+    <div class="subtitle">Safe editor — no canvas / no audio / no fullscreen</div>
+  </div>
 </header>
 
-<div id="content">
-    <h2>Spiele</h2>
-
-    <div class="game-grid">
-        <div class="game-box" id="game1">
-            <div class="game-title">Game 1</div>
-            <div class="game-sub">Klicke um Code einzufügen</div>
-        </div>
-        <div class="game-box" id="game2"><div class="game-title">Game 2</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game3"><div class="game-title">Game 3</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game4"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game5"><div class="game-title">Game 5</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game6"><div class="game-title">Game 6</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game7"><div class="game-title">Game 7</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game8"><div class="game-title">Game 8</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game9"><div class="game-title">Game 9</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game10"><div class="game-title">Game 10</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game11"><div class="game-title">Game 11</div><div class="game-sub">Platzhalter</div></div>
-        <div class="game-box" id="game12"><div class="game-title">Game 12</div><div class="game-sub">Platzhalter</div></div>
+<main>
+  <div style="display:flex; gap:16px; align-items:flex-start;">
+    <div style="flex:1">
+      <div style="font-weight:800; font-size:18px">Games (12 Slots)</div>
+      <div class="grid" id="gameGrid" style="margin-top:12px;">
+        <!-- 12 game cards -->
+        <div class="game-card" id="game-1"><div><div class="game-title">Game 1</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-2"><div><div class="game-title">Game 2</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-3"><div><div class="game-title">Game 3</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-4"><div><div class="game-title">Game 4</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-5"><div><div class="game-title">Game 5</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-6"><div><div class="game-title">Game 6</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-7"><div><div class="game-title">Game 7</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-8"><div><div class="game-title">Game 8</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-9"><div><div class="game-title">Game 9</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-10"><div><div class="game-title">Game 10</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-11"><div><div class="game-title">Game 11</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+        <div class="game-card" id="game-12"><div><div class="game-title">Game 12</div><div class="game-sub">Click to edit</div></div><div class="play-hint">Edit</div></div>
+      </div>
     </div>
+
+    <aside style="width:300px;">
+      <div style="background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); padding:12px; border-radius:10px;">
+        <div style="font-weight:700">Status</div>
+        <div id="statusBox" style="margin-top:8px; color:var(--muted)">Ready</div>
+        <div style="margin-top:12px">
+          <button id="connectMeta" class="btn btn-ghost">Connect MetaMask</button>
+          <button id="connectPhantom" class="btn btn-ghost">Connect Phantom</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- modal editor -->
+<div id="gameModal" class="modal" role="dialog" aria-hidden="true">
+  <div class="modal-box" role="document">
+    <div class="editor">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800">Game Editor</div>
+        <div class="small-muted" id="editorSlot">Slot: -</div>
+      </div>
+
+      <textarea id="gameCode" placeholder="Paste full HTML/CSS/JS of your game here. Canvas / audio / fullscreen will be removed by sanitizer."></textarea>
+
+      <div class="controls">
+        <button id="saveCode" class="btn btn-primary">Save</button>
+        <button id="runCode" class="btn btn-primary">Run (sanitized)</button>
+        <button id="closeModal" class="btn btn-ghost">Close</button>
+        <button id="clearCode" class="btn btn-ghost">Delete</button>
+      </div>
+
+      <div style="margin-top:8px; color:var(--muted); font-size:13px">Hinweis: Canvas, Audio, Fullscreen-API und direkte autoplay-Aufrufe werden vor Ausführung entfernt.</div>
+    </div>
+
+    <div class="iframe-wrap">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div style="font-weight:700">Preview</div>
+        <div style="margin-left:auto" class="small-muted">Sandboxed iframe</div>
+      </div>
+      <div class="iframe-preview" id="iframePreview">
+        <!-- sandbox: allow-scripts allow-same-origin => scripts run, but no fullscreen -->
+        <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end;">
+        <button id="openNew" class="btn btn-ghost">Open in new tab</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<script>
-    // Click handler für alle 12 Plätze
-    for (let i = 1; i <= 12; i++) {
-        document.getElementById("game" + i).addEventListener("click", () => {
-            alert("Hier kannst du später deinen Game-Code für Slot " + i + " einfügen.");
-        });
-    }
-</script>
+<!-- chat -->
+<div id="chat" style="position:fixed; right:14px; bottom:14px; z-index:2000;">
+  <div class="chatbox" style="width:320px;">
+    <div class="chat-header">CitrusBot</div>
+    <div class="chat-messages" id="chatMessages" style="padding:8px; height:160px; overflow:auto; background:#f8fafc;"></div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="Sag etwas..." />
+      <button id="chatSend">Senden</button>
+    </div>
+  </div>
+</div>
 
+<footer>© CitrusArcade — stepwise build</footer>
+
+<script>
+/* ------------------------------
+   Basic UI hooks
+   ------------------------------ */
+document.getElementById('logo').addEventListener('click', ()=> location.reload());
+const modal = document.getElementById('gameModal');
+const codeArea = document.getElementById('gameCode');
+const gameFrame = document.getElementById('gameFrame');
+const editorSlot = document.getElementById('editorSlot');
+
+const STORAGE_PREFIX = 'citrus_game_'; // + slot id
+
+// open editor for slot
+function openEditor(slot){
+  editorSlot.textContent = 'Slot: ' + slot;
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden','false');
+  const saved = localStorage.getItem(STORAGE_PREFIX + slot);
+  codeArea.value = saved || defaultTemplate(slot);
+  // show (sanitized) preview immediately
+  gameFrame.srcdoc = sanitizeCode(codeArea.value);
+  currentSlot = slot;
+}
+
+// default small template
+function defaultTemplate(slot){
+  return `<!doctype html>
+<html>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1" /><title>Game ${slot}</title>
+<style>body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#071018;color:#fff;font-family:Arial}</style>
+</head>
+<body><h1>Game ${slot} — paste your code</h1></body>
+</html>`;
+}
+
+// attach click to 12 cards
+let currentSlot = null;
+for(let i=1;i<=12;i++){
+  const node = document.getElementById('game-' + i);
+  if(!node) continue;
+  node.addEventListener('click', ()=> openEditor(i));
+}
+
+// close / save / run
+document.getElementById('closeModal').addEventListener('click', ()=> {
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden','true');
+});
+document.getElementById('saveCode').addEventListener('click', ()=> {
+  if(!currentSlot) return alert('No slot open');
+  localStorage.setItem(STORAGE_PREFIX + currentSlot, codeArea.value);
+  alert('Saved slot ' + currentSlot);
+});
+document.getElementById('clearCode').addEventListener('click', ()=> {
+  if(!currentSlot) return;
+  if(confirm('Delete saved code for slot ' + currentSlot + '?')){
+    localStorage.removeItem(STORAGE_PREFIX + currentSlot);
+    codeArea.value = defaultTemplate(currentSlot);
+    gameFrame.srcdoc = sanitizeCode(codeArea.value);
+  }
+});
+document.getElementById('openNew').addEventListener('click', ()=> {
+  const sanitized = sanitizeCode(codeArea.value);
+  const blob = new Blob([sanitized], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+});
+
+// On-run: sanitize and set srcdoc
+document.getElementById('runCode').addEventListener('click', ()=> {
+  const sanitized = sanitizeCode(codeArea.value);
+  // set preview
+  gameFrame.srcdoc = sanitized;
+});
+
+/* ------------------------------
+   Sanitizer (removes canvas, audio, video, fullscreen calls, autoplay/new Audio)
+   ------------------------------ */
+function sanitizeCode(input){
+  let out = input;
+
+  // remove <canvas ...>...</canvas> or <canvas .../> tags
+  out = out.replace(/<canvas[\s\S]*?<\/canvas>/gi, '');
+  out = out.replace(/<canvas[^>]*\/>/gi, '');
+
+  // remove audio & video tags
+  out = out.replace(/<audio[\s\S]*?<\/audio>/gi, '');
+  out = out.replace(/<audio[^>]*\/>/gi, '');
+  out = out.replace(/<video[\s\S]*?<\/video>/gi, '');
+  out = out.replace(/<video[^>]*\/>/gi, '');
+
+  // remove elements with playsinline / autoplay attributes (strip autoplay attrs)
+  out = out.replace(/\sautoplay(\s*=\s*"?[^"\s>]*)?/gi, '');
+  out = out.replace(/\splaysinline(\s*=\s*"?[^"\s>]*)?/gi, '');
+
+  // remove common fullscreen API usage
+  out = out.replace(/\.requestFullscreen\s*\(/gi, '.removedRequestFullscreen(');
+  out = out.replace(/\.webkitRequestFullScreen\s*\(/gi, '.removedRequestFullscreen(');
+  out = out.replace(/\.mozRequestFullScreen\s*\(/gi, '.removedRequestFullscreen(');
+  out = out.replace(/\.msRequestFullscreen\s*\(/gi, '.removedRequestFullscreen(');
+
+  // remove creation of Audio via constructor or play() calls - simple heuristics
+  out = out.replace(/new\s+Audio\s*\([\s\S]*?\);?/gi, '');
+  out = out.replace(/\.play\s*\(\s*\)\s*;?/gi, '');
+
+  // remove setAttribute('src') on audio/video and common element insertion for media (basic)
+  out = out.replace(/createElement\(['"]audio['"]\)/gi, "/* removed audio element */null");
+  out = out.replace(/createElement\(['"]video['"]\)/gi, "/* removed video element */null");
+
+  // remove <iframe allow="autoplay"> attribute occurrences (strip allow attributes)
+  out = out.replace(/\sallow=["'][^"']*autoplay[^"']*["']/gi, '');
+
+  // final safety: ensure no "<canvas" anywhere
+  out = out.replace(/<\s*canvas/gi, '<!-- canvas removed');
+
+  // document.write that injects audio etc: avoid by removing direct document.write calls that include <audio> or <video>
+  out = out.replace(/document\.write\s*\([\s\S]*?\<\/?(audio|video)[\s\S]*?\)\s*;?/gi, '/* removed document.write audio/video */');
+
+  // Return sanitized output
+  return out;
+}
+
+/* ------------------------------
+   Simple local chat & small helpers
+   ------------------------------ */
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+
+function addChat(who, text){
+  const d = document.createElement('div');
+  d.style.margin = '6px 0';
+  d.textContent = (who === 'user' ? 'Du: ' : 'Bot: ') + text;
+  chatMessages.appendChild(d);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+chatSend.addEventListener('click', ()=> {
+  const v = chatInput.value.trim(); if(!v) return;
+  addChat('user', v); chatInput.value = '';
+  setTimeout(()=> addChat('bot', simpleBotReply(v)), 350);
+});
+chatInput.addEventListener('keypress', e => { if(e.key === 'Enter') chatSend.click(); });
+function simpleBotReply(t){
+  t = t.toLowerCase();
+  if(t.includes('hallo')||t.includes('hi')) return 'Hallo! Sag mir Schritt 1.';
+  if(t.includes('hilfe')) return 'Sag mir, welchen Slot du bearbeiten willst.';
+  return 'Sorry, das weiß ich noch nicht. Sag "hilfe".';
+}
+
+/* ------------------------------
+   MetaMask / Phantom placeholders (no payment code)
+   ------------------------------ */
+const connectMeta = document.getElementById('connectMeta');
+connectMeta.addEventListener('click', async () => {
+  if(!window.ethereum){ alert('MetaMask nicht gefunden'); return; }
+  try{
+    const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    alert('MetaMask connected: ' + accs[0]);
+  }catch(e){ console.error(e); alert('MetaMask connect failed'); }
+});
+const connectPhantom = document.getElementById('connectPhantom');
+connectPhantom.addEventListener('click', async () => {
+  if(!window.solana){ alert('Phantom not found'); return; }
+  try{ await window.solana.connect(); alert('Phantom connected: ' + window.solana.publicKey.toString()); }
+  catch(e){ console.error(e); alert('Phantom connect failed'); }
+});
+
+</script>
 </body>
 </html>
