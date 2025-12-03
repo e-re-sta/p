@@ -14,33 +14,6 @@
         overflow-x: hidden;
     }
 
-    /* --- OPTISCHE EFFEKT-LAYER (über allem) --- */
-    .effect-layer {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 9999;
-    }
-
-    /* Schnee am Boden */
-    #snow-ground {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-        height: 40px;
-        background: white;
-        opacity: 0;
-        transition: opacity 2s ease-in-out;
-        z-index: 9998;
-        pointer-events: none;
-    }
-
-    /* Header */
     header {
         display: flex;
         align-items: center;
@@ -83,8 +56,6 @@
         border: 1px solid #1f242c;
         padding: 20px;
         border-radius: 10px;
-        cursor: pointer;
-        transition: 0.2s;
         height: 140px;
         display: flex;
         flex-direction: column;
@@ -114,6 +85,12 @@
         font-size: 14px;
         color: #d2d2d2;
         opacity: 0.8;
+        cursor: pointer;
+    }
+
+    .play-tag:hover {
+        color: #ffffff;
+        opacity: 1;
     }
 </style>
 </head>
@@ -128,139 +105,87 @@
     <h2>Spiele</h2>
 
     <div class="game-grid">
-        <div class="game-box" id="game1">
+
+        <div class="game-box">
             <div class="game-title">Game 1</div>
             <div class="game-sub">Ein kleines Garten-Abenteuer. Pflege Pflanzen, sammle Punkte.</div>
-            <div class="play-tag">Play</div>
+            <div class="play-tag" onclick="startGame(1)">Play</div>
         </div>
 
-        <!-- Platzhalter 2–12 -->
-        <div class="game-box" id="game2"><div class="game-title">Game 2</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game3"><div class="game-title">Game 3</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game4"><div class="game-title">Game 4</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game5"><div class="game-title">Game 5</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game6"><div class="game-title">Game 6</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game7"><div class="game-title">Game 7</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game8"><div class="game-title">Game 8</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game9"><div class="game-title">Game 9</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game10"><div class="game-title">Game 10</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game11"><div class="game-title">Game 11</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
-        <div class="game-box" id="game12"><div class="game-title">Game 12</div><div class="game-sub">Spielbeschreibung folgt.</div><div class="play-tag">Play</div></div>
+        <div class="game-box">
+            <div class="game-title">Game 2</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(2)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 3</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(3)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 4</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(4)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 5</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(5)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 6</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(6)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 7</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(7)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 8</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(8)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 9</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(9)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 10</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(10)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 11</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(11)">Play</div>
+        </div>
+
+        <div class="game-box">
+            <div class="game-title">Game 12</div>
+            <div class="game-sub">Spielbeschreibung folgt.</div>
+            <div class="play-tag" onclick="startGame(12)">Play</div>
+        </div>
 
     </div>
 </div>
 
-<!-- Effekt-Layer -->
-<div id="effects" class="effect-layer"></div>
-<div id="snow-ground"></div>
-
 <script>
-/* ===============================
-   CLICK HANDLER
-================================*/
-for (let i = 1; i <= 12; i++) {
-    document.getElementById("game" + i).addEventListener("click", () => {
-        alert("Spiel " + i + " wird später gestartet.");
-    });
+function startGame(id) {
+    // später wird hier das richtige Game geladen
+    alert("Starte Spiel " + id);
 }
-
-/* ===============================
-   EFFEKTE: Gurkenregen & Schnee
-================================*/
-const layer = document.getElementById("effects");
-const snowGround = document.getElementById("snow-ground");
-
-function gurkenRegen() {
-    let interval = setInterval(() => {
-        const c = document.createElement("div");
-        c.textContent = "🥒";
-        c.style.position = "absolute";
-        c.style.left = Math.random() * 100 + "vw";
-        c.style.top = "-20px";
-        c.style.fontSize = "26px";
-        c.style.animation = `drop 2.5s linear forwards`;
-        layer.appendChild(c);
-
-        setTimeout(() => c.remove(), 2600);
-    }, 120);
-
-    setTimeout(() => clearInterval(interval), 15000);
-}
-
-function schneeFall() {
-    snowGround.style.opacity = 1;
-
-    let interval = setInterval(() => {
-        const s = document.createElement("div");
-        s.textContent = "❄️";
-        s.style.position = "absolute";
-        s.style.left = Math.random() * 100 + "vw";
-        s.style.top = "-20px";
-        s.style.fontSize = "20px";
-        s.style.animation = `drop 3s linear forwards`;
-        layer.appendChild(s);
-
-        setTimeout(() => s.remove(), 3100);
-    }, 150);
-
-    setTimeout(() => {
-        clearInterval(interval);
-
-        // Schneeräumer kommt
-        const car = document.createElement("div");
-        car.textContent = "🚜";
-        car.style.position = "absolute";
-        car.style.bottom = "10px";
-        car.style.left = "-100px";
-        car.style.fontSize = "40px";
-        car.style.transition = "transform 4s linear";
-        layer.appendChild(car);
-
-        setTimeout(() => car.style.transform = "translateX(120vw)", 100);
-        setTimeout(() => {
-            snowGround.style.opacity = 0;
-            car.remove();
-        }, 4500);
-    }, 22000);
-}
-
-/* ===============================
-   TIMING-LOGIK (Wechsel)
-================================*/
-async function effectLoop() {
-    while (true) {
-        gurkenRegen();
-        await wait(15000);
-
-        schneeFall();
-        await wait(22000);
-
-        gurkenRegen();
-        await wait(35000);
-
-        schneeFall();
-        await wait(15000);
-    }
-}
-
-function wait(ms) {
-    return new Promise(res => setTimeout(res, ms));
-}
-
-effectLoop();
-
-/* ===============================
-   ANIMATION
-================================*/
-const style = document.createElement("style");
-style.innerHTML = `
-@keyframes drop {
-    from { transform: translateY(0); }
-    to { transform: translateY(110vh); }
-}
-`;
-document.head.appendChild(style);
-
 </script>
 
 </body>
