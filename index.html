@@ -1,396 +1,275 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CitrusArcade – Clean Version</title>
-
+<meta charset="UTF-8" />
+<title>CitrusArcade – Effekte</title>
 <style>
-  body {
+body {
+    background: #111;
     margin: 0;
-    padding: 0;
-    background: #0d0d0d;
-    color: white;
-    font-family: Arial, sans-serif;
     overflow-x: hidden;
-  }
+}
 
-  /* HEADER */
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 25px;
-    background: #111;
-    border-bottom: 2px solid #f5c400;
-  }
+/* ========================== */
+/*  FALL-ANIMATION            */
+/* ========================== */
+@keyframes fallDown {
+    from { transform: translateY(-50px); opacity: 1; }
+    to   { transform: translateY(120vh); opacity: 0; }
+}
 
-  header h1 {
-    margin: 0;
-    font-size: 26px;
-    color: #f5c400;
-    letter-spacing: 1px;
-  }
+/* ========================== */
+/*  FUNKEN / LAVA             */
+/* ========================== */
+@keyframes sparkRise {
+    from { transform: translateY(0) translateX(0); opacity: 1; }
+    to   { transform: translateY(-150px) translateX(40px); opacity: 0; }
+}
 
-  .wallet-btn {
-    background: #f5c400;
-    color: #000;
-    padding: 10px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    border: none;
-    transition: 0.2s;
-  }
+/* ========================== */
+/* NEBEL                      */
+/* ========================== */
+@keyframes fogMove {
+    from { transform: translateX(-200px); opacity: 0.4; }
+    to   { transform: translateX(200px); opacity: 0.7; }
+}
 
-  .wallet-btn:hover {
-    transform: scale(1.05);
-  }
-
-  /* GAME GRID */
-  .games-section {
-    padding: 40px 20px;
-    text-align: center;
-  }
-
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
-  }
-
-  .game-card {
-    background: #151515;
-    border: 2px solid #333;
-    padding: 20px;
-    border-radius: 14px;
-    transition: 0.2s;
-    cursor: pointer;
-  }
-
-  .game-card:hover {
-    border-color: #f5c400;
-    transform: scale(1.05);
-  }
-
-  .game-card h3 {
-    margin: 10px 0 0 0;
-    color: #f5c400;
-  }
-
-  .game-card p {
-    opacity: 0.7;
-    font-size: 14px;
-  }
-
-  /* CHATBOT BUTTON */
-  #chatbot-btn {
+.fog {
     position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: #f5c400;
-    color: #000;
-    padding: 15px 18px;
-    font-size: 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 0 15px #f5c400aa;
-    transition: 0.2s;
-    z-index: 999;
-  }
+    top: 20vh;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: radial-gradient(circle, rgba(200,200,200,0.4), transparent);
+    animation: fogMove 10s ease-in-out infinite alternate;
+    z-index: 9998;
+    pointer-events: none;
+    filter: blur(30px);
+}
 
-  #chatbot-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 20px #f5c400;
-  }
-
-  /* CHATBOT POPUP */
-  #chatbot-window {
+/* ========================== */
+/* BLITZE                     */
+/* ========================== */
+@keyframes lightningFlash {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    15% { opacity: 0; }
+    20% { opacity: 1; }
+    25% { opacity: 0; }
+    100% { opacity: 0; }
+}
+.lightning {
     position: fixed;
-    bottom: 90px;
-    right: 25px;
-    width: 300px;
-    height: 380px;
-    background: #111;
-    border: 2px solid #f5c400;
-    border-radius: 14px;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 999;
-  }
+    inset: 0;
+    background: white;
+    opacity: 0;
+    animation: lightningFlash 0.6s ease-out;
+    z-index: 999999;
+    pointer-events: none;
+}
 
-  #chatbot-header {
-    padding: 12px;
-    background: #f5c400;
-    color: #000;
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  #chatbot-messages {
-    padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  #chatbot-input {
-    display: flex;
-    border-top: 2px solid #f5c400;
-  }
-
-  #chatbot-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    background: #222;
-    color: #fff;
-  }
-
-  #chatbot-input button {
-    background: #f5c400;
-    color: #000;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
-</style>
-
-</head>
-<body>
-
-<header>
-  <h1>CitrusArcade</h1>
-  <button class="wallet-btn">Wallet verbinden</button>
-</header>
-
-<section class="games-section">
-  <h2>Games</h2>
-
-  <div class="games-grid">
-    <div class="game-card">
-      <h3>Flappy Lemon</h3>
-      <p>Kommendes Spiel</p>
-    </div>
-
-    <div class="game-card">
-      <h3>Lemon Clicker</h3>
-      <p>Bald verfügbar</p>
-    </div>
-
-    <div class="game-card">
-      <h3>Citrus Runner</h3>
-      <p>In Planung</p>
-    </div>
-  </div>
-</section>
-
-<!-- CHATBOT BUTTON -->
-<button id="chatbot-btn">💬</button>
-
-<!-- CHATBOT WINDOW -->
-<div id="chatbot-window">
-  <div id="chatbot-header">CitrusBot</div>
-  <div id="chatbot-messages"></div>
-
-  <div id="chatbot-input">
-    <input type="text" id="chatbot-text" placeholder="Schreib etwas...">
-    <button id="chatbot-send">OK</button>
-  </div>
-</div>
-
-<script>
-  // CHATBOT ÖFFNEN/SCHLIESSEN
-  const chatBtn = document.getElementById("chatbot-btn");
-  const chatWindow = document.getElementById("chatbot-window");
-
-  chatBtn.addEventListener("click", () => {
-    chatWindow.style.display =
-      chatWindow.style.display === "flex" ? "none" : "flex";
-  });
-
-  // EINFACHER DUMMY-CHATBOT
-  const msgBox = document.getElementById("chatbot-messages");
-  const input = document.getElementById("chatbot-text");
-  const sendBtn = document.getElementById("chatbot-send");
-
-  function botReply(msg) {
-    const div = document.createElement("div");
-    div.style.margin = "5px 0";
-    div.style.color = "#f5c400";
-    div.textContent = "🟡 CitrusBot: " + msg;
-    msgBox.appendChild(div);
-
-    msgBox.scrollTop = msgBox.scrollHeight;
-  }
-
-  sendBtn.onclick = () => {
-    const user = input.value.trim();
-    if (!user) return;
-
-    const div = document.createElement("div");
-    div.style.margin = "5px 0";
-    div.textContent = "🧑: " + user;
-    msgBox.appendChild(div);
-
-    input.value = "";
-
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-    setTimeout(() => botReply("Interessant 👀"), 500);
-  };
-<style>
-/* 🔥 Feuer am Rand */
+/* ========================== */
+/* FEUER-AM-RAND             */
+/* ========================== */
 .fire-edge {
     pointer-events: none;
     position: fixed;
     inset: 0;
     animation: fireGlow 0.2s infinite;
-    box-shadow: 0 0 50px 20px rgba(255,100,0,0.8) inset;
-    z-index: 9999;
+    box-shadow: 0 0 60px 30px rgba(255,50,0,0.9) inset;
+    z-index: 999999;
 }
-
 @keyframes fireGlow {
-    0%   { box-shadow: 0 0 40px 15px rgba(255,120,0,0.7) inset; }
-    50%  { box-shadow: 0 0 60px 25px rgba(255,30,0,0.9) inset; }
-    100% { box-shadow: 0 0 40px 15px rgba(255,120,0,0.7) inset; }
+    0%   { box-shadow: 0 0 40px 20px rgba(255,120,0,0.7) inset; }
+    50%  { box-shadow: 0 0 80px 30px rgba(255,0,0,1) inset; }
+    100% { box-shadow: 0 0 40px 20px rgba(255,120,0,0.7) inset; }
 }
 
-/* Animation für fallende Elemente (Gurken & Schnee) */
-@keyframes fallDown {
-    from { transform: translateY(-50px); opacity: 1; }
-    to   { transform: translateY(110vh); opacity: 0; }
-}
-
-/* Autos */
-.car {
-    position: fixed;
-    bottom: 20px;
-    font-size: 40px;
-    z-index: 9999;
-    white-space: nowrap;
-    animation: drive linear;
-}
-
+/* ========================== */
+/*  AUTOS                     */
+/* ========================== */
 @keyframes drive {
     from { transform: translateX(-200px); }
     to   { transform: translateX(120vw); }
 }
+.car {
+    position: fixed;
+    bottom: 20px;
+    font-size: 50px;
+    z-index: 99990;
+    animation: drive linear;
+}
+</style>
+</head>
+
+<body>
 
 <div class="fire-edge"></div>
+<div id="fogContainer"></div>
 
-/* ============================
-   🥒 GURKEN-REGEN
-============================ */
-function startCucumberRain() {
-    const interval = setInterval(() => {
-        let c = document.createElement("div");
-        c.innerHTML = "🥒";
-        c.style.position = "fixed";
-        c.style.left = Math.random() * window.innerWidth + "px";
-        c.style.top = "-50px";
-        c.style.fontSize = "28px";
-        c.style.animation = "fallDown 4s linear";
-        c.style.zIndex = 5000;
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 4000);
-    }, 250);
+<script>
+console.log("%cEFFEKT ENGINE STARTET", "color: lime");
 
-    return interval;
+/* ========================== */
+/*  RANDOM HELPERS            */
+/* ========================== */
+function rnd(min, max) { return Math.random() * (max - min) + min; }
+
+/* ========================== */
+/*  GENERISCHE FALL-ELEMENTE  */
+/* ========================== */
+function spawnFalling(emoji, size) {
+    let e = document.createElement("div");
+    e.innerHTML = emoji;
+    e.style.position = "fixed";
+    e.style.left = rnd(0, window.innerWidth) + "px";
+    e.style.top = "-60px";
+    e.style.fontSize = size + "px";
+    e.style.zIndex = 99999;
+    e.style.animation = "fallDown " + rnd(3,6) + "s linear";
+
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 7000);
 }
 
-/* ============================
-   ❄️ SCHNEEFLOCKEN
-============================ */
+/* ========================== */
+/*  EFFEKTGRUPPEN             */
+/* ========================== */
+
+function startCucumber() {
+    console.log("🥒 Gurkenregen");
+    return setInterval(() => spawnFalling("🥒", 40), 200);
+}
 function startSnow() {
-    const interval = setInterval(() => {
+    console.log("❄️ Schnee");
+    return setInterval(() => spawnFalling("❄️", 30), 150);
+}
+function startIvy() {
+    console.log("🌿 Efeu");
+    return setInterval(() => spawnFalling("🌿", 35), 180);
+}
+function startSparks() {
+    console.log("🔥 Lava Funken");
+    return setInterval(() => {
         let s = document.createElement("div");
-        s.innerHTML = "❄️";
+        s.innerHTML = "✨";
         s.style.position = "fixed";
-        s.style.left = Math.random() * window.innerWidth + "px";
-        s.style.top = "-50px";
-        s.style.fontSize = (Math.random()*15+15) + "px";
-        s.style.opacity = Math.random()+0.3;
-        s.style.animation = "fallDown " + (Math.random()*4+3) + "s linear";
-        s.style.zIndex = 4000;
+        s.style.left = rnd(0, window.innerWidth) + "px";
+        s.style.top = rnd(70, 95) + "vh";
+        s.style.fontSize = "20px";
+        s.style.color = "orange";
+        s.style.animation = "sparkRise 1.5s ease-out";
+        s.style.zIndex = 99990;
         document.body.appendChild(s);
-        setTimeout(() => s.remove(), 5000);
-    }, 150);
-
-    return interval;
+        setTimeout(() => s.remove(), 1500);
+    }, 80);
+}
+function startFog() {
+    console.log("🌫️ Nebel");
+    let fog = document.createElement("div");
+    fog.classList.add("fog");
+    fog.id = "fog";
+    document.body.appendChild(fog);
+    return fog;
 }
 
-/* ============================
-   🚗 AUTOS
-============================ */
-const carIcons = ["🚗", "🚙", "🚕", "🏎️", "🚓"];
+/* ========================== */
+/*  BLITZE                    */
+/* ========================== */
+function flashLightning() {
+    let l = document.createElement("div");
+    l.classList.add("lightning");
+    document.body.appendChild(l);
+    setTimeout(() => l.remove(), 700);
+}
+
+/* ========================== */
+/*  AUTOS                     */
+/* ========================== */
 
 function spawnCar() {
+    console.log("🚗 Auto fährt vorbei");
     let car = document.createElement("div");
     car.classList.add("car");
-    car.innerHTML = carIcons[Math.floor(Math.random()*carIcons.length)];
-
-    car.style.bottom = (Math.random()*40 + 10) + "px";         // Höhe
-    car.style.fontSize = (Math.random()*20+35) + "px";         // Größe
-    car.style.animationDuration = (Math.random()*3+3) + "s";   // Geschwindigkeit
-
+    car.innerHTML = ["🚗", "🚙", "🚕", "🏎️"][Math.floor(Math.random()*4)];
+    car.style.bottom = rnd(10,50) + "px";
+    car.style.animationDuration = rnd(3,7) + "s";
     document.body.appendChild(car);
-    setTimeout(() => car.remove(), 6000);
+    setTimeout(() => car.remove(), 8000);
 }
 
-/* Autos fahren zufällig alle paar Sekunden */
-setInterval(spawnCar, 3000 + Math.random()*3000);
+/* Crash */
+function carCrash() {
+    console.log("💥 CRASH!");
 
-/* ============================
-   🔄 ABWECHSELNDE LOGIK
-============================ */
+    let car1 = document.createElement("div");
+    let car2 = document.createElement("div");
+    car1.className = car2.className = "car";
+
+    car1.innerHTML = "🚗";
+    car2.innerHTML = "🚙";
+
+    car1.style.left = "-200px";
+    car2.style.right = "-200px";
+
+    car1.style.bottom = "40px";
+    car2.style.bottom = "40px";
+
+    car1.style.animation = "drive 3s linear";
+    car2.style.animation = "drive 3s linear reverse";
+
+    document.body.appendChild(car1);
+    document.body.appendChild(car2);
+
+    setTimeout(() => {
+        car1.innerHTML = "💥";
+        car2.innerHTML = "";
+    }, 1500);
+
+    setTimeout(() => { car1.remove(); car2.remove(); }, 5000);
+}
+
+/* alle 20–40 Sek ein Auto */
+setInterval(() => spawnCar(), rnd(20000, 40000));
+
+/* alle 2 Minuten Crash */
+setInterval(() => carCrash(), 120000);
+
+/* ========================== */
+/*  ZUFÄLLIGER EFFEKTZYKLUS   */
+/* ========================== */
+
+let currentEffect = null;
+
+function stopEffect(e) {
+    if (!e) return;
+    if (typeof e === "number") clearInterval(e); // interval
+    if (e instanceof HTMLElement) e.remove(); // fog
+}
+
+const effectList = [
+    startCucumber,
+    startSnow,
+    startIvy,
+    startSparks,
+    startFog
+];
+
 function cycleEffects() {
-    let cucumber = null;
-    let snow = null;
+    stopEffect(currentEffect);
 
-    function startCukes() {
-        cucumber = startCucumberRain();
-    }
-    function stopCukes() {
-        clearInterval(cucumber);
-    }
+    // zufälliger Effekt
+    let effect = effectList[Math.floor(Math.random() * effectList.length)];
+    currentEffect = effect();
 
-    function startSnowing() {
-        snow = startSnow();
-    }
-    function stopSnowing() {
-        clearInterval(snow);
+    // Gewitterchance
+    if (Math.random() < 0.3) {
+        setTimeout(flashLightning, rnd(500, 2000));
+        setTimeout(flashLightning, rnd(1500, 3000));
     }
 
-    // Ablauf:
-    // 1.  Gurken (5s)
-    // 2.  Pause (1s)
-    // 3.  Schnee (6s)
-    // 4.  Pause (1s)
-    // 5.  Wiederholen
-
-    function loop() {
-        startCukes();
-        setTimeout(() => {
-            stopCukes();
-        }, 5000);
-
-        setTimeout(() => {
-            startSnowing();
-        }, 6000);
-
-        setTimeout(() => {
-            stopSnowing();
-        }, 12000);
-
-        setTimeout(loop, 13000);
-    }
-
-    loop();
+    // Dauer 12–18 Sekunden
+    setTimeout(cycleEffects, rnd(12000, 18000));
 }
 
 cycleEffects();
