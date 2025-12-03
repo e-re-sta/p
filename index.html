@@ -186,33 +186,97 @@ function startGame(id) {
     // später wird hier das richtige Game geladen
     alert("Starte Spiel " + id);
 }
-   // SIMPLE GARDEN GAME SCRIPT ONLY
-let score = 0;
+// -----------------------------
+// GARDEN GAME (ONLY JAVASCRIPT)
+// -----------------------------
 
-function initGardenGame() {
-    const plots = document.querySelectorAll(".plot");
-    const scoreNum = document.getElementById("scoreNum");
+function startGardenGame() {
 
-    plots.forEach(plot => {
+    // Seite leeren
+    document.body.innerHTML = "";
+    document.body.style.margin = "0";
+    document.body.style.background = "#0b0e11";
+    document.body.style.color = "white";
+    document.body.style.fontFamily = "Arial, sans-serif";
+
+    // Hauptcontainer
+    const game = document.createElement("div");
+    game.style.maxWidth = "600px";
+    game.style.margin = "40px auto";
+    game.style.textAlign = "center";
+
+    // Überschrift
+    const title = document.createElement("h1");
+    title.textContent = "🍋 Garden Game";
+    title.style.marginBottom = "20px";
+    game.appendChild(title);
+
+    // Punkteanzeige
+    const scoreBox = document.createElement("div");
+    scoreBox.style.fontSize = "22px";
+    scoreBox.style.marginBottom = "20px";
+    scoreBox.innerHTML = 'Punkte: <span id="scoreNum">0</span>';
+    game.appendChild(scoreBox);
+
+    // Grid Container
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+    grid.style.gap = "12px";
+
+    game.appendChild(grid);
+    document.body.appendChild(game);
+
+    // 9 Felder erzeugen
+    for (let i = 0; i < 9; i++) {
+        let plot = document.createElement("div");
+
+        plot.classList.add("plot");
+        plot.setAttribute("data-state", "empty");
+
+        // Style inline, da ohne CSS
+        plot.style.height = "120px";
+        plot.style.background = "#1b232d";
+        plot.style.border = "1px solid #2a333f";
+        plot.style.borderRadius = "8px";
+        plot.style.cursor = "pointer";
+        plot.style.display = "flex";
+        plot.style.alignItems = "center";
+        plot.style.justifyContent = "center";
+        plot.style.fontSize = "30px";
+        plot.style.transition = "0.2s";
+        plot.style.userSelect = "none";
+
+        // Hover-Effekt
+        plot.onmouseenter = () => plot.style.background = "#263240";
+        plot.onmouseleave = () => plot.style.background = "#1b232d";
+
+        grid.appendChild(plot);
+    }
+
+    // Spiellogik
+    let score = 0;
+
+    document.querySelectorAll(".plot").forEach(plot => {
+
         plot.addEventListener("click", () => {
             let state = plot.getAttribute("data-state");
 
             if (state === "empty") {
-                // Pflanze setzen
+                // Setzen
                 plot.textContent = "🌱";
                 plot.setAttribute("data-state", "growing");
 
                 setTimeout(() => {
                     plot.textContent = "🍋";
                     plot.setAttribute("data-state", "ready");
-                }, 6000); // Wachstum 6 Sekunden
+                }, 6000); // Wachstum: 6 Sekunden
             }
 
             else if (state === "ready") {
                 // Ernten
                 score++;
-                scoreNum.textContent = score;
-
+                document.getElementById("scoreNum").textContent = score;
                 plot.textContent = "";
                 plot.setAttribute("data-state", "empty");
             }
@@ -220,12 +284,10 @@ function initGardenGame() {
     });
 }
 
-// automatischer Start, sofern Game-Elemente existieren
-document.addEventListener("DOMContentLoaded", () => {
-    if (document.querySelector(".plot")) {
-        initGardenGame();
-    }
-}); 
+// -----------------------------------------
+// Auto-Start, wenn du es manuell auslöst:
+// Beispiel: startGardenGame()
+// -----------------------------------------
 </script>
 
 </body>
