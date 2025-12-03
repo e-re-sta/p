@@ -883,77 +883,48 @@ function botReply(userText) {
     return "Das habe ich leider nicht verstanden – probier es anders oder sag 'hilfe'.";
 } 
 
-document.addEventListener('DOMContentLoaded', () => {
+// Sobald die Seite fertig ist
+document.addEventListener("DOMContentLoaded", () => {
 
-  console.log("🔵 CitrusArcade Super-Klick-System aktiviert.");
+  // Play-Element holen (ID oder Klasse eintragen)
+  const playBtn = document.querySelector("#play, .play, [data-play]");
 
-  // 1) Alle relevanten Elemente einsammeln
-  let elements = new Set();
+  if(!playBtn){
+    console.warn("⚠️ Kein PLAY-Schriftzug gefunden!");
+    return;
+  }
 
-  // Buttons direkt
-  document.querySelectorAll("button").forEach(el => elements.add(el));
+  console.log("🟢 Play gefunden:", playBtn);
 
-  // Alles mit onclick
-  document.querySelectorAll("[onclick]").forEach(el => elements.add(el));
+  // Visuelle Klick-Animation
+  playBtn.style.cursor = "pointer";
 
-  // Alles, das wie ein Button aussieht
-  document.querySelectorAll("a, div, span").forEach(el => {
-    const css = getComputedStyle(el);
-    const looksClickable =
-      css.cursor === "pointer" ||
-      css.userSelect === "none" ||
-      css.borderRadius !== "0px" ||
-      css.backgroundColor !== "rgba(0, 0, 0, 0)";
+  playBtn.addEventListener("click", () => {
 
-    if (looksClickable) elements.add(el);
-  });
+    console.log("▶️ PLAY geklickt!");
 
-  // Sichtbare Elemente filtern
-  elements = [...elements].filter(el => el.offsetParent !== null);
+    // Klick-Feedback
+    playBtn.style.transform = "scale(0.95)";
+    setTimeout(() => playBtn.style.transform = "scale(1)", 150);
 
-  console.log("🔍 Gefunden:", elements.length, "klickbare Elemente");
+    // ❗ HIER bestimmst du, wohin es weitergeht
+    // Beispiel: Auf ein Spielscreen wechseln:
+    const gameScreen = document.getElementById("game");
+    const titleScreen = document.getElementById("title");
 
-  // 2) Falls keine ID → automatisch eine geben
-  elements.forEach((el, i) => {
-    if (!el.id) el.id = "citrus-btn-" + (i + 1);
-  });
-
-  // 3) Klick-Animation (visuelles Feedback)
-  const s = document.createElement("style");
-  s.textContent = `
-    .citrus-click {
-      transform: scale(0.96);
-      opacity: 0.85;
-      transition: 120ms ease;
+    if (gameScreen && titleScreen) {
+      titleScreen.style.display = "none";
+      gameScreen.style.display = "block";
     }
-  `;
-  document.head.appendChild(s);
 
-  // 4) ALTEN Button entfernen → NEU klonen (macht ihn 100% klickbar)
-  elements = elements.map(el => {
-    const clone = el.cloneNode(true);
-    el.replaceWith(clone);
-    return clone;
-  });
+    // Wenn du statt dessen zu einer URL willst:
+    // window.location.href = "game.html";
 
-  // 5) Saubere Click-Handler draufpacken
-  elements.forEach((el, index) => {
-    el.addEventListener("click", e => {
-      // Animation
-      el.classList.add("citrus-click");
-      setTimeout(() => el.classList.remove("citrus-click"), 120);
-
-      // Debug-Ausgabe
-      console.log("🟢 Klick:", el.id, `"${el.textContent.trim()}"`);
-
-      // ---- HIER kannst du später echte Aktionen ergänzen ----
-      // Beispiel:
-      // if (el.id === "citrus-btn-1") startGame();
-      // if (el.id === "citrus-btn-8") openShop();
-    });
+    // Wenn du etwas anderes willst, sag mir Bescheid!
   });
 
 });
+
 </script>
 </body>
 </html>
