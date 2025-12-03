@@ -882,47 +882,89 @@ function botReply(userText) {
 
     return "Das habe ich leider nicht verstanden – probier es anders oder sag 'hilfe'.";
 } 
+  
+document.addEventListener('DOMContentLoaded', () => {
+  // Wieviele Buttons brauchst du? (12 angefragt)
+  const WANT = 12;
 
-// Sobald die Seite fertig ist
-document.addEventListener("DOMContentLoaded", () => {
+  // Suche: (a) bevorzugt Buttons mit bestimmter Klasse, z.B. 'citrus-ui-btn'
+  // Wenn du solche Klasse(n) nicht hast, nutze fallback auf alle Buttons.
+  let found = Array.from(document.querySelectorAll('button.citrus-ui-btn'));
 
-  // Play-Element holen (ID oder Klasse eintragen)
-  const playBtn = document.querySelector("#play, .play, [data-play]");
-
-  if(!playBtn){
-    console.warn("⚠️ Kein PLAY-Schriftzug gefunden!");
-    return;
+  if(found.length === 0) {
+    // fallback: alle sichtbaren Buttons auf der Seite
+    found = Array.from(document.querySelectorAll('button'));
   }
 
-  console.log("🟢 Play gefunden:", playBtn);
+  // Optional: filtere Buttons, die hidden sind
+  found = found.filter(b => b.offsetParent !== null); // nur sichtbare
 
-  // Visuelle Klick-Animation
-  playBtn.style.cursor = "pointer";
-
-  playBtn.addEventListener("click", () => {
-
-    console.log("▶️ PLAY geklickt!");
-
-    // Klick-Feedback
-    playBtn.style.transform = "scale(0.95)";
-    setTimeout(() => playBtn.style.transform = "scale(1)", 150);
-
-    // ❗ HIER bestimmst du, wohin es weitergeht
-    // Beispiel: Auf ein Spielscreen wechseln:
-    const gameScreen = document.getElementById("game");
-    const titleScreen = document.getElementById("title");
-
-    if (gameScreen && titleScreen) {
-      titleScreen.style.display = "none";
-      gameScreen.style.display = "block";
+  // Wenn weniger als WANT gefunden wurden, nimm weitere (inkl. versteckte)
+  if(found.length < WANT) {
+    const all = Array.from(document.querySelectorAll('button'));
+    for(const b of all){
+      if(found.indexOf(b) === -1) found.push(b);
+      if(found.length >= WANT) break;
     }
+  }
 
-    // Wenn du statt dessen zu einer URL willst:
-    // window.location.href = "game.html";
+  // Erstelle/prüfe IDs und binde Handler
+  const buttons = [];
+  for(let i = 0; i < WANT; i++){
+    const b = found[i];
+    if(!b) break; // nicht genug Buttons auf Seite
+    // falls keine id, automatisch eine eindeutige zuweisen
+    if(!b.id){
+      b.id = `btn-auto-${i+1}`;
+      // optional: markiere im DOM (data-attr)
+      b.setAttribute('data-auto-id', 'true');
+    }
+    buttons.push(b);
+  }
 
-    // Wenn du etwas anderes willst, sag mir Bescheid!
+  // Beispiel-Handler: passe die Logik hier an
+  function makeHandler(index, buttonEl){
+    return function(evt){
+      evt.preventDefault();
+      console.log('geklickt:', index+1, 'id=', buttonEl.id, 'text=', buttonEl.textContent.trim());
+      // Beispiel-Aktion: zeige kurzen visuellen Feedback
+      buttonEl.classList.add('btn-clicked-temp');
+      setTimeout(()=> buttonEl.classList.remove('btn-clicked-temp'), 220);
+
+      // Hier deine eigentliche Aktion:
+      // switch(index) { case 0: ...; break; ... }
+      // oder benutze data-attributes: buttonEl.dataset.action
+    };
+  }
+
+  // CSS für visuelles Feedback (falls noch nicht vorhanden) hinzufügen
+  const styleId = 'btn-temp-style';
+  if(!document.getElementById(styleId)) {
+    const s = document.createElement('style');
+    s.id = styleId;
+    s.textContent = `
+      .btn-clicked-temp { transform: translateY(1px) scale(0.995); transition: transform 120ms; box-shadow: 0 2px 6px rgba(0,0,0,0.12) !important; }
+    `;
+    document.head.appendChild(s);
+  }
+
+  // Binde Event Listener
+  buttons.forEach((b, idx) => {
+    // entferne alte Listener (sicherer Neustart)
+    b.replaceWith(b.cloneNode(true));
+    const fresh = document.getElementById(b.id);
+    fresh.addEventListener('click', makeHandler(idx, fresh));
+    // Optional: auch touchstart / key support
+    fresh.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        fresh.click();
+      }
+    });
   });
 
+  // Info in Konsole
+  console.log('Automatisch gebunden:', buttons.map((b,i)=> `${i+1}:${b.id}`).join(', '));
 });
 
 </script>
