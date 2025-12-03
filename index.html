@@ -1,142 +1,695 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CitrusArcade</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CitrusArcade — Game Portal</title>
 <style>
-/* Grundstyles */
-body { margin:0; font-family:sans-serif; background:#111; color:#eee; transition:0.3s; overflow-x:hidden;}
-body.light { background:#fafafa; color:#111;}
-header { display:flex; align-items:center; padding:10px 20px; background:#111; justify-content:space-between;}
-header.light { background:#eee;}
-header h1 { margin:0; font-size:1.5em;}
-button { cursor:pointer; border:none; border-radius:5px; padding:8px 12px; margin:0 5px; color:#fff; background:#ff6600;}
-button:hover { background:#ffa040;}
-#logoReload { width:50px; height:50px; background:url('logo.png') no-repeat center/contain; border:none; cursor:pointer;}
-#games { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:15px; padding:15px;}
-.game-btn { background:#222; padding:15px; text-align:center; border-radius:10px; cursor:pointer; border:2px solid #555;}
-.game-btn:hover { transform:scale(1.05); border-color:#ff6600;}
-#gameFrame { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000c; justify-content:center; align-items:center; z-index:10;}
-#gameBox { width:90%; height:90%; background:#000; border:3px solid #ff6600; border-radius:15px; position:relative; overflow:hidden;}
-#closeGame { position:absolute; top:10px; right:10px; padding:5px 10px; background:#ff6600; cursor:pointer;}
-#effectsLayer { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;}
-.fx { position:absolute; width:100%; height:100%; top:0; left:0; pointer-events:none;}
-.fx.rain { background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.2) 0 2px, transparent 2px 4px); animation: fall 6s linear infinite;}
-.fx.fire { background: radial-gradient(circle, rgba(255,100,0,0.3) 0%, transparent 70%); animation: flicker 12s infinite;}
-.fx.snow { background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.3) 0 2px, transparent 2px 4px); animation: snow 12s linear infinite;}
-.fx.vines { background: url('vines.png') repeat; animation: grow 20s linear infinite;}
-.fx.ivy { background: url('ivy.png') repeat; animation: grow 32s linear infinite;}
-@keyframes fall {0%{background-position:0 0;}100%{background-position:0 100%;}}
-@keyframes flicker {0%,100%{opacity:1;}50%{opacity:0.5;}}
-@keyframes snow {0%{background-position:0 0;}100%{background-position:0 100%;}}
-@keyframes grow {0%{background-size:0;}50%{background-size:50%;}100%{background-size:100%;}}
+  /* ===== Base / Layout ===== */
+  :root{
+    --bg:#0b0c10; --panel:#0f1720; --accent:#ff7a00; --accent-2:#ffaa33; --muted:#9aa3b2;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,#06060a 0%, #0b0c10 100%);
+    color:#fff; min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  }
+
+  header{
+    width:100%; padding:22px 18px; display:flex; gap:14px; align-items:center;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 20px rgba(0,0,0,0.45);
+  }
+  .brand {
+    display:flex; gap:12px; align-items:center;
+    margin-left:10px;
+  }
+  .logo {
+    width:48px; height:48px; border-radius:10px; display:grid;place-items:center;
+    background:rgba(255,255,255,0.08); box-shadow:0 6px 14px rgba(0,0,0,0.25);
+  }
+  .logo svg{width:36px;height:36px}
+  h1{font-size:20px; margin:0; color:#071018; letter-spacing:0.6px}
+  .subtitle{font-size:12px; color:#071018; opacity:0.9; margin-top:2px}
+
+  main{width:100%; max-width:1200px; padding:24px;}
+
+  .intro{display:flex; justify-content:space-between; gap:16px; align-items:center; margin-bottom:18px;}
+  .intro-left{flex:1}
+  .intro-right{display:flex; gap:12px; align-items:center}
+
+  .desc{color:var(--muted); font-size:14px; margin-top:6px}
+
+  /* grid of buttons */
+  .grid{
+    display:grid; gap:18px;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  }
+  .game-card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    padding:18px; border-radius:12px; cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease;
+    min-height:120px; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .game-card:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(0,0,0,0.45) }
+  .game-title{font-weight:700; color:var(--accent); font-size:18px}
+  .game-sub{font-size:12px; color:var(--muted); margin-top:6px}
+
+  /* control / wallet area */
+  .wallet-panel{
+    background:transparent; border-radius:10px; padding:8px 10px; display:flex; gap:10px; align-items:center;
+  }
+  .wallet-btn{
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.04);
+    padding:8px 12px; border-radius:8px; cursor:pointer; color:#fff; font-weight:600;
+  }
+  .wallet-status{font-size:13px; color:var(--muted)}
+
+  /* bottom area small */
+  footer{width:100%; max-width:1200px; padding:18px; color:var(--muted); font-size:13px; text-align:center;}
+
+  /* Game container modal */
+  .game-modal{
+    display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, rgba(3,3,3,0.6), rgba(3,3,3,0.85));
+  }
+  .game-box{
+    width:95%; max-width:1100px; background:var(--panel); border-radius:14px; padding:14px; border:1px solid rgba(255,255,255,0.03);
+    display:flex; flex-direction:column; gap:12px; align-items:center;
+  }
+  .canvas-wrap{ width:100%; background:#000; border-radius:10px; padding:10px; display:flex; justify-content:center; }
+  canvas{ width:100%; height:480px; max-height:60vh; background:#071018; border-radius:8px; display:block; }
+
+  .controls-row{display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between}
+  .back-btn{background:var(--accent); color:#000; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer}
+  .pay-btn{background:linear-gradient(90deg,#ffd37a,#ff7a00); color:#000; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer}
+  .small-muted{color:var(--muted); font-size:13px}
+
+  /* rank panel */
+  .rank-panel{position:fixed; right:18px; top:90px; background:rgba(255,255,255,0.03); padding:12px; border-radius:10px; min-width:140px; border:1px solid rgba(255,255,255,0.02)}
+  .rank-title{color:var(--accent); font-weight:700; margin-bottom:8px; font-size:13px}
+  .rank-item{font-size:13px; color:var(--muted); margin-top:6px}
+
+  /* cucumber rain */
+  .gurken{
+    pointer-events:none; position:fixed; inset:0; z-index:1500; overflow:hidden;
+  }
+  .gurke{
+    position:absolute; font-size:28px; transform:rotate(-18deg); opacity:0.95; animation:fall linear;
+  }
+
+  @keyframes fall {
+    from{ transform: translateY(-10vh) rotate(-10deg) }
+    to{ transform: translateY(120vh) rotate(20deg) }
+  }
+
+  /* fire edges */
+  .fire-left, .fire-right{
+    position:fixed; top:0; bottom:0; width:60px; z-index:1400; pointer-events:none;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .fire-left{ left:0; }
+  .fire-right{ right:0; transform:scaleX(-1); }
+  .flame{ width:120px; height:100%; background: linear-gradient(180deg, rgba(255,120,0,0.12), rgba(255,20,0,0.06)); animation: blaze 1.6s infinite; opacity:0.9;}
+  @keyframes blaze{ 0%{filter:blur(6px) saturate(0.9)} 50%{filter:blur(2px) saturate(1.2)} 100%{filter:blur(6px) saturate(0.9)} }
+
+  /* responsive tweaks */
+  @media (max-width:700px){
+    header{padding:16px}
+    h1{font-size:18px}
+    canvas{height:360px}
+  }
 </style>
 </head>
 <body>
+
 <header>
-  <button id="logoReload" title="Reload"></button>
-  <h1>CitrusArcade</h1>
-  <div>
-    <button id="darkModeBtn">Darkmode</button>
-    <button id="walletBtn">Connect Wallet</button>
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <!-- inline SVG icon (orange + gamepad) -->
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="60" height="60" rx="10" fill="#0a1014"/>
+        <circle cx="22" cy="26" r="12" fill="#ff7a00"/>
+        <path d="M38 16h14v16c0 6-5 10-11 10H38V16z" fill="#ffd37a" opacity="0.95"/>
+        <rect x="34" y="40" width="6" height="6" rx="1.2" fill="#071018"/>
+        <rect x="44" y="40" width="6" height="6" rx="1.2" fill="#071018"/>
+      </svg>
+    </div>
+    <div>
+      <h1>CitrusArcade</h1>
+      <div class="subtitle">Browser games • ETH & SOL paywall • Mobile ready</div>
+    </div>
+  </div>
+
+  <div style="margin-left:auto; display:flex; align-items:center; gap:12px; margin-right:16px;">
+    <div class="wallet-panel">
+      <button id="connectBtn" class="wallet-btn">Connect MetaMask</button>
+      <div id="walletAddr" class="wallet-status">Not connected</div>
+    </div>
   </div>
 </header>
 
-<div id="games">
-  <!-- 12 Game Buttons -->
-  <div class="game-btn" data-game="1">Game 1</div>
-  <div class="game-btn" data-game="2">Game 2</div>
-  <div class="game-btn" data-game="3">Game 3</div>
-  <div class="game-btn" data-game="4">Game 4</div>
-  <div class="game-btn" data-game="5">Game 5</div>
-  <div class="game-btn" data-game="6">Game 6</div>
-  <div class="game-btn" data-game="7">Game 7</div>
-  <div class="game-btn" data-game="8">Game 8</div>
-  <div class="game-btn" data-game="9">Game 9</div>
-  <div class="game-btn" data-game="10">Game 10</div>
-  <div class="game-btn" data-game="11">Game 11</div>
-  <div class="game-btn" data-game="12">Game 12</div>
-</div>
+<main>
+  <div class="intro">
+    <div class="intro-left">
+      <div style="font-weight:800; font-size:20px">Play & Pay — one wallet config</div>
+      <div class="desc">Insert your ETH & SOL address once in the code (CONFIG). MetaMask connection is required to play. Payments supported: ETH (MetaMask) and SOL (Phantom).</div>
+    </div>
+    <div class="intro-right">
+      <div class="payment-section">
+        <div class="small-muted">Quick test actions</div>
+        <div style="margin-top:8px">
+          <button onclick="showPayTest()" class="pay-btn">Test Payment Flow</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div id="gameFrame">
-  <div id="gameBox">
-    <button id="closeGame">Back</button>
-    <div id="gameContent">Game Placeholder</div>
+  <section class="grid" id="gameGrid">
+    <!-- 12 cards generated by JS for clarity -->
+  </section>
+</main>
+
+<!-- rank panel -->
+<div class="rank-panel" id="rankPanel">
+  <div class="rank-title">Top Scores</div>
+  <div id="rankList">
+    <div class="rank-item">No scores yet</div>
   </div>
 </div>
 
-<div id="effectsLayer"></div>
+<!-- cucumber rain layer -->
+<div class="gurken" id="gurkenLayer"></div>
+
+<!-- fire edges -->
+<div class="fire-left"><div class="flame"></div></div>
+<div class="fire-right"><div class="flame"></div></div>
+
+<!-- game modal (single modal, reused for all games) -->
+<div class="game-modal" id="gameModal" aria-hidden="true">
+  <div class="game-box" role="dialog">
+    <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+      <div style="font-weight:800; color:var(--accent)">Game</div>
+      <div class="small-muted" id="gameInfo">...</div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div class="controls-row">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button id="backToMain" class="back-btn">Back</button>
+        <button id="restartGame" class="wallet-btn" style="display:none">Restart</button>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div class="small-muted" id="scoreDisplay">Score: 0</div>
+        <button id="payToPlay" class="pay-btn">Pay & Play</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© CitrusArcade — Ready for API binding. All frontend. Put wallet once in CONFIG in the script.</footer>
+
+<!-- ===== scripts: web3 + solana (only used if wallets present) ===== -->
+<script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+<script src="https://unpkg.com/@solana/web3.js@1.73.0/lib/index.iife.js"></script>
 
 <script>
-// Darkmode
-const body = document.body;
-document.getElementById('darkModeBtn').addEventListener('click',()=>{
-  body.classList.toggle('light');
-});
+/* =========================
+   CONFIG - edit only here
+   ========================= */
+const CONFIG = {
+  PAYMENT_ENABLED: true,               // set false for dev (skips payment)
+  ETH_ADDRESS: "YOUR_ETH_ADDRESS_HERE",// <<-- insert once
+  SOL_ADDRESS: "YOUR_SOL_ADDRESS_HERE",// <<-- insert once
+  ETH_AMOUNT: 0.00012,                 // default per-game price
+  SOL_AMOUNT: 0.0008                   // default per-game price
+};
 
-// Reload
-document.getElementById('logoReload').addEventListener('click',()=>{
-  location.reload();
-});
+/* =========================
+   GLOBAL STATE
+   ========================= */
+let isMetaConnected = false;
+let metaAccount = null;
+let currentGameId = null; // 'game-1'..'game-12'
+let localScores = JSON.parse(localStorage.getItem('citrus-scores')||'{}');
 
-// Game Buttons
-const gameBtns = document.querySelectorAll('.game-btn');
-const gameFrame = document.getElementById('gameFrame');
-const gameContent = document.getElementById('gameContent');
-const closeGame = document.getElementById('closeGame');
-
-gameBtns.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    // Wallet Check
-    if(!walletConnected && paymentActive){
-      alert('Please connect your wallet first!');
-      return;
-    }
-    gameContent.textContent = `Game ${btn.dataset.game} Placeholder`;
-    gameFrame.style.display='flex';
-  });
-});
-
-closeGame.addEventListener('click',()=>{gameFrame.style.display='none';});
-
-// Special Effects Engine
-const effectsLayer = document.getElementById('effectsLayer');
-const effects = ['rain','fire','snow','vines','ivy'];
-let currentEffect = 0;
-function nextEffect(){
-  effectsLayer.innerHTML='';
-  const fx = document.createElement('div');
-  fx.classList.add('fx',effects[currentEffect]);
-  effectsLayer.appendChild(fx);
-  currentEffect = (currentEffect+1)%effects.length;
-  setTimeout(nextEffect,5000);
+/* =========================
+   UI INIT
+   ========================= */
+const gameGrid = document.getElementById('gameGrid');
+for(let i=1;i<=12;i++){
+  const card = document.createElement('button');
+  card.className='game-card';
+  card.id = `game-${i}`;
+  card.innerHTML = `<div><div class="game-title">Game ${i}</div><div class="game-sub">${i===1?'Agent Bird (Demo)':'Coming Soon - pay to unlock'}</div></div>
+                    <div style="display:flex; justify-content:flex-end;"><small class="small-muted">PLAY</small></div>`;
+  card.onclick = ()=> onGameButton(i);
+  gameGrid.appendChild(card);
 }
-nextEffect();
 
-// Wallet / Paywall Placeholder
-let walletConnected=false;
-const paymentActive=true;
-document.getElementById('walletBtn').addEventListener('click',async()=>{
-  // MetaMask
-  if(window.ethereum){
-    try{
-      await window.ethereum.request({method:'eth_requestAccounts'});
-      walletConnected=true;
-      alert('MetaMask connected!');
-    }catch(e){alert('MetaMask connection failed');}
-  }else{
-    alert('MetaMask not detected.');
+// wallet connect btn
+const connectBtn = document.getElementById('connectBtn');
+const walletAddr = document.getElementById('walletAddr');
+connectBtn.addEventListener('click', connectMetaMask);
+
+function showPayTest(){
+  alert('This will test the pay UI. It does not send money unless you confirm in your wallet.');
+}
+
+/* =========================
+   METAMASK CONNECT
+   ========================= */
+async function connectMetaMask(){
+  if(typeof window.ethereum === 'undefined'){
+    alert('MetaMask not found. Install MetaMask to play.');
+    return;
   }
-  // Phantom/Solana placeholder
-  if(window.solana && window.solana.isPhantom){
-    try{
-      await window.solana.connect();
-      walletConnected=true;
-      alert('Phantom Wallet connected!');
-    }catch(e){alert('Phantom connection failed');}
+  try{
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    metaAccount = accounts[0];
+    isMetaConnected = true;
+    walletAddr.textContent = metaAccount;
+    connectBtn.textContent = 'MetaMask connected';
+    connectBtn.disabled = true;
+  }catch(e){
+    console.error(e); alert('MetaMask connection cancelled.');
   }
-});
+}
+
+/* =========================
+   PAYMENT HELPERS
+   ========================= */
+async function payETH(amountETH){
+  if(!isMetaConnected){ alert('Please connect MetaMask first.'); return false; }
+  try{
+    const web3 = new Web3(window.ethereum);
+    const tx = await web3.eth.sendTransaction({
+      from: metaAccount,
+      to: CONFIG.ETH_ADDRESS,
+      value: web3.utils.toWei(amountETH.toString(),'ether')
+    });
+    console.log('ETH tx', tx);
+    return true;
+  }catch(e){
+    console.error('eth pay error',e);
+    alert('ETH payment failed or cancelled.');
+    return false;
+  }
+}
+
+async function paySOL(amountSOL){
+  if(typeof window.solana === 'undefined'){ alert('Solana wallet not found. Install Phantom/sol wallet.'); return false; }
+  try{
+    await window.solana.connect();
+    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+    const fromPubkey = window.solana.publicKey;
+    const toPubkey = new solanaWeb3.PublicKey(CONFIG.SOL_ADDRESS);
+    const tx = new solanaWeb3.Transaction().add(
+      solanaWeb3.SystemProgram.transfer({ fromPubkey, toPubkey, lamports: Math.round(amountSOL * solanaWeb3.LAMPORTS_PER_SOL) })
+    );
+    const { signature } = await window.solana.signAndSendTransaction(tx);
+    await connection.confirmTransaction(signature);
+    console.log('sol tx', signature);
+    return true;
+  }catch(e){
+    console.error('sol pay error', e);
+    alert('SOL payment failed or cancelled.');
+    return false;
+  }
+}
+
+/* Generic pay function (asks user) */
+async function payForGame(gameId){
+  if(!CONFIG.PAYMENT_ENABLED) {
+    console.log('Payment disabled in CONFIG — skipping payment.');
+    return true;
+  }
+  if(!isMetaConnected){
+    alert('MetaMask must be connected to play. Press Connect MetaMask and try again.');
+    return false;
+  }
+
+  // Choose payment method
+  const useETH = confirm(`Pay ${CONFIG.ETH_AMOUNT} ETH (OK) or Cancel for ${CONFIG.SOL_AMOUNT} SOL`);
+  if(useETH) {
+    return await payETH(CONFIG.ETH_AMOUNT);
+  } else {
+    return await paySOL(CONFIG.SOL_AMOUNT);
+  }
+}
+
+/* =========================
+   Game button handler
+   ========================= */
+async function onGameButton(i){
+  const id = `game-${i}`;
+  currentGameId = id;
+
+  // For game1 we allow free play? user required MetaMask connected to play
+  // We enforce MetaMask connected before playing (per instructions)
+  if(!isMetaConnected){
+    const r = confirm('MetaMask must be connected to play. Connect now?');
+    if(r) await connectMetaMask();
+    if(!isMetaConnected) return;
+  }
+
+  // For Game 1 we can set different behavior: let's require payForGame for all except game1
+  if(i !== 1){
+    const paid = await payForGame(id);
+    if(!paid) return;
+  } else {
+    // For Game 1 we still check PAYMENT_ENABLED: if enabled we can skip payment (demo); but MetaMask must be connected
+    if(CONFIG.PAYMENT_ENABLED){
+      // allow free demo but require MetaMask connected (as requested)
+      // optionally you can require payment here too by uncommenting:
+      // const paid = await payForGame(id); if(!paid) return;
+    }
+  }
+
+  openGameModal(i);
+}
+
+/* =========================
+   Game modal & routing
+   ========================= */
+const modal = document.getElementById('gameModal');
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const backToMain = document.getElementById('backToMain');
+const payToPlayBtn = document.getElementById('payToPlay');
+const restartGameBtn = document.getElementById('restartGame');
+const gameInfo = document.getElementById('gameInfo');
+const scoreDisplay = document.getElementById('scoreDisplay');
+
+backToMain.addEventListener('click', ()=> closeGameModal());
+restartGameBtn.addEventListener('click', ()=> startGameInstance(currentGameId));
+
+function openGameModal(index){
+  modal.style.display='flex';
+  gameInfo.textContent = `Game ${index}`;
+  // canvas size adjust
+  resizeCanvasModal();
+  window.addEventListener('resize', resizeCanvasModal);
+  // start appropriate game
+  startGameInstance(`game-${index}`);
+}
+
+function closeGameModal(){
+  modal.style.display='none';
+  stopGameInstance();
+  window.removeEventListener('resize', resizeCanvasModal);
+}
+
+/* placeholder API call */
+async function callBackendAPI(endpoint, data){
+  // ready to bind: example fetch
+  // return fetch(endpoint,{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+  console.log('API call placeholder', endpoint, data);
+  return {ok:true};
+}
+
+/* =========================
+   Simple engine for Game 1 (Agent Bird)
+   - demo playable
+   ========================= */
+let gameLoopHandle = null;
+let gameState = null;
+
+function resizeCanvasModal(){
+  canvas.width = Math.min(1100, window.innerWidth * 0.94);
+  canvas.height = Math.min(720, window.innerHeight * 0.65);
+}
+
+function stopGameInstance(){
+  if(gameLoopHandle) cancelAnimationFrame(gameLoopHandle);
+  gameLoopHandle = null;
+  gameState = null;
+  restartGameBtn.style.display='none';
+}
+
+/* Start specific game by id */
+function startGameInstance(id){
+  stopGameInstance();
+  if(id === 'game-1'){
+    startAgentBird();
+  } else {
+    startPlaceholderGame(id);
+  }
+}
+
+/* ===== AGENT BIRD Implementation ===== */
+function startAgentBird(){
+  // initial state
+  gameState = {
+    type:'agentbird',
+    player:{ x:50, y: Math.floor(canvas.height/2), w:42, h:36, speed:6 },
+    bullets:[],
+    enemies:[],
+    lives:3,
+    lastSpawn:0,
+    score:0,
+    zoom:1.7, // zoom-out start
+    running:true
+  };
+
+  // bind controls to canvas only
+  canvas.onmousemove = (e)=>{
+    if(!gameState.running) return;
+    const r = canvas.getBoundingClientRect();
+    gameState.player.y = e.clientY - r.top - gameState.player.h/2;
+  };
+  canvas.ontouchmove = (e)=>{
+    if(!gameState.running) return;
+    const r = canvas.getBoundingClientRect();
+    gameState.player.y = e.touches[0].clientY - r.top - gameState.player.h/2;
+    e.preventDefault();
+  };
+  canvas.onclick = ()=>{ if(gameState.running) shootAgentBird() };
+  canvas.ontouchstart = ()=>{ if(gameState.running) shootAgentBird() };
+
+  restartGameBtn.style.display='none';
+  scoreDisplay.textContent = "Score: 0";
+
+  // small animation frame loop
+  let lastT = 0;
+  function loop(t){
+    const dt = t - (lastT || t);
+    lastT = t;
+    updateAgentBird(t, dt);
+    renderAgentBird();
+    if(gameState.running) gameLoopHandle = requestAnimationFrame(loop);
+  }
+  gameLoopHandle = requestAnimationFrame(loop);
+}
+
+/* spawn */
+function spawnEnemyAgent(){
+  const y = Math.random() * (canvas.height - 60) + 20;
+  const speed = 1.5 + Math.random()*2.0;
+  const size = 28 + Math.random()*24;
+  gameState.enemies.push({ x: canvas.width + 20, y, w:size, h:size, speed });
+}
+
+/* shoot */
+function shootAgentBird(){
+  const p = gameState.player;
+  gameState.bullets.push({ x: p.x + p.w, y: p.y + p.h/2 - 4, w:10, h:6, speed:10 });
+}
+
+/* update */
+function updateAgentBird(t, dt){
+  // spawn every ~900ms
+  if(t - gameState.lastSpawn > 900){
+    spawnEnemyAgent(); gameState.lastSpawn = t;
+  }
+  // move bullets
+  gameState.bullets.forEach(b=> b.x += b.speed);
+  gameState.bullets = gameState.bullets.filter(b => b.x < canvas.width + 50);
+
+  // move enemies
+  gameState.enemies.forEach(e => e.x -= e.speed);
+  gameState.enemies = gameState.enemies.filter(e => e.x + e.w > -50);
+
+  // collisions bullet/enemy
+  for(let i=gameState.enemies.length-1;i>=0;i--){
+    const e = gameState.enemies[i];
+    for(let j=gameState.bullets.length-1;j>=0;j--){
+      const b = gameState.bullets[j];
+      if(rectIntersect(b, e)){
+        // destroy
+        gameState.enemies.splice(i,1);
+        gameState.bullets.splice(j,1);
+        gameState.score += 10;
+        scoreDisplay.textContent = "Score: " + gameState.score;
+        saveScore('Agent Bird', gameState.score);
+        break;
+      }
+    }
+  }
+
+  // enemy hits player
+  const p = gameState.player;
+  for(let i=gameState.enemies.length-1;i>=0;i--){
+    const e = gameState.enemies[i];
+    if(rectIntersect(e, p)){
+      gameState.enemies.splice(i,1);
+      gameState.lives -= 1;
+      if(gameState.lives <= 0){
+        gameState.running = false;
+        onGameOver();
+      }
+    }
+  }
+}
+
+/* render */
+function renderAgentBird(){
+  // clear
+  ctx.fillStyle = "#071018";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // slight background grid
+  ctx.strokeStyle = "rgba(255,255,255,0.02)";
+  ctx.lineWidth = 1;
+  for(let x=0;x<canvas.width;x+=48){
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+
+  // draw player
+  const p = gameState.player;
+  ctx.fillStyle='cyan';
+  roundedRect(ctx, p.x, p.y, p.w, p.h, 6);
+  ctx.fill();
+
+  // bullets
+  ctx.fillStyle='lime';
+  gameState.bullets.forEach(b=> roundedRect(ctx, b.x,b.y,b.w,b.h,3), ctx.fill());
+
+  // enemies
+  ctx.fillStyle='orange';
+  gameState.enemies.forEach(e=> {
+    ctx.save();
+    ctx.translate(e.x + e.w/2, e.y + e.h/2);
+    ctx.rotate(Math.sin(e.x/40) * 0.15);
+    ctx.fillStyle = 'crimson';
+    roundedRect(ctx, -e.w/2, -e.h/2, e.w, e.h, Math.min(12, e.w/6));
+    ctx.fill();
+    ctx.restore();
+  });
+
+  // HUD
+  ctx.fillStyle='white';
+  ctx.font = '18px Inter,Arial';
+  ctx.fillText(`Lives: ${gameState.lives}`, 10, 24);
+  ctx.fillText(`Score: ${gameState.score}`, 10, 48);
+}
+
+/* placeholder simple games for 2-12 */
+function startPlaceholderGame(id){
+  // very simple: show a colorful animated background and score grows
+  gameState = { type:'placeholder', t0:performance.now(), running:true, score:0 };
+  restartGameBtn.style.display='none';
+  scoreDisplay.textContent = "Score: 0";
+
+  // animate
+  function loop(t){
+    if(!gameState.running) return;
+    const s = Math.sin(t/400) * 80 + 120;
+    ctx.fillStyle = `rgb(${Math.abs(Math.sin(t/500))*120+20},${Math.abs(Math.cos(t/700))*100+40}, ${Math.abs(Math.sin(t/900))*80+50})`;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    gameState.score = Math.floor((t - gameState.t0)/700);
+    scoreDisplay.textContent = `Score: ${gameState.score}`;
+    gameLoopHandle = requestAnimationFrame(loop);
+  }
+  gameLoopHandle = requestAnimationFrame(loop);
+}
+
+/* helper */
+function rectIntersect(a,b){
+  return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
+}
+function roundedRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+/* game over */
+function onGameOver(){
+  restartGameBtn.style.display='inline-block';
+  // show mini modal? rely on restart button
+  saveScore('Agent Bird', gameState.score);
+}
+
+/* save score */
+function saveScore(gameName, score){
+  const list = JSON.parse(localStorage.getItem('citrus-scores') || "{}");
+  if(!list[gameName] || score > list[gameName]) list[gameName] = score;
+  localStorage.setItem('citrus-scores', JSON.stringify(list));
+  updateRankPanel();
+}
+function updateRankPanel(){
+  const list = JSON.parse(localStorage.getItem('citrus-scores') || "{}");
+  const keys = Object.keys(list).sort((a,b)=>list[b]-list[a]).slice(0,6);
+  const rankList = document.getElementById('rankList');
+  rankList.innerHTML = '';
+  if(keys.length===0) rankList.innerHTML = '<div class="rank-item">No scores yet</div>';
+  keys.forEach(k=>{
+    const d = document.createElement('div');
+    d.className='rank-item';
+    d.textContent = `${k}: ${list[k]}`;
+    rankList.appendChild(d);
+  });
+}
+
+/* =========================
+   Gurkenregen (cucumber rain)
+   spawn random emoji falling
+   ========================= */
+const gurkenLayer = document.getElementById('gurkenLayer');
+function spawnGurke(){
+  const g = document.createElement('div');
+  g.className='gurke';
+  g.style.left = Math.random() * 100 + 'vw';
+  g.style.fontSize = (18 + Math.random()*28) + 'px';
+  g.style.top = (-10 - Math.random()*10) + 'vh';
+  g.style.opacity = (0.6 + Math.random()*0.4);
+  g.style.animationDuration = (6 + Math.random()*6) + 's';
+  g.textContent = '🥒'; // cucumber
+  gurkenLayer.appendChild(g);
+  // remove after animation
+  setTimeout(()=> g.remove(), 14000);
+}
+setInterval(spawnGurke, 700);
+
+/* =========================
+   Init
+   ========================= */
+updateRankPanel();
+
+// expose connect function to window (for convenience)
+window.connectMetaMask = connectMetaMask;
+
+// For convenience, auto-try to detect already connected account
+(async ()=>{
+  if(window.ethereum && window.ethereum.selectedAddress){
+    metaAccount = window.ethereum.selectedAddress;
+    isMetaConnected = true;
+    walletAddr.textContent = metaAccount;
+    connectBtn.textContent = 'MetaMask connected';
+    connectBtn.disabled = true;
+  }
+})();
+
 </script>
 </body>
 </html>
