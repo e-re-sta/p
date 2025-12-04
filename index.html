@@ -6,290 +6,289 @@
 <title>CitrusArcade</title>
 
 <style>
-    body {
-        margin: 0;
-        background: #0b0e11;
-        color: #fff;
-        font-family: Arial, sans-serif;
+    :root {
+        --bg: #0b0e11;
+        --header: #11161c;
+        --box: #12181f;
+        --border: #1f242c;
+        --text: #ffffff;
+        --subtext: #8e9aa8;
+        --highlight: #ffd782;
+        --play: #ffa800;
     }
 
+    /* LIGHT MODE */
+    .light {
+        --bg: #f4f6f8;
+        --header: #e3e6eb;
+        --box: #ffffff;
+        --border: #d4d7dd;
+        --text: #111;
+        --subtext: #444;
+        --highlight: #e4a100;
+        --play: #cc7a00;
+    }
+
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, sans-serif;
+        overflow-x: hidden;
+        transition: background 0.25s, color 0.25s;
+    }
+
+    /* Header */
     header {
         display: flex;
         align-items: center;
         padding: 12px 18px;
-        background: #11161c;
-        border-bottom: 1px solid #222;
+        background: var(--header);
+        border-bottom: 1px solid var(--border);
         position: sticky;
         top: 0;
-        z-index: 100;
+        z-index: 1000;
+        transition: background 0.25s;
+        justify-content: space-between;
+    }
+
+    /* Left side (Logo + Title) */
+    .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     #logo {
-        font-size: 30px;
+        font-size: 28px;
         cursor: pointer;
-        margin-right: 12px;
         user-select: none;
-        transition: 0.2s;
     }
 
-    h1 {
-        margin: 0;
-        font-size: 22px;
-        font-weight: 800;
+    /* Darkmode Toggle Button */
+    #darkToggle {
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--box);
+        color: var(--text);
+        transition: 0.25s;
+        user-select: none;
+    }
+
+    #darkToggle:hover {
+        opacity: 0.7;
     }
 
     #content {
-        max-width: 1000px;
+        max-width: 900px;
         margin: 30px auto;
         padding: 0 20px;
     }
 
+    /* Grid */
     .game-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 16px;
+        gap: 18px;
         margin-top: 20px;
     }
 
     .game-box {
-        background: #12181f;
-        border: 1px solid #1f242c;
+        background: var(--box);
+        border: 1px solid var(--border);
         padding: 20px;
         border-radius: 10px;
-        cursor: default;
-        height: 140px;
+        transition: 0.15s;
+        height: 150px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        user-select: none;
     }
 
     .game-title {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bold;
-        color: #ffd782;
-    }
-
-    .game-desc {
-        font-size: 13px;
-        color: #8e9aa8;
-    }
-
-    .play-btn {
-        color: #5bc0ff;
-        font-size: 14px;
-        text-align: right;
-        cursor: pointer;
+        color: var(--highlight);
         user-select: none;
     }
 
-    /* Game Screen */
-    #gameView {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #0b0e11;
+    .game-sub {
+        font-size: 13px;
+        color: var(--subtext);
+    }
+
+    .play-link {
+        text-align: right;
+        font-size: 14px;
+        color: var(--play);
+        cursor: pointer;
+        user-select: none;
+        text-decoration: underline;
+    }
+
+    /* Game view */
+    .game-container {
         display: none;
-        flex-direction: column;
         padding: 20px;
-        z-index: 999;
     }
 
-    #backBtn {
-        color: #5bc0ff;
-        font-size: 16px;
-        margin-bottom: 20px;
-        cursor: pointer;
-    }
-
-    /* Payment Box */
-    .payment-box {
-        margin-top: 40px;
-        padding: 18px;
-        background: #12181f;
-        border: 1px solid #1f242c;
-        border-radius: 10px;
-    }
-
-    .payment-title {
-        font-size: 15px;
-        margin-bottom: 8px;
-    }
-
-    .pay-btn {
-        padding: 8px 14px;
-        margin-right: 10px;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        background: #ffd782;
+    .back-btn {
+        background: var(--play);
         color: #000;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-block;
+        margin-bottom: 20px;
         font-weight: bold;
     }
 
+    /* Lemon Rain */
+    .lemon {
+        position: fixed;
+        top: -50px;
+        font-size: 22px;
+        pointer-events: none;
+        user-select: none;
+        animation: fallLemon linear forwards;
+        z-index: 5000;
+    }
+
+    @keyframes fallLemon {
+        to {
+            transform: translateY(110vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
 </style>
 </head>
-<body>
+<body class="dark">
 
 <header>
-    <div id="logo" onclick="location.reload()">🍋</div>
-    <h1>CitrusArcade</h1>
+    <div class="left">
+        <div id="logo" onclick="location.reload()">🍋</div>
+        <h1>CitrusArcade</h1>
+    </div>
+
+    <div id="darkToggle" onclick="toggleDarkmode()">🌙 Dark</div>
 </header>
 
 <div id="content">
+
     <h2>Spiele</h2>
 
+    <!-- ======== GRID MIT 12 SPIELEN ======== -->
     <div class="game-grid">
 
-        <!-- 12 Game Slots -->
-        <script>
-            const games = [
-                "Agent Lemon I",
-                "Agent Lemon II",
-                "Agent Lemon III",
-                "Mystery Garden",
-                "Lemon Clicker",
-                "Cucumber Runner",
-                "Pineapple Storm",
-                "Snowfall Arena",
-                "Arcade Invaders",
-                "Fruit Escape",
-                "Lemon Tower",
-                "Super Citrus World"
-            ];
-        </script>
+        <div class="game-box">
+            <div class="game-title">Game 1 – Agent Lemon</div>
+            <div class="game-sub">Ein Zitrus-Agenten-Abenteuer</div>
+            <div class="play-link" onclick="openGame(1)">Play</div>
+        </div>
 
-        <script>
-        document.write(
-            Array.from({length:12}, (_,i)=>`
-                <div class="game-box">
-                    <div class="game-title">${games[i]}</div>
-                    <div class="game-desc">Beschreibung folgt…</div>
-                    <div class="play-btn" onclick="openGame(${i+1})">Play</div>
-                </div>
-            `).join('')
-        );
-        </script>
+        <div class="game-box">
+            <div class="game-title">Game 2 – Agent Lemon II</div>
+            <div class="game-sub">Fortsetzung mit mehr Action</div>
+            <div class="play-link" onclick="openGame(2)">Play</div>
+        </div>
 
+        <div class="game-box">
+            <div class="game-title">Game 3 – Agent Lemon III</div>
+            <div class="game-sub">Das Finale der Trilogie</div>
+            <div class="play-link" onclick="openGame(3)">Play</div>
+        </div>
+
+        <!-- Platzhalter -->
+        <div class="game-box"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(4)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 5</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(5)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 6</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(6)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 7</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(7)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 8</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(8)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 9</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(9)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 10</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(10)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 11</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(11)">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 12</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(12)">Play</div></div>
     </div>
 
-    <!-- Payment Placeholder Area -->
-    <div class="payment-box">
-        <div class="payment-title">Spezialeffekte kaufen</div>
-        <button class="pay-btn" onclick="payETH()">Mit ETH bezahlen</button>
-        <button class="pay-btn" onclick="paySOL()">Mit SOL bezahlen</button>
+
+    <!-- ======= GAME VIEW ======= -->
+    <div id="gameView" class="game-container">
+        <div class="back-btn" onclick="closeGame()">← Zurück</div>
+        <div id="gameContent">Game wird geladen...</div>
     </div>
 
 </div>
 
-
-<!-- GAME VIEW -->
-<div id="gameView">
-    <div id="backBtn" onclick="closeGame()">← Zurück</div>
-    <div id="gameContainer" style="color:white; font-size:20px;">
-        Lade Spiel…
-    </div>
-</div>
-
-
-
+<!-- ========================================================= -->
+<!--                      ZITRONEN REGEN                      -->
+<!-- ========================================================= -->
 <script>
-/* -----------------------------------------
-   WALLET ADRESSEN – HIER EINMAL EINTRAGEN
------------------------------------------- */
-const ETH_WALLET = "0xDEINE_ETH_ADRESSE";
-const SOL_WALLET = "DEINE_SOL_ADRESSE";
+function spawnLemonRain() {
+    const amount = Math.floor(Math.random() * 13) + 5;
 
-/* -----------------------------------------
-   GAME OPEN / CLOSE
------------------------------------------- */
+    for (let i = 0; i < amount; i++) {
+        const lemon = document.createElement("div");
+        lemon.className = "lemon";
+        lemon.textContent = "🍋";
 
-function openGame(id) {
-    document.getElementById("content").style.display = "none";
-    document.getElementById("gameView").style.display = "flex";
+        lemon.style.left = Math.random() * 100 + "vw";
+        lemon.style.fontSize = (18 + Math.random() * 14) + "px";
+        lemon.style.animationDuration = (2 + Math.random() * 3) + "s";
 
-    document.getElementById("gameContainer").innerHTML =
-        "Game " + id + " wird hier geladen…";
+        document.body.appendChild(lemon);
+
+        setTimeout(() => lemon.remove(), 4500);
+    }
+}
+
+function lemonLoop() {
+    const next = Math.floor(Math.random() * 6000) + 6000; // 6–12s
+    spawnLemonRain();
+    setTimeout(lemonLoop, next);
+}
+lemonLoop();
+</script>
+
+
+<!-- ========================================================= -->
+<!--                    GAME-PLATZHALTER 12x                  -->
+<!-- ========================================================= -->
+<script>
+function openGame(n) {
+    document.querySelector(".game-grid").style.display = "none";
+    document.getElementById("gameView").style.display = "block";
+
+    document.getElementById("gameContent").innerHTML = `
+        <h2>Game ${n}</h2>
+        <p>Hier fügst du deinen eigenen Spielcode für Game ${n} ein.</p>
+        <p><b>Platzhalter:</b> /game${n}_logic_here</p>
+    `;
 }
 
 function closeGame() {
     document.getElementById("gameView").style.display = "none";
-    document.getElementById("content").style.display = "block";
-}
-
-/* -----------------------------------------
-   PAYMENT PLATZHALTER
------------------------------------------- */
-function payETH() {
-    alert("ETH Zahlung starten an:\n" + ETH_WALLET);
-}
-
-function paySOL() {
-    alert("SOL Zahlung starten an:\n" + SOL_WALLET);
+    document.querySelector(".game-grid").style.display = "grid";
 }
 </script>
 
-   <style>
-    /* Gurken-Animation */
-    .cucumber {
-        position: fixed;
-        top: -80px;
-        width: 40px;
-        height: 40px;
-        background-image: url('https://i.imgur.com/N6dFJPZ.png'); /* Beispielgurke */
-        background-size: cover;
-        animation: fall linear forwards;
-        pointer-events: none;
-        z-index: 9999;
-    }
 
-    @keyframes fall {
-        from { transform: translateY(0); }
-        to { transform: translateY(120vh); }
-    }
-</style>
-
+<!-- ========================================================= -->
+<!--                      DARKMODE TOGGLE                     -->
+<!-- ========================================================= -->
 <script>
-/* ============================
-     G U R K E N R E G E N
-     20s Pause – 15s Dauer
-=============================== */
+function toggleDarkmode() {
+    document.body.classList.toggle("light");
 
-let cucumberRainActive = false;
-
-function startCucumberRain() {
-    if (cucumberRainActive) return;
-    cucumberRainActive = true;
-
-    let interval = setInterval(() => {
-        spawnCucumber();
-    }, 200); // alle 0,2s eine Gurke
-
-    // 15 sekunden laufen lassen
-    setTimeout(() => {
-        clearInterval(interval);
-        cucumberRainActive = false;
-    }, 15000);
+    const btn = document.getElementById("darkToggle");
+    if (document.body.classList.contains("light")) {
+        btn.textContent = "☀️ Light";
+    } else {
+        btn.textContent = "🌙 Dark";
+    }
 }
+</script>
 
-function spawnCucumber() {
-    const c = document.createElement("div");
-    c.classList.add("cucumber");
-
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.animationDuration = (3 + Math.random() * 3) + "s";
-
-    document.body.appendChild(c);
-
-    // nach dem Fall entfernen
-    setTimeout(() => c.remove(), 7000);
-}
-
-/* alle 20 sekunden ein neuer Regen */
-setInterval(() => {
-    startCucumberRain();
-}, 20000);
-</script> 
 </body>
 </html>
