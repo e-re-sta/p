@@ -6,36 +6,11 @@
 <title>CitrusArcade</title>
 
 <style>
-    :root {
-        --bg: #0b0e11;
-        --header: #11161c;
-        --box: #12181f;
-        --border: #1f242c;
-        --text: #ffffff;
-        --subtext: #8e9aa8;
-        --highlight: #ffd782;
-        --play: #ffa800;
-    }
-
-    /* LIGHT MODE */
-    .light {
-        --bg: #f4f6f8;
-        --header: #e3e6eb;
-        --box: #ffffff;
-        --border: #d4d7dd;
-        --text: #111;
-        --subtext: #444;
-        --highlight: #e4a100;
-        --play: #cc7a00;
-    }
-
     body {
         margin: 0;
-        background: var(--bg);
-        color: var(--text);
+        background: #0b0e11;
+        color: white;
         font-family: Arial, sans-serif;
-        overflow-x: hidden;
-        transition: background 0.25s, color 0.25s;
     }
 
     /* Header */
@@ -43,20 +18,11 @@
         display: flex;
         align-items: center;
         padding: 12px 18px;
-        background: var(--header);
-        border-bottom: 1px solid var(--border);
+        background: #11161c;
+        border-bottom: 1px solid #222;
         position: sticky;
         top: 0;
-        z-index: 1000;
-        transition: background 0.25s;
-        justify-content: space-between;
-    }
-
-    /* Left side (Logo + Title) */
-    .left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        z-index: 100;
     }
 
     #logo {
@@ -65,229 +31,165 @@
         user-select: none;
     }
 
-    /* Darkmode Toggle Button */
-    #darkToggle {
-        padding: 6px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: 1px solid var(--border);
-        background: var(--box);
-        color: var(--text);
-        transition: 0.25s;
-        user-select: none;
+    h1 {
+        margin: 0;
+        margin-left: 10px;
+        font-size: 22px;
+        font-weight: 800;
     }
 
-    #darkToggle:hover {
-        opacity: 0.7;
-    }
-
+    /* Content */
     #content {
         max-width: 900px;
         margin: 30px auto;
         padding: 0 20px;
     }
 
-    /* Grid */
     .game-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 18px;
-        margin-top: 20px;
+        gap: 20px;
     }
 
-    .game-box {
-        background: var(--box);
-        border: 1px solid var(--border);
-        padding: 20px;
+    .game-card {
+        background: #12181f;
+        border: 1px solid #1f242c;
+        padding: 18px;
         border-radius: 10px;
-        transition: 0.15s;
-        height: 150px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        position: relative;
+        height: 130px;
     }
 
-    .game-title {
+    .game-card h3 {
+        margin: 0;
         font-size: 18px;
-        font-weight: bold;
-        color: var(--highlight);
-        user-select: none;
+        color: #ffd782;
     }
 
-    .game-sub {
+    .game-card p {
+        margin-top: 5px;
+        color: #8b97a5;
         font-size: 13px;
-        color: var(--subtext);
     }
 
-    .play-link {
-        text-align: right;
-        font-size: 14px;
-        color: var(--play);
+    /* Play Button — no hover, no focus highlight */
+    .play-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-weight: bold;
         cursor: pointer;
         user-select: none;
-        text-decoration: underline;
+        -webkit-tap-highlight-color: transparent;
     }
 
-    /* Game view */
+    .play-btn:focus,
+    .play-btn:active,
+    .play-btn:hover {
+        outline: none;
+        filter: none;
+        color: inherit;
+    }
+
+    /* GAME CONTAINERS */
     .game-container {
         display: none;
         padding: 20px;
     }
 
     .back-btn {
-        background: var(--play);
-        color: #000;
-        padding: 8px 14px;
-        border-radius: 6px;
+        background: #ffd782;
+        padding: 10px 16px;
+        border-radius: 8px;
+        color: black;
         cursor: pointer;
-        display: inline-block;
-        margin-bottom: 20px;
+        border: none;
+        margin-bottom: 15px;
         font-weight: bold;
-    }
-
-    /* Lemon Rain */
-    .lemon {
-        position: fixed;
-        top: -50px;
-        font-size: 22px;
-        pointer-events: none;
-        user-select: none;
-        animation: fallLemon linear forwards;
-        z-index: 5000;
-    }
-
-    @keyframes fallLemon {
-        to {
-            transform: translateY(110vh) rotate(360deg);
-            opacity: 0;
-        }
     }
 </style>
 </head>
-<body class="dark">
+<body>
 
 <header>
-    <div class="left">
-        <div id="logo" onclick="location.reload()">🍋</div>
-        <h1>CitrusArcade</h1>
-    </div>
-
-    <div id="darkToggle" onclick="toggleDarkmode()">🌙 Dark</div>
+    <div id="logo" onclick="goHome()">🍋</div>
+    <h1>CitrusArcade</h1>
 </header>
 
 <div id="content">
 
     <h2>Spiele</h2>
 
-    <!-- ======== GRID MIT 12 SPIELEN ======== -->
     <div class="game-grid">
-
-        <div class="game-box">
-            <div class="game-title">Game 1 – Agent Lemon</div>
-            <div class="game-sub">Ein Zitrus-Agenten-Abenteuer</div>
-            <div class="play-link" onclick="openGame(1)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 2 – Agent Lemon II</div>
-            <div class="game-sub">Fortsetzung mit mehr Action</div>
-            <div class="play-link" onclick="openGame(2)">Play</div>
-        </div>
-
-        <div class="game-box">
-            <div class="game-title">Game 3 – Agent Lemon III</div>
-            <div class="game-sub">Das Finale der Trilogie</div>
-            <div class="play-link" onclick="openGame(3)">Play</div>
-        </div>
-
-        <!-- Platzhalter -->
-        <div class="game-box"><div class="game-title">Game 4</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(4)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 5</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(5)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 6</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(6)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 7</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(7)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 8</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(8)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 9</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(9)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 10</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(10)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 11</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(11)">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 12</div><div class="game-sub">Platzhalter</div><div class="play-link" onclick="openGame(12)">Play</div></div>
+        <!-- 12 GAME CARDS -->
+        <div class="game-card"><h3>Game 1</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(1)">PLAY</div></div>
+        <div class="game-card"><h3>Game 2</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(2)">PLAY</div></div>
+        <div class="game-card"><h3>Game 3</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(3)">PLAY</div></div>
+        <div class="game-card"><h3>Game 4</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(4)">PLAY</div></div>
+        <div class="game-card"><h3>Game 5</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(5)">PLAY</div></div>
+        <div class="game-card"><h3>Game 6</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(6)">PLAY</div></div>
+        <div class="game-card"><h3>Game 7</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(7)">PLAY</div></div>
+        <div class="game-card"><h3>Game 8</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(8)">PLAY</div></div>
+        <div class="game-card"><h3>Game 9</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(9)">PLAY</div></div>
+        <div class="game-card"><h3>Game 10</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(10)">PLAY</div></div>
+        <div class="game-card"><h3>Game 11</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(11)">PLAY</div></div>
+        <div class="game-card"><h3>Game 12</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(12)">PLAY</div></div>
     </div>
-
-
-    <!-- ======= GAME VIEW ======= -->
-    <div id="gameView" class="game-container">
-        <div class="back-btn" onclick="closeGame()">← Zurück</div>
-        <div id="gameContent">Game wird geladen...</div>
-    </div>
-
 </div>
 
-<!-- ========================================================= -->
-<!--                      ZITRONEN REGEN                      -->
-<!-- ========================================================= -->
+<!-- 12 EMPTY GAME CONTAINERS -->
+<div id="game1" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game1-root"></div></div>
+<div id="game2" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game2-root"></div></div>
+<div id="game3" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game3-root"></div></div>
+<div id="game4" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game4-root"></div></div>
+<div id="game5" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game5-root"></div></div>
+<div id="game6" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game6-root"></div></div>
+<div id="game7" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game7-root"></div></div>
+<div id="game8" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game8-root"></div></div>
+<div id="game9" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game9-root"></div></div>
+<div id="game10" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game10-root"></div></div>
+<div id="game11" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game11-root"></div></div>
+<div id="game12" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game12-root"></div></div>
+
+
+
 <script>
-function spawnLemonRain() {
-    const amount = Math.floor(Math.random() * 13) + 5;
-
-    for (let i = 0; i < amount; i++) {
-        const lemon = document.createElement("div");
-        lemon.className = "lemon";
-        lemon.textContent = "🍋";
-
-        lemon.style.left = Math.random() * 100 + "vw";
-        lemon.style.fontSize = (18 + Math.random() * 14) + "px";
-        lemon.style.animationDuration = (2 + Math.random() * 3) + "s";
-
-        document.body.appendChild(lemon);
-
-        setTimeout(() => lemon.remove(), 4500);
-    }
+/* HOME */
+function goHome() {
+    document.querySelectorAll('.game-container').forEach(c => c.style.display = "none");
+    document.getElementById('content').style.display = "block";
 }
 
-function lemonLoop() {
-    const next = Math.floor(Math.random() * 6000) + 6000; // 6–12s
-    spawnLemonRain();
-    setTimeout(lemonLoop, next);
-}
-lemonLoop();
-</script>
+/* OPEN GAME */
+function openGame(id) {
+    document.getElementById('content').style.display = "none";
 
+    document.querySelectorAll('.game-container').forEach(c => c.style.display = "none");
+    document.getElementById("game" + id).style.display = "block";
 
-<!-- ========================================================= -->
-<!--                    GAME-PLATZHALTER 12x                  -->
-<!-- ========================================================= -->
-<script>
-function openGame(n) {
-    document.querySelector(".game-grid").style.display = "none";
-    document.getElementById("gameView").style.display = "block";
-
-    document.getElementById("gameContent").innerHTML = `
-        <h2>Game ${n}</h2>
-        <p>Hier fügst du deinen eigenen Spielcode für Game ${n} ein.</p>
-        <p><b>Platzhalter:</b> /game${n}_logic_here</p>
-    `;
+    // Run game code
+    window["startGame" + id]();
 }
 
-function closeGame() {
-    document.getElementById("gameView").style.display = "none";
-    document.querySelector(".game-grid").style.display = "grid";
+/* 12 EMPTY GAME FUNCTIONS — here you insert full game code later */
+function startGame1() {
+    const root = document.getElementById("game1-root");
+    root.innerHTML = "<p>Game 1 läuft…</p>"; 
+    // 👉 Hier fügst du dein komplettes Spiel ein!
 }
-</script>
 
+function startGame2() { const r=document.getElementById("game2-root"); r.innerHTML = ""; }
+function startGame3() { const r=document.getElementById("game3-root"); r.innerHTML = ""; }
+function startGame4() { const r=document.getElementById("game4-root"); r.innerHTML = ""; }
+function startGame5() { const r=document.getElementById("game5-root"); r.innerHTML = ""; }
+function startGame6() { const r=document.getElementById("game6-root"); r.innerHTML = ""; }
+function startGame7() { const r=document.getElementById("game7-root"); r.innerHTML = ""; }
+function startGame8() { const r=document.getElementById("game8-root"); r.innerHTML = ""; }
+function startGame9() { const r=document.getElementById("game9-root"); r.innerHTML = ""; }
+function startGame10(){ const r=document.getElementById("game10-root");r.innerHTML = ""; }
+function startGame11(){ const r=document.getElementById("game11-root");r.innerHTML = ""; }
+function startGame12(){ const r=document.getElementById("game12-root");r.innerHTML = ""; }
 
-<!-- ========================================================= -->
-<!--                      DARKMODE TOGGLE                     -->
-<!-- ========================================================= -->
-<script>
-function toggleDarkmode() {
-    document.body.classList.toggle("light");
-
-    const btn = document.getElementById("darkToggle");
-    if (document.body.classList.contains("light")) {
-        btn.textContent = "☀️ Light";
-    } else {
-        btn.textContent = "🌙 Dark";
-    }
-}
 </script>
 
 </body>
