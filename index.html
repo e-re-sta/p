@@ -191,6 +191,111 @@ function startGame11(){ const r=document.getElementById("game11-root");r.innerHT
 function startGame12(){ const r=document.getElementById("game12-root");r.innerHTML = ""; }
 
 </script>
+<style>
+/* Regen-Elemente */
+.falling-item {
+    position: fixed;
+    top: -40px;
+    font-size: 28px;
+    pointer-events: none;
+    animation: fall linear forwards;
+}
 
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+}
+</style>
+
+<script>
+// ===============================================
+//   GLOBALER ZYKLUS (NICHT NEU STARTEN BEI RELOAD)
+// ===============================================
+const GURKEN_DAUER = 10000;
+const ZITRONEN_DAUER = 10000;
+const PAUSE_DAUER = 40000;
+const ZYKLUS = GURKEN_DAUER + ZITRONEN_DAUER + PAUSE_DAUER;
+
+// Startzeit speichern, falls nicht vorhanden
+if (!localStorage.getItem("regenCycleStart")) {
+    localStorage.setItem("regenCycleStart", Date.now());
+}
+
+// Regen-Interval-ID speichern
+let regenInterval = null;
+
+// ===============================================
+//             REGEN-START & STOP
+// ===============================================
+function startRegen() {
+    if (regenInterval) return; // schon aktiv
+
+    regenInterval = setInterval(() => {
+        const start = Number(localStorage.getItem("regenCycleStart"));
+        const now = Date.now();
+        const diff = (now - start) % ZYKLUS;
+
+        const anyGameVisible = document.querySelector(".game-container[style*='block']");
+        if (anyGameVisible) return; // Wenn ein Spiel aktiv ist → Kein Regen
+
+        if (diff < GURKEN_DAUER) {
+            spawnItem("🥒");
+        } else if (diff < GURKEN_DAUER + ZITRONEN_DAUER) {
+            spawnItem("🍋");
+        }
+        // danach Pause → nichts tun
+
+    }, 300);
+}
+
+function stopRegen() {
+    clearInterval(regenInterval);
+    regenInterval = null;
+}
+
+// Regenelement erzeugen
+function spawnItem(symbol) {
+    const e = document.createElement("div");
+    e.className = "falling-item";
+    e.textContent = symbol;
+    e.style.left = Math.random() * 100 + "vw";
+    e.style.animationDuration = (2 + Math.random() * 2) + "s";
+    document.body.appendChild(e);
+
+    setTimeout(() => e.remove(), 3000);
+}
+
+startRegen(); // Direkt starten auf Startseite
+
+
+// ===============================================
+//      SPIEL ÖFFNEN → REGEN SOFORT STOPPEN
+// ===============================================
+function openGame(id) {
+    // Alles verstecken
+    document.querySelectorAll(".game-container").forEach(c => c.style.display = "none");
+    document.getElementById("content").style.display = "none";
+
+    // Regen sofort aus
+    stopRegen();
+
+    // gewünschtes Spiel öffnen
+    document.getElementById(id).style.display = "block";
+}
+
+
+// ===============================================
+//      BACK → Startseite zeigen & Regen starten
+// ===============================================
+function goHome() {
+    document.querySelectorAll(".game-container").forEach(c => c.style.display = "none");
+    document.getElementById("content").style.display = "block";
+
+    // Regen weiterlaufen lassen
+    startRegen();
+}
+</script>
 </body>
 </html>
