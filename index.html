@@ -13,7 +13,6 @@
         font-family: Arial, sans-serif;
     }
 
-    /* Header */
     header {
         display: flex;
         align-items: center;
@@ -28,17 +27,10 @@
     #logo {
         font-size: 28px;
         cursor: pointer;
+        margin-right: 12px;
         user-select: none;
     }
 
-    h1 {
-        margin: 0;
-        margin-left: 10px;
-        font-size: 22px;
-        font-weight: 800;
-    }
-
-    /* Content */
     #content {
         max-width: 900px;
         margin: 30px auto;
@@ -47,329 +39,168 @@
 
     .game-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
     }
 
-    .game-card {
+    .game-box {
         background: #12181f;
         border: 1px solid #1f242c;
-        padding: 18px;
+        padding: 20px;
         border-radius: 10px;
-        position: relative;
-        height: 130px;
+        cursor: default;
+        height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: none;
     }
 
-    .game-card h3 {
-        margin: 0;
-        font-size: 18px;
+    .game-title {
+        font-size: 16px;
+        font-weight: bold;
         color: #ffd782;
     }
 
-    .game-card p {
-        margin-top: 5px;
-        color: #8b97a5;
+    .game-sub {
         font-size: 13px;
+        color: #8e9aa8;
     }
 
-    /* Play Button — no hover, no focus highlight */
-    .play-btn {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        font-weight: bold;
+    .game-play {
+        align-self: flex-end;
+        color: #ffd782;
+        font-size: 14px;
         cursor: pointer;
         user-select: none;
-        -webkit-tap-highlight-color: transparent;
     }
 
-    .play-btn:focus,
-    .play-btn:active,
-    .play-btn:hover {
-        outline: none;
-        filter: none;
-        color: inherit;
+    /* Keine Hover Effekte */
+    .game-box:hover,
+    .game-play:hover {
+        background: inherit;
+        transform: none;
     }
 
-    /* GAME CONTAINERS */
+    /* Game-Container */
     .game-container {
         display: none;
-        padding: 20px;
-    }
-
-    .back-btn {
-        background: #ffd782;
-        padding: 10px 16px;
-        border-radius: 8px;
-        color: black;
-        cursor: pointer;
-        border: none;
-        margin-bottom: 15px;
-        font-weight: bold;
     }
 </style>
 </head>
 <body>
 
 <header>
-    <div id="logo" onclick="goHome()">🍋</div>
+    <div id="logo" onclick="location.reload()">🍋</div>
     <h1>CitrusArcade</h1>
 </header>
 
 <div id="content">
-
     <h2>Spiele</h2>
 
     <div class="game-grid">
-        <!-- 12 GAME CARDS -->
-        <div class="game-card"><h3>Game 1</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(1)">PLAY</div></div>
-        <div class="game-card"><h3>Game 2</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(2)">PLAY</div></div>
-        <div class="game-card"><h3>Game 3</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(3)">PLAY</div></div>
-        <div class="game-card"><h3>Game 4</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(4)">PLAY</div></div>
-        <div class="game-card"><h3>Game 5</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(5)">PLAY</div></div>
-        <div class="game-card"><h3>Game 6</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(6)">PLAY</div></div>
-        <div class="game-card"><h3>Game 7</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(7)">PLAY</div></div>
-        <div class="game-card"><h3>Game 8</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(8)">PLAY</div></div>
-        <div class="game-card"><h3>Game 9</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(9)">PLAY</div></div>
-        <div class="game-card"><h3>Game 10</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(10)">PLAY</div></div>
-        <div class="game-card"><h3>Game 11</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(11)">PLAY</div></div>
-        <div class="game-card"><h3>Game 12</h3><p>Beschreibung…</p><div class="play-btn" onclick="openGame(12)">PLAY</div></div>
+
+        <!-- GAME 1 -->
+        <div class="game-box" id="game1">
+            <div class="game-title">Game 1 – Agent Lemon</div>
+            <div class="game-sub">Top-Down Agentenspiel</div>
+            <div class="game-play" id="play-game1">Play</div>
+        </div>
+
+        <!-- GAME 2–12 -->
+        <div class="game-box"><div class="game-title">Game 2</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 3</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 4</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 5</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 6</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 7</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 8</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 9</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 10</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 11</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+        <div class="game-box"><div class="game-title">Game 12</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
+
     </div>
 </div>
 
-<!-- 12 EMPTY GAME CONTAINERS -->
-<div id="game1" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game1-root"></div></div>
-<div id="game2" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game2-root"></div></div>
-<div id="game3" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game3-root"></div></div>
-<div id="game4" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game4-root"></div></div>
-<div id="game5" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game5-root"></div></div>
-<div id="game6" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game6-root"></div></div>
-<div id="game7" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game7-root"></div></div>
-<div id="game8" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game8-root"></div></div>
-<div id="game9" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game9-root"></div></div>
-<div id="game10" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game10-root"></div></div>
-<div id="game11" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game11-root"></div></div>
-<div id="game12" class="game-container"><button class="back-btn" onclick="goHome()">← BACK</button><div id="game12-root"></div></div>
-
-
-
-<script>
-/* HOME */
-function goHome() {
-    document.querySelectorAll('.game-container').forEach(c => c.style.display = "none");
-    document.getElementById('content').style.display = "block";
-}
-
-/* OPEN GAME */
-function openGame(id) {
-    document.getElementById('content').style.display = "none";
-
-    document.querySelectorAll('.game-container').forEach(c => c.style.display = "none");
-    document.getElementById("game" + id).style.display = "block";
-
-    // Run game code
-    window["startGame" + id]();
-}
-
-/* 12 EMPTY GAME FUNCTIONS — here you insert full game code later */
-function startGame1() {
-    const root = document.getElementById("game1-root");
-    root.innerHTML = "<p>Game 1 läuft…</p>"; 
-    // 👉 Hier fügst du dein komplettes Spiel ein!
-}
-
-function startGame2() { const r=document.getElementById("game2-root"); r.innerHTML = ""; }
-function startGame3() { const r=document.getElementById("game3-root"); r.innerHTML = ""; }
-function startGame4() { const r=document.getElementById("game4-root"); r.innerHTML = ""; }
-function startGame5() { const r=document.getElementById("game5-root"); r.innerHTML = ""; }
-function startGame6() { const r=document.getElementById("game6-root"); r.innerHTML = ""; }
-function startGame7() { const r=document.getElementById("game7-root"); r.innerHTML = ""; }
-function startGame8() { const r=document.getElementById("game8-root"); r.innerHTML = ""; }
-function startGame9() { const r=document.getElementById("game9-root"); r.innerHTML = ""; }
-function startGame10(){ const r=document.getElementById("game10-root");r.innerHTML = ""; }
-function startGame11(){ const r=document.getElementById("game11-root");r.innerHTML = ""; }
-function startGame12(){ const r=document.getElementById("game12-root");r.innerHTML = ""; }
-
-</script>
-<style>
-/* Regen-Elemente */
-.falling-item {
-    position: fixed;
-    top: -40px;
-    font-size: 28px;
-    pointer-events: none;
-    animation: fall linear forwards;
-}
-
-@keyframes fall {
-    to {
-        transform: translateY(110vh);
-        opacity: 0;
-    }
-}
-</style>
-
-<script>
-// ===============================================
-//   GLOBALER ZYKLUS (NICHT NEU STARTEN BEI RELOAD)
-// ===============================================
-const GURKEN_DAUER = 10000;
-const ZITRONEN_DAUER = 10000;
-const PAUSE_DAUER = 40000;
-const ZYKLUS = GURKEN_DAUER + ZITRONEN_DAUER + PAUSE_DAUER;
-
-// Startzeit speichern, falls nicht vorhanden
-if (!localStorage.getItem("regenCycleStart")) {
-    localStorage.setItem("regenCycleStart", Date.now());
-}
-
-// Regen-Interval-ID speichern
-let regenInterval = null;
-
-// ===============================================
-//             REGEN-START & STOP
-// ===============================================
-function startRegen() {
-    if (regenInterval) return; // schon aktiv
-
-    regenInterval = setInterval(() => {
-        const start = Number(localStorage.getItem("regenCycleStart"));
-        const now = Date.now();
-        const diff = (now - start) % ZYKLUS;
-
-        const anyGameVisible = document.querySelector(".game-container[style*='block']");
-        if (anyGameVisible) return; // Wenn ein Spiel aktiv ist → Kein Regen
-
-        if (diff < GURKEN_DAUER) {
-            spawnItem("🥒");
-        } else if (diff < GURKEN_DAUER + ZITRONEN_DAUER) {
-            spawnItem("🍋");
-        }
-        // danach Pause → nichts tun
-
-    }, 300);
-}
-
-function stopRegen() {
-    clearInterval(regenInterval);
-    regenInterval = null;
-}
-
-// Regenelement erzeugen
-function spawnItem(symbol) {
-    const e = document.createElement("div");
-    e.className = "falling-item";
-    e.textContent = symbol;
-    e.style.left = Math.random() * 100 + "vw";
-    e.style.animationDuration = (2 + Math.random() * 2) + "s";
-    document.body.appendChild(e);
-
-    setTimeout(() => e.remove(), 3000);
-}
-
-startRegen(); // Direkt starten auf Startseite
-
-
-// ===============================================
-//      SPIEL ÖFFNEN → REGEN SOFORT STOPPEN
-// ===============================================
-function openGame(id) {
-    // Alles verstecken
-    document.querySelectorAll(".game-container").forEach(c => c.style.display = "none");
-    document.getElementById("content").style.display = "none";
-
-    // Regen sofort aus
-    stopRegen();
-
-    // gewünschtes Spiel öffnen
-    document.getElementById(id).style.display = "block";
-}
-
-
-// ===============================================
-//      BACK → Startseite zeigen & Regen starten
-// ===============================================
-function goHome() {
-    document.querySelectorAll(".game-container").forEach(c => c.style.display = "none");
-    document.getElementById("content").style.display = "block";
-
-    // Regen weiterlaufen lassen
-    startRegen();
-}
-</script>
-   <!-- ███ GAME 1 – AGENT LEMON ███ -->
-<div id="game1-container" class="game-container" style="display:none;">
+<!-- GAME 1 CONTAINER -->
+<div id="game1-container" class="game-container">
     <button id="backFromGame1" style="
-        position:absolute; 
-        top:20px; 
-        left:20px; 
-        padding:8px 16px;
-        background:#222; 
-        color:white; 
-        border:1px solid #444;
-        border-radius:6px;
-        cursor:pointer;
-        z-index:9999;
+        position:absolute; top:20px; left:20px; padding:8px 16px;
+        background:#222; color:white; border:1px solid #444; border-radius:6px; cursor:pointer; z-index:9999;
     ">← Back</button>
 
     <h2 style="text-align:center; margin-top:70px;">Agent Lemon – Mission Start</h2>
 
     <canvas id="lemonCanvas" width="420" height="600" style="
-        display:block;
-        margin:40px auto;
-        background:#1a1e23;
-        border:1px solid #333;
+        display:block; margin:40px auto; background:#1a1e23; border:1px solid #333;
     "></canvas>
 </div>
 
 <script>
-/* -------------------------------------------------------
-     GAME 1 – AGENT LEMON (einfacher Prototyp)
--------------------------------------------------------- */
+// -----------------------------------------------
+// ZITRONEN + GURKEN REGEN (nur im Menü)
+// -----------------------------------------------
+let effectsPaused = false;
 
-// ⭕ Container referenzen
-const game1Container = document.getElementById("game1-container");
-const back1 = document.getElementById("backFromGame1");
+function startEffects() {
+    if (effectsPaused) return;
 
-// ⭕ Spiel startet, wenn man Play klickt
+    setInterval(() => {
+        if (effectsPaused) return;
+        dropItem("🍋", 25); // Zitronenfall
+        dropItem("🥒", 15); // Gurkenfall
+    }, 2000);
+}
+
+function dropItem(icon, count) {
+    for (let i = 0; i < count; i++) {
+        const el = document.createElement("div");
+        el.textContent = icon;
+        el.style.position = "fixed";
+        el.style.left = Math.random() * window.innerWidth + "px";
+        el.style.top = "-40px";
+        el.style.fontSize = "24px";
+        el.style.transition = "top 2.5s linear";
+        document.body.appendChild(el);
+        setTimeout(() => el.style.top = window.innerHeight + "px", 20);
+        setTimeout(() => el.remove(), 2600);
+    }
+}
+
+startEffects();
+
+// -----------------------------------------------
+// GAME 1 LOGIK
+// -----------------------------------------------
 document.getElementById("play-game1").onclick = () => {
-    // Spezialeffekte aus
-    window.disableEffects = true;
+    // Effekte deaktivieren
+    effectsPaused = true;
 
     document.getElementById("content").style.display = "none";
-    game1Container.style.display = "block";
+    document.getElementById("game1-container").style.display = "block";
 
     startAgentLemon();
 };
 
-// ⭕ Back → zurück zu Spielübersicht
-back1.onclick = () => {
-    game1Container.style.display = "none";
+document.getElementById("backFromGame1").onclick = () => {
+    document.getElementById("game1-container").style.display = "none";
     document.getElementById("content").style.display = "block";
 
-    window.disableEffects = false;  // Effekte wieder an
+    // Effekte wieder aktivieren
+    effectsPaused = false;
 
     cancelAnimationFrame(gameLoop);
 };
 
-
-/* -------------------------------------------------------
-      GAME ENGINE – extrem simpel
--------------------------------------------------------- */
-let ctx, lemon, keys = {};
-let gameLoop;
+let ctx, lemon, keys = {}, gameLoop;
 
 function startAgentLemon() {
     const canvas = document.getElementById("lemonCanvas");
     ctx = canvas.getContext("2d");
 
-    lemon = {
-        x: 180,
-        y: 500,
-        w: 40,
-        h: 40,
-        speed: 4
-    };
+    lemon = { x: 180, y: 500, w: 40, h: 40, speed: 4 };
 
     window.addEventListener("keydown", e => keys[e.key] = true);
     window.addEventListener("keyup", e => keys[e.key] = false);
@@ -382,16 +213,15 @@ function loop() {
 
     ctx.clearRect(0, 0, 420, 600);
 
-    // Bewegung
     if (keys["ArrowLeft"]) lemon.x -= lemon.speed;
     if (keys["ArrowRight"]) lemon.x += lemon.speed;
     if (keys["ArrowUp"]) lemon.y -= lemon.speed;
     if (keys["ArrowDown"]) lemon.y += lemon.speed;
 
-    // Zeichnen (gelber Agent)
     ctx.fillStyle = "yellow";
     ctx.fillRect(lemon.x, lemon.y, lemon.w, lemon.h);
 }
-</script> 
+</script>
+
 </body>
 </html>
