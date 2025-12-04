@@ -1,227 +1,551 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CitrusArcade</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CitrusArcade — Ultimate (ETH+SOL)</title>
+<link rel="icon" href="data:,">
 <style>
-    body {
-        margin: 0;
-        background: #0b0e11;
-        color: white;
-        font-family: Arial, sans-serif;
-    }
-
-    header {
-        display: flex;
-        align-items: center;
-        padding: 12px 18px;
-        background: #11161c;
-        border-bottom: 1px solid #222;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    #logo {
-        font-size: 28px;
-        cursor: pointer;
-        margin-right: 12px;
-        user-select: none;
-    }
-
-    #content {
-        max-width: 900px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
-
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
-        margin-top: 20px;
-    }
-
-    .game-box {
-        background: #12181f;
-        border: 1px solid #1f242c;
-        padding: 20px;
-        border-radius: 10px;
-        cursor: default;
-        height: 140px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: none;
-    }
-
-    .game-title {
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffd782;
-    }
-
-    .game-sub {
-        font-size: 13px;
-        color: #8e9aa8;
-    }
-
-    .game-play {
-        align-self: flex-end;
-        color: #ffd782;
-        font-size: 14px;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    /* Keine Hover Effekte */
-    .game-box:hover,
-    .game-play:hover {
-        background: inherit;
-        transform: none;
-    }
-
-    /* Game-Container */
-    .game-container {
-        display: none;
-    }
+  :root{
+    --bg:#071018; --panel:#0f1720; --muted:#9aa3b2; --accent:#ff7a00; --accent-2:#ffd37a; --card:#0f1a21;
+  }
+  .light{
+    --bg:#f4f6f8; --panel:#ffffff; --muted:#5b6470; --accent:#ff7a00; --accent-2:#ffd37a; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#071018 60%);color:#fff;min-height:100vh}
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#071018;position:sticky;top:0;z-index:1200}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,0.08)}
+  main{max-width:1200px;margin:24px auto;padding:0 18px}
+  .intro{display:flex;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .desc{color:var(--muted);font-size:14px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.02);min-height:140px;display:flex;flex-direction:column;justify-content:space-between;position:relative; -webkit-tap-highlight-color: transparent}
+  .title{font-weight:800;color:var(--accent);font-size:16px}
+  .sub{font-size:13px;color:var(--muted)}
+  .play{align-self:flex-end;color:var(--accent-2);font-weight:700;cursor:pointer;user-select:none;text-decoration:underline;outline:none}
+  /* no hover/focus glow */
+  .card:hover, .play:hover, .play:focus { background: inherit; transform:none; box-shadow:none; outline:none; }
+  /* game containers */
+  .game-container{display:none;padding:18px;max-width:1100px;margin:20px auto 80px auto;background:var(--panel);border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+  .back-btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent-2);color:#071018;font-weight:800;border:none;cursor:pointer}
+  /* global back bottom-left */
+  #globalBack{position:fixed;left:18px;bottom:18px;z-index:2000;display:none;padding:10px 14px;border-radius:10px;background:#111;color:#fff;border:1px solid rgba(255,255,255,0.06);cursor:pointer}
+  /* wallet panel */
+  #walletPanel{position:fixed;right:18px;bottom:18px;z-index:1500;width:340px;font-family:inherit}
+  .wallet-box{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);color:var(--muted)}
+  .w-row{display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+  .btn-primary{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#071018}
+  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  /* falling items */
+  .falling{position:fixed;top:-40px;font-size:26px;pointer-events:none;z-index:1200;transform:translateY(0);transition:transform linear, opacity linear}
+  /* dark toggle */
+  #darkToggle{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;cursor:pointer;font-weight:700}
+  :focus{outline:none} *{-webkit-tap-highlight-color: transparent}
+  @media (max-width:700px){ header{padding:10px} #walletPanel{right:10px;bottom:80px;width:300px} }
 </style>
 </head>
 <body>
 
 <header>
-    <div id="logo" onclick="location.reload()">🍋</div>
-    <h1>CitrusArcade</h1>
+  <div class="brand">
+    <div class="logo">🍋</div>
+    <div>
+      <div style="font-weight:900;font-size:18px">CitrusArcade</div>
+      <div class="desc">Browser Games • ETH & SOL integr. • Effekte kaufbar</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button id="darkToggle" title="Toggle Light/Dark">🌙</button>
+  </div>
 </header>
 
-<div id="content">
-    <h2>Spiele</h2>
-
-    <div class="game-grid">
-
-        <!-- GAME 1 -->
-        <div class="game-box" id="game1">
-            <div class="game-title">Game 1 – Agent Lemon</div>
-            <div class="game-sub">Top-Down Agentenspiel</div>
-            <div class="game-play" id="play-game1">Play</div>
-        </div>
-
-        <!-- GAME 2–12 -->
-        <div class="game-box"><div class="game-title">Game 2</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 3</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 4</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 5</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 6</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 7</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 8</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 9</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 10</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 11</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-        <div class="game-box"><div class="game-title">Game 12</div><div class="game-sub">Noch kein Spiel</div><div class="game-play">Play</div></div>
-
+<main>
+  <div class="intro">
+    <div>
+      <div style="font-weight:900;font-size:20px">Welcome</div>
+      <div class="desc">Klicke Play um ein Spiel zu öffnen. Effekte kaufbar via MetaMask oder Solana Wallet.</div>
     </div>
+    <div class="desc">Füge dein Spiel in die Funktion <code>startGameX()</code> ein.</div>
+  </div>
+
+  <section id="gameGrid" class="grid">
+    <!-- 12 cards -->
+    <div class="card"><div><div class="title">Game 1 — Agent Lemon</div><div class="sub">Demo</div></div><div class="play" onclick="openGameNum(1)">Play</div></div>
+    <div class="card"><div><div class="title">Game 2</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(2)">Play</div></div>
+    <div class="card"><div><div class="title">Game 3</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(3)">Play</div></div>
+
+    <div class="card"><div><div class="title">Game 4</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(4)">Play</div></div>
+    <div class="card"><div><div class="title">Game 5</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(5)">Play</div></div>
+    <div class="card"><div><div class="title">Game 6</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(6)">Play</div></div>
+
+    <div class="card"><div><div class="title">Game 7</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(7)">Play</div></div>
+    <div class="card"><div><div class="title">Game 8</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(8)">Play</div></div>
+    <div class="card"><div><div class="title">Game 9</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(9)">Play</div></div>
+
+    <div class="card"><div><div class="title">Game 10</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(10)">Play</div></div>
+    <div class="card"><div><div class="title">Game 11</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(11)">Play</div></div>
+    <div class="card"><div><div class="title">Game 12</div><div class="sub">Platzhalter</div></div><div class="play" onclick="openGameNum(12)">Play</div></div>
+  </section>
+</main>
+
+<!-- 12 game containers -->
+<div id="gameContainer1" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game1-root"></div></div>
+<div id="gameContainer2" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game2-root"></div></div>
+<div id="gameContainer3" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game3-root"></div></div>
+<div id="gameContainer4" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game4-root"></div></div>
+<div id="gameContainer5" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game5-root"></div></div>
+<div id="gameContainer6" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game6-root"></div></div>
+<div id="gameContainer7" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game7-root"></div></div>
+<div id="gameContainer8" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game8-root"></div></div>
+<div id="gameContainer9" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game9-root"></div></div>
+<div id="gameContainer10" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game10-root"></div></div>
+<div id="gameContainer11" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game11-root"></div></div>
+<div id="gameContainer12" class="game-container"><button class="back-btn" onclick="closeGame()">← Zurück</button><div id="game12-root"></div></div>
+
+<!-- global back -->
+<button id="globalBack" onclick="closeGame()">← Back</button>
+
+<!-- wallet panel -->
+<div id="walletPanel">
+  <div class="wallet-box">
+    <div class="w-row">
+      <div style="font-weight:800">Wallets</div>
+      <div><button id="connectMM" class="btn btn-primary">Connect MetaMask</button></div>
+    </div>
+    <div style="margin-top:10px">
+      <div id="mmInfo" style="font-size:13px;color:var(--muted)">MetaMask: nicht verbunden</div>
+      <div id="mmBal" style="font-size:13px;color:var(--muted);margin-top:6px"></div>
+    </div>
+    <hr style="opacity:0.06;margin:10px 0" />
+    <div style="font-size:13px;color:var(--muted)">Solana Wallet</div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="connectSol" class="btn btn-ghost">Connect Solana</button>
+      <input id="solInput" placeholder="(optional) SOL Empfangsadresse" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+    </div>
+    <div style="margin-top:8px;display:flex;gap:8px">
+      <button id="openPay" class="btn btn-primary">Effekt kaufen</button>
+      <button id="showEffects" class="btn btn-ghost">Gekaufte</button>
+    </div>
+    <div id="payFeedback" style="margin-top:8px;color:var(--muted);font-size:13px"></div>
+  </div>
 </div>
 
-<!-- GAME 1 CONTAINER -->
-<div id="game1-container" class="game-container">
-    <button id="backFromGame1" style="
-        position:absolute; top:20px; left:20px; padding:8px 16px;
-        background:#222; color:white; border:1px solid #444; border-radius:6px; cursor:pointer; z-index:9999;
-    ">← Back</button>
-
-    <h2 style="text-align:center; margin-top:70px;">Agent Lemon – Mission Start</h2>
-
-    <canvas id="lemonCanvas" width="420" height="600" style="
-        display:block; margin:40px auto; background:#1a1e23; border:1px solid #333;
-    "></canvas>
+<!-- pay modal -->
+<div id="payModal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:2000;background:rgba(0,0,0,0.6)">
+  <div style="width:360px;background:var(--panel);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)">
+    <div style="font-weight:800">Effekt kaufen</div>
+    <div style="margin-top:8px;color:var(--muted)">Wähle Effekt:</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary buy" data-effect="zitronen" data-eth="0.001">Zitronen (0.001 ETH)</button>
+      <button class="btn btn-primary buy" data-effect="gurken" data-eth="0.001">Gurken (0.001 ETH)</button>
+      <button class="btn btn-primary buy" data-effect="ananas" data-eth="0.001">Ananas (0.001 ETH)</button>
+    </div>
+    <div style="margin-top:12px;color:var(--muted)">Zahlungsmethode:</div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="payWithMM" class="btn btn-primary">Mit MetaMask</button>
+      <button id="payWithSol" class="btn btn-ghost">Mit Solana</button>
+    </div>
+    <div style="text-align:right;margin-top:12px"><button id="payClose" class="btn btn-ghost">Schließen</button></div>
+    <div id="payModalFeedback" style="margin-top:8px;color:var(--muted)"></div>
+  </div>
 </div>
+
+<!-- libs for Solana -->
+<script src="https://unpkg.com/@solana/web3.js@1.76.0/lib/index.iife.js"></script>
 
 <script>
-// -----------------------------------------------
-// ZITRONEN + GURKEN REGEN (nur im Menü)
-// -----------------------------------------------
+/* =========================
+   CONFIG - TRAGE HIER EIN
+   ========================= */
+const ETH_RECEIVER = "0xDEINE_ETH_ADRESSE_HIER"; // <-- deine ETH empfänger adresse
+const SOL_RECEIVER = "DEINE_SOL_ADDRESS_HIER";   // <-- deine SOL empfänger adresse (Pubkey string)
+/* ========================= */
+
+/* -------------------------
+   Darkmode (persist)
+   ------------------------- */
+const darkToggle = document.getElementById('darkToggle');
+(function initDark(){
+  const isLight = localStorage.getItem('citrus_light') === '1';
+  if(isLight) document.body.classList.add('light');
+  darkToggle.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+})();
+darkToggle.addEventListener('click', ()=>{
+  const now = document.body.classList.toggle('light');
+  localStorage.setItem('citrus_light', now ? '1' : '0');
+  darkToggle.textContent = now ? '☀️' : '🌙';
+});
+
+/* -------------------------
+   Effects cycle (persistent)
+   20s lemon -> 20s pause -> 20s cucumber -> 20s pause
+   ------------------------- */
+const Z = 20000, P = 20000, G = 20000;
+const CYCLE = Z + P + G + P;
+if(!localStorage.getItem('citrus_cycleStart')) localStorage.setItem('citrus_cycleStart', Date.now());
 let effectsPaused = false;
+let effectInterval = null;
 
-function startEffects() {
-    if (effectsPaused) return;
+function startEffectLoop(){
+  if(effectInterval) return;
+  effectInterval = setInterval(effectTick, 600);
+  effectTick();
+}
+function stopEffectLoop(){
+  if(effectInterval){ clearInterval(effectInterval); effectInterval = null; }
+}
+function effectTick(){
+  if(effectsPaused) return;
+  const start = Number(localStorage.getItem('citrus_cycleStart') || Date.now());
+  const elapsed = (Date.now() - start) % CYCLE;
 
-    setInterval(() => {
-        if (effectsPaused) return;
-        dropItem("🍋", 25); // Zitronenfall
-        dropItem("🥒", 15); // Gurkenfall
-    }, 2000);
+  if(elapsed < Z){
+    // lemon
+    spawnFalling('🍋', 12);
+  } else if(elapsed < Z + P){
+    // pause
+  } else if(elapsed < Z + P + G){
+    // gurke
+    spawnFalling('🥒', 10);
+  } else {
+    // pause
+  }
+}
+function spawnFalling(icon, amount){
+  const cnt = Math.max(1, Math.round(amount * (Math.random()*0.6 + 0.6)));
+  for(let i=0;i<cnt;i++){
+    const el = document.createElement('div');
+    el.className = 'falling';
+    el.textContent = icon;
+    el.style.left = (2 + Math.random()*96) + 'vw';
+    const dur = 2000 + Math.random()*2200;
+    el.style.transition = `transform ${dur}ms linear, opacity ${dur}ms linear`;
+    document.body.appendChild(el);
+    requestAnimationFrame(()=>{ el.style.transform = `translateY(${window.innerHeight + 120}px)`; el.style.opacity = '0'; });
+    setTimeout(()=> el.remove(), dur + 200);
+  }
+}
+startEffectLoop();
+
+/* -------------------------
+   Show/hide global back button
+   ------------------------- */
+const globalBack = document.getElementById('globalBack');
+function showGlobalBack(){ globalBack.style.display = 'block'; }
+function hideGlobalBack(){ globalBack.style.display = 'none'; }
+hideGlobalBack();
+
+/* -------------------------
+   Open / Close Games
+   ------------------------- */
+function openGameNum(n){
+  // hide home
+  document.querySelector('main').style.display = 'none';
+  document.getElementById('gameGrid').style.display = 'none';
+
+  // pause effects instantly
+  effectsPaused = true;
+  stopEffectLoop();
+
+  // show game container
+  const cont = document.getElementById('gameContainer' + n);
+  if(cont) cont.style.display = 'block';
+  showGlobalBack();
+
+  // run start function if present
+  try{ const fn = window['startGame' + n]; if(typeof fn === 'function') fn(); }catch(e){ console.error(e); }
 }
 
-function dropItem(icon, count) {
-    for (let i = 0; i < count; i++) {
-        const el = document.createElement("div");
-        el.textContent = icon;
-        el.style.position = "fixed";
-        el.style.left = Math.random() * window.innerWidth + "px";
-        el.style.top = "-40px";
-        el.style.fontSize = "24px";
-        el.style.transition = "top 2.5s linear";
-        document.body.appendChild(el);
-        setTimeout(() => el.style.top = window.innerHeight + "px", 20);
-        setTimeout(() => el.remove(), 2600);
+function closeGame(){
+  // hide all
+  for(let i=1;i<=12;i++){
+    const c = document.getElementById('gameContainer' + i);
+    if(c) c.style.display = 'none';
+  }
+  // show home
+  document.querySelector('main').style.display = 'block';
+  document.getElementById('gameGrid').style.display = 'grid';
+
+  // resume effects (do not reset cycle start)
+  effectsPaused = false;
+  startEffectLoop();
+  hideGlobalBack();
+
+  // call stop functions if user defined them
+  for(let i=1;i<=12;i++){
+    try{ const stopFn = window['stopGame' + i]; if(typeof stopFn === 'function') stopFn(); }catch(e){}
+  }
+}
+
+/* -------------------------
+   MetaMask (EIP-1193) Minimal (no libs)
+   - connect, balance, send tx (eth_sendTransaction)
+   - wait for receipt polling
+   ------------------------- */
+const connectMMBtn = document.getElementById('connectMM');
+const mmInfo = document.getElementById('mmInfo');
+const mmBal = document.getElementById('mmBal');
+let mmAccount = null;
+
+async function connectMetaMask(){
+  if(!window.ethereum){ alert('MetaMask nicht gefunden'); return; }
+  try{
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    mmAccount = accounts[0];
+    mmInfo.textContent = 'MetaMask: ' + mmAccount.slice(0,8) + '…' + mmAccount.slice(-6);
+    connectMMBtn.textContent = 'Connected';
+    connectMMBtn.disabled = true;
+    updateEthBalance();
+    if(window.ethereum.on) window.ethereum.on('accountsChanged', handleAccountsChanged);
+  }catch(e){ console.error(e); alert('MetaMask Verbindung abgebrochen'); }
+}
+async function handleAccountsChanged(accounts){
+  if(!accounts || accounts.length === 0){ mmAccount = null; mmInfo.textContent = 'MetaMask: nicht verbunden'; connectMMBtn.disabled = false; connectMMBtn.textContent='Connect MetaMask'; mmBal.textContent=''; }
+  else { mmAccount = accounts[0]; mmInfo.textContent = 'MetaMask: ' + mmAccount.slice(0,8) + '…'; updateEthBalance(); }
+}
+async function updateEthBalance(){
+  if(!mmAccount) return;
+  try{
+    const balHex = await window.ethereum.request({ method: 'eth_getBalance', params: [mmAccount, 'latest'] });
+    const bal = BigInt(balHex);
+    const eth = Number(bal) / 1e18;
+    mmBal.textContent = `Balance: ${eth.toFixed(6)} ETH`;
+  }catch(e){ console.error(e); }
+}
+connectMMBtn.addEventListener('click', connectMetaMask);
+
+/* send ETH with eth_sendTransaction (value hex) */
+async function sendEth(amountEth){
+  if(!window.ethereum) return alert('MetaMask nicht gefunden');
+  if(!mmAccount){ const ok = confirm('MetaMask nicht verbunden. Verbinden?'); if(!ok) return; await connectMetaMask(); if(!mmAccount) return; }
+  const wei = BigInt(Math.round(amountEth * 1e18));
+  const weiHex = '0x' + wei.toString(16);
+  try{
+    const txHash = await window.ethereum.request({ method: 'eth_sendTransaction', params: [{ from: mmAccount, to: ETH_RECEIVER, value: weiHex }] });
+    document.getElementById('payModalFeedback').textContent = 'Tx gesendet: ' + txHash.slice(0,12) + '…';
+    const receipt = await waitForReceipt(txHash, 2*60*1000, 3000);
+    if(!receipt) { document.getElementById('payModalFeedback').textContent = 'Keine Bestätigung erhalten (Timeout)'; return false; }
+    const status = receipt.status;
+    const succeeded = (status === '0x1' || status === '0x01' || status === 1);
+    if(succeeded){ return {txHash, receipt}; } else { return null; }
+  }catch(e){ console.error(e); alert('ETH Zahlung abgebrochen/fehlgeschlagen'); return null; }
+}
+async function waitForReceipt(txHash, timeout=120000, poll=3000){
+  const start = Date.now();
+  while(Date.now() - start < timeout){
+    try{
+      const receipt = await window.ethereum.request({ method: 'eth_getTransactionReceipt', params: [txHash] });
+      if(receipt && (receipt.blockNumber || receipt.status)) return receipt;
+    }catch(e){}
+    await new Promise(r=>setTimeout(r,poll));
+  }
+  return null;
+}
+
+/* -------------------------
+   Solana universal (Phantom + window.solana wallets)
+   ------------------------- */
+let solWallet = null;
+let solPublicKey = null;
+const solConnection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
+
+function detectSolWallet(){
+  // prefer phantom
+  if(window.phantom?.solana?.isPhantom) return window.phantom.solana;
+  // fallback to window.solana (Backpack, Glow, Solflare web)
+  if(window.solana && window.solana.request) return window.solana;
+  return null;
+}
+async function connectSolana(){
+  const wallet = detectSolWallet();
+  if(!wallet) return alert('Keine kompatible Solana Wallet gefunden (Phantom, Backpack, Glow, Solflare).');
+  try{
+    const resp = await wallet.connect();
+    solWallet = wallet;
+    solPublicKey = resp?.publicKey || wallet.publicKey;
+    document.getElementById('solInput').value = solPublicKey?.toString?.() || '';
+    alert('Solana verbunden: ' + solPublicKey.toString());
+  }catch(e){ console.error(e); alert('Solana Verbindung abgebrochen'); }
+}
+document.getElementById('connectSol').addEventListener('click', connectSolana);
+
+/* pay SOL (universal) */
+async function sendSol(amountSol){
+  if(!solWallet || !solPublicKey){ const ok=confirm('Solana Wallet nicht verbunden. Jetzt verbinden?'); if(!ok) return; await connectSolana(); if(!solWallet) return; }
+  const connection = solConnection;
+  const toPublicKey = new solanaWeb3.PublicKey(SOL_RECEIVER);
+  const tx = new solanaWeb3.Transaction().add(
+    solanaWeb3.SystemProgram.transfer({
+      fromPubkey: solPublicKey,
+      toPubkey: toPublicKey,
+      lamports: Math.round(amountSol * solanaWeb3.LAMPORTS_PER_SOL)
+    })
+  );
+  tx.feePayer = solPublicKey;
+  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+
+  try{
+    if(solWallet.isPhantom){
+      const signed = await solWallet.signAndSendTransaction(tx);
+      await connection.confirmTransaction(signed.signature, 'confirmed');
+      return { signature: signed.signature };
+    } else {
+      // try request API
+      const msg = tx.serializeMessage();
+      const res = await solWallet.request({ method: 'signAndSendTransaction', params: { message: msg } });
+      // some wallets return { signature }
+      const sig = res?.signature || res;
+      await connection.confirmTransaction(sig, 'confirmed');
+      return { signature: sig };
     }
+  }catch(e){ console.error(e); alert('SOL Zahlung abgebrochen/fehlgeschlagen'); return null; }
 }
 
-startEffects();
+/* -------------------------
+   Pay modal wiring
+   ------------------------- */
+const payModal = document.getElementById('payModal');
+const payModalFeedback = document.getElementById('payModalFeedback');
+document.getElementById('openPay').addEventListener('click', ()=> payModal.style.display = 'flex');
+document.getElementById('payClose').addEventListener('click', ()=> payModal.style.display = 'none');
 
-// -----------------------------------------------
-// GAME 1 LOGIK
-// -----------------------------------------------
-document.getElementById("play-game1").onclick = () => {
-    // Effekte deaktivieren
-    effectsPaused = true;
+let selectedEffect = null;
+document.querySelectorAll('.buy').forEach(b=>{
+  b.addEventListener('click', (e)=>{
+    selectedEffect = e.currentTarget.dataset.effect;
+    const eth = parseFloat(e.currentTarget.dataset.eth);
+    payModalFeedback.textContent = `Ausgewählt: ${selectedEffect} — ${eth} ETH (MetaMask) oder Solana möglich`;
+  });
+});
 
-    document.getElementById("content").style.display = "none";
-    document.getElementById("game1-container").style.display = "block";
+document.getElementById('payWithMM').addEventListener('click', async ()=>{
+  if(!selectedEffect) return alert('Bitte Effekt wählen');
+  const btn = document.querySelector(`.buy[data-effect="${selectedEffect}"]`);
+  const amount = parseFloat(btn.dataset.eth || 0.001);
+  payModalFeedback.textContent = 'Starte MetaMask Transaktion...';
+  const res = await sendEth(amount);
+  if(res && res.txHash){
+    // mark effect
+    localStorage.setItem('effect_' + selectedEffect, '1');
+    payModalFeedback.textContent = `Erfolg: ${selectedEffect} freigeschaltet (ETH).`;
+    // optionally trigger immediate effect
+    triggerEffectNow(selectedEffect);
+    setTimeout(()=> payModal.style.display = 'none', 1000);
+  } else {
+    payModalFeedback.textContent = 'Zahlung fehlgeschlagen oder abgebrochen.';
+  }
+});
 
-    startAgentLemon();
-};
+document.getElementById('payWithSol').addEventListener('click', async ()=>{
+  if(!selectedEffect) return alert('Bitte Effekt wählen');
+  const btn = document.querySelector(`.buy[data-effect="${selectedEffect}"]`);
+  // try amount conversion: we don't have sol amount per button; pick 0.001 sol approx equivalent or use 0.001 ETH -> use 0.001 SOL default
+  const amountSOL = 0.001;
+  payModalFeedback.textContent = 'Starte Solana Transaktion...';
+  const res = await sendSol(amountSOL);
+  if(res && res.signature){
+    localStorage.setItem('effect_' + selectedEffect, '1');
+    payModalFeedback.textContent = `Erfolg: ${selectedEffect} freigeschaltet (SOL).`;
+    triggerEffectNow(selectedEffect);
+    setTimeout(()=> payModal.style.display = 'none', 1000);
+  } else {
+    payModalFeedback.textContent = 'SOL Zahlung fehlgeschlagen oder abgebrochen.';
+  }
+});
 
-document.getElementById("backFromGame1").onclick = () => {
-    document.getElementById("game1-container").style.display = "none";
-    document.getElementById("content").style.display = "block";
+document.getElementById('showEffects').addEventListener('click', ()=>{
+  const keys = Object.keys(localStorage).filter(k=>k.startsWith('effect_')).map(k=>k.replace('effect_',''));
+  alert(keys.length ? 'Gekaufte Effekte:\n' + keys.join('\n') : 'Keine Effekte gekauft.');
+});
 
-    // Effekte wieder aktivieren
-    effectsPaused = false;
-
-    cancelAnimationFrame(gameLoop);
-};
-
-let ctx, lemon, keys = {}, gameLoop;
-
-function startAgentLemon() {
-    const canvas = document.getElementById("lemonCanvas");
-    ctx = canvas.getContext("2d");
-
-    lemon = { x: 180, y: 500, w: 40, h: 40, speed: 4 };
-
-    window.addEventListener("keydown", e => keys[e.key] = true);
-    window.addEventListener("keyup", e => keys[e.key] = false);
-
-    loop();
+/* helper to trigger effect immediately (visual) */
+function triggerEffectNow(name){
+  if(name === 'zitronen') spawnFalling('🍋', 24);
+  if(name === 'gurken') spawnFalling('🥒', 20);
+  if(name === 'ananas') spawnFalling('🍍', 16);
 }
 
-function loop() {
-    gameLoop = requestAnimationFrame(loop);
+/* on load restore sol input if user saved one */
+window.addEventListener('load', ()=>{
+  const savedSol = localStorage.getItem('citrus_sol');
+  if(savedSol) document.getElementById('solInput').value = savedSol;
+  // start effect loop if not paused
+  startEffectLoop();
+});
 
-    ctx.clearRect(0, 0, 420, 600);
+/* save sol input if changed */
+document.getElementById('solInput').addEventListener('change', (e)=>{
+  const v = e.target.value.trim();
+  if(v) localStorage.setItem('citrus_sol', v);
+});
 
-    if (keys["ArrowLeft"]) lemon.x -= lemon.speed;
-    if (keys["ArrowRight"]) lemon.x += lemon.speed;
-    if (keys["ArrowUp"]) lemon.y -= lemon.speed;
-    if (keys["ArrowDown"]) lemon.y += lemon.speed;
+/* accessibility: Esc to close game */
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    const anyVisible = Array.from(document.querySelectorAll('[id^="gameContainer"]')).some(c=>c.style.display==='block');
+    if(anyVisible) closeGame();
+  }
+});
 
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(lemon.x, lemon.y, lemon.w, lemon.h);
+/* -------------------------
+   Game placeholders
+   Insert your entire game code inside startGameX(), and cleanup in stopGameX()
+   ------------------------- */
+function startGame1(){
+  const root = document.getElementById('game1-root');
+  root.innerHTML = `
+    <div style="text-align:center;padding:40px;color:var(--muted)">
+      <h2>Agent Lemon — Demo</h2>
+      <p>Füge hier dein gesamtes Spiel-Script ein. Nutze stopGame1() für Cleanup.</p>
+      <p style="margin-top:18px;color:var(--muted)">Beispiel: <button onclick="exampleAgentLemonStart()" class="btn btn-primary">Quick Demo Start</button></p>
+      <div id="agentDemoArea" style="margin-top:20px"></div>
+    </div>
+  `;
 }
+function stopGame1(){ /* user override: cancel intervals, animation frames etc */ }
+
+/* small demo starter for Agent Lemon (optional) */
+let _agentInterval = null;
+function exampleAgentLemonStart(){
+  const area = document.getElementById('agentDemoArea');
+  area.innerHTML = '<div style="height:200px;background:#081016;border-radius:8px;padding:12px;color:#fff">Agent Lemon Demo läuft... (simulated)</div>';
+  // simulated animation
+  if(_agentInterval) clearInterval(_agentInterval);
+  _agentInterval = setInterval(()=> {
+    const el = document.createElement('div'); el.textContent = '🍋'; el.style.fontSize = '20px'; el.style.marginTop='6px'; area.appendChild(el);
+    if(area.children.length > 20) area.removeChild(area.children[0]);
+  }, 400);
+}
+function stopAgentDemo(){ if(_agentInterval) clearInterval(_agentInterval); }
+
+/* other placeholders */
+for(let i=2;i<=12;i++){
+  window['startGame'+i] = function(){
+    document.getElementById('game'+i+'-root')?.remove?.(); // safety
+    const root = document.getElementById('game'+i+'-root') || document.getElementById('game'+i+'-root');
+    const el = document.getElementById('game'+i+'-root') ? document.getElementById('game'+i+'-root') : document.getElementById('game'+i+'-root'); // no-op but keeps references
+    const target = document.getElementById('game'+i+'-root') || document.getElementById('game' + i + '-root');
+    (target || document.getElementById('game' + i + '-root') || document.createElement('div')).innerHTML = `<div style="padding:24px;color:var(--muted)">Game ${i} Platzhalter — hier dein Spiel</div>`;
+  };
+  window['stopGame'+i] = function(){ /* override in game code */ };
+}
+
+/* -------------------------
+   Small compatibility fixes: ensure gameX-root exist
+   ------------------------- */
+for(let i=1;i<=12;i++){
+  const r = document.getElementById('game' + i + '-root');
+  if(!r){
+    const cont = document.getElementById('gameContainer' + i);
+    const root = cont.querySelector('div[id^="game"]') || cont.querySelector('div');
+    root && root.id && root.id !== ('game'+i+'-root') ? root.setAttribute('id', 'game'+i+'-root') : null;
+  }
+}
+
+/* End of script */
 </script>
-
 </body>
 </html>
